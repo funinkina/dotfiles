@@ -1,0 +1,11 @@
+[Libinput][12625][12320][YICHIP Wireless Device Mouse]
+PointerAcceleration=0.200
+
+[Libinput][1739][52861][SYNA32C6:00 06CB:CE7D Touchpad]
+NaturalScroll=true
+PointerAcceleration=0.200
+ScrollFactor=0.75
+
+[Mouse]
+cursorSize=32
+cursorTheme=Posy_Cursor_125_175
