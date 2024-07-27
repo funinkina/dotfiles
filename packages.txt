@@ -86,6 +86,7 @@ networkmanager-openvpn
 noto-fonts
 ntfs-3g
 openvpn
+pass
 pipewire
 pipewire-alsa
 pipewire-jack
