@@ -62,6 +62,7 @@ alias update="sudo pacman -Syu"
 alias install="install_package"
 alias search="search_package"
 alias list="pacman -Q | grep"
+alias backup-packages="backup_packages"
 alias c="clear"
 alias e="exit"
 alias s="sudo"
@@ -78,4 +79,9 @@ search_package() {
     pacman -Ss "$1"
     echo "$1 in AUR:"
     yay -Ss "$1"
+}
+
+backup_packages() {
+    pacman -Qqen > ~/.dotfiles/packages.txt
+    pacman -Qqem > ~/.dotfiles/aur-packages.txt
 }
