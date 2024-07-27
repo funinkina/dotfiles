@@ -79,11 +79,15 @@ search_package() {
 }
 
 backup_packages() {
+    echo "Backing up arch packages..."
     pacman -Qqen > ~/.dotfiles/packages.txt
+    echo "Backing up AUR packages..."
     pacman -Qqem > ~/.dotfiles/aur-packages.txt
     cd ~/.dotfiles
+    echo "Committing changes..."
     git add .
     git commit -m "updated packages"
     git push
+    echo "\e[38;2;94;255;190m\e[1mBackup succesfully completed.\e[m"
     cd ~
 }
