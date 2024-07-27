@@ -84,4 +84,9 @@ search_package() {
 backup_packages() {
     pacman -Qqen > ~/.dotfiles/packages.txt
     pacman -Qqem > ~/.dotfiles/aur-packages.txt
+    cd ~/.dotfiles
+    git add .
+    git commit -m "updated packages"
+    git push
+    cd ~
 }

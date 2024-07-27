@@ -1,7 +1,6 @@
 adw-gtk3
 aphototoollibre
 auto-cpufreq
-autofs
 figma-linux
 gdm-settings
 gnome-session-properties
@@ -10,7 +9,6 @@ google-chrome
 impression
 localepurge
 mission-center
-morphosis
 mutter-performance
 onlyoffice-bin
 otf-apple-fonts

@@ -74,8 +74,6 @@ libva-intel-driver
 libva-utils
 linux
 linux-firmware
-linux-lts
-linux-lts-headers
 loupe
 man-db
 nano
@@ -87,7 +85,6 @@ networkmanager-openvpn
 noto-fonts
 ntfs-3g
 openvpn
-orca
 pipewire
 pipewire-alsa
 pipewire-jack
