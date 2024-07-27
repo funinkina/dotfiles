@@ -2,7 +2,7 @@
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 
@@ -60,9 +60,11 @@ fi
 alias yeet="sudo pacman -Rncs"
 alias update="sudo pacman -Syu"
 alias install="install_package"
-alias search="pacman -Q | grep"
-alias list="list_package"
+alias search="search_package"
+alias list="pacman -Q | grep"
 alias c="clear"
+alias e="exit"
+alias s="sudo"
 
 install_package() {
     if ! sudo pacman -S "$1"; then
