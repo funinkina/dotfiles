@@ -1,3 +1,15 @@
 [user]
 	name = Aryan Kushwaha
 	email = 59092136+funinkina@users.noreply.github.com
+
+[core]
+	editor = nano
+	excludesfile = /home/funinkina/.gitignore_global
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	type = cat-file -t
+	dump = cat-file -p
