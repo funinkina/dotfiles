@@ -5,7 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -54,9 +53,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias l='ls -CF'
 fi
 
-# End of your ~/.zshrc configuration
-# aliases
-
+#aliases
 alias yeet="sudo pacman -Rncs"
 alias update="sudo pacman -Syu"
 alias install="install_package"
@@ -69,15 +66,15 @@ alias s="sudo"
 
 install_package() {
     if ! sudo pacman -S "$1"; then
-        echo "Package not found in official repositories. Trying to install from AUR..."
+        echo "\e[38;2;94;255;190m\e[1mPackage not found in official repositories. Trying to install from AUR...\e[m\n"
         yay -S "$1"
     fi
 }
 
 search_package() {
-    echo "$1 in official repositories:"
+    echo "\e[38;2;94;255;190m\e[1m$1 in official repositories:\e[m"
     pacman -Ss "$1"
-    echo "$1 in AUR:"
+    echo "\n\e[38;2;94;255;190m\e[1m$1 in AUR:\e[m"
     yay -Ss "$1"
 }
 
