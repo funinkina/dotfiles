@@ -3,6 +3,7 @@ aphototoollibre
 auto-cpufreq
 figma-linux
 gdm-settings
+git-credential-manager-bin
 gnome-session-properties
 gnome-shell-performance
 google-chrome

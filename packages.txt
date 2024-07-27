@@ -68,6 +68,7 @@ intel-ucode
 iwd
 jdk21-openjdk
 jupyter-notebook
+libc++
 libfprint
 libpulse
 libva-intel-driver
