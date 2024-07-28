@@ -21,7 +21,6 @@ gdm
 geary
 gimp
 git
-gnome-2048
 gnome-backgrounds
 gnome-browser-connector
 gnome-calculator
@@ -34,8 +33,8 @@ gnome-console
 gnome-contacts
 gnome-control-center
 gnome-disk-utility
+gnome-firmware
 gnome-font-viewer
-gnome-games
 gnome-keyring
 gnome-logs
 gnome-menus
@@ -50,6 +49,7 @@ gnome-user-docs
 gnome-user-share
 go
 gst-plugin-pipewire
+gufw
 gvfs
 gvfs-afc
 gvfs-dnssd
@@ -77,12 +77,16 @@ linux
 linux-firmware
 loupe
 man-db
+meson
 nano
 nautilus
+nautilus-image-converter
+nautilus-share
 neovim
 network-manager-applet
 networkmanager
 networkmanager-openvpn
+ninja
 noto-fonts
 ntfs-3g
 openvpn
@@ -100,6 +104,7 @@ python-pytorch
 python-scikit-learn
 python-seaborn
 python-tensorflow
+python-tqdm
 qbittorrent
 quadrapassel
 reflector

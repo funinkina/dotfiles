@@ -1,6 +1,7 @@
 adw-gtk3
 aphototoollibre
 auto-cpufreq
+extension-manager
 figma-linux
 gdm-settings
 git-credential-manager-bin
@@ -14,6 +15,7 @@ mutter-performance
 onlyoffice-bin
 otf-apple-fonts
 papers
+pfetch
 pika-backup
 python-imgaug
 python-pycocotools
