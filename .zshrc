@@ -55,11 +55,10 @@ fi
 
 #aliases
 alias yeet="sudo pacman -Rncs"
-alias update="sudo pacman -Syu"
+alias update="sudo pacman -Syyu"
 alias install="install_package"
 alias search="search_package"
 alias list="pacman -Q | grep"
-alias backup-packages="backup_packages"
 alias c="clear"
 alias e="exit"
 alias s="sudo"
@@ -78,16 +77,3 @@ search_package() {
     yay -Ss "$1"
 }
 
-backup_packages() {
-    echo "Backing up arch packages..."
-    pacman -Qqen > ~/.dotfiles/packages.txt
-    echo "Backing up AUR packages..."
-    pacman -Qqem > ~/.dotfiles/aur-packages.txt
-    cd ~/.dotfiles
-    echo "Committing changes..."
-    git add .
-    git commit -m "updated packages"
-    git push
-    echo "\e[38;2;94;255;190m\e[1mBackup succesfully completed.\e[m"
-    cd ~
-}
