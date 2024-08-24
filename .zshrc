@@ -42,28 +42,28 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 #aliases
-alias yeet="sudo pacman -Rns"
-alias update="sudo pacman -Syyu"
+alias yeet="aura -Rns"
+alias update="aura -Syu"
 alias install="install_package"
 alias search="search_package"
-alias list="pacman -Q | grep"
+alias list="aura -Q | grep"
 alias edit="sudo nano"
 alias c="clear"
 alias e="exit"
 alias s="sudo"
 
 install_package() {
-    if ! sudo pacman -S "$1"; then
+    if ! aura -S "$1"; then
         echo "\e[38;2;94;255;190m\e[1mPackage not found in official repositories. Trying to install from AUR...\e[m\n"
-        yay -S "$1"
+        aura -A "$1"
     fi
 }
 
 search_package() {
     echo "\e[38;2;94;255;190m\e[1m$1 in official repositories:\e[m"
-    pacman -Ss "$1"
+    aura -Ss "$1"
     echo "\n\e[38;2;94;255;190m\e[1m$1 in AUR:\e[m"
-    yay -Ss "$1"
+    aura -As "$1"
 }
 
 eval "$(starship init zsh)"
