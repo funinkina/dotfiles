@@ -62,7 +62,7 @@ alias ~="cd ~"
 alias ll="ls -alF"  # Detailed listing with file types
 alias la="ls -A"  # List all except . and ..
 alias l="ls -CF"  # List only directories
-
+alias gc="git clone"
 
 install_package() {
     if ! sudo pacman -S "$1"; then
