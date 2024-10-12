@@ -78,4 +78,5 @@ search_package() {
     yay -Ss "$1"
 }
 
+fortune | cowsay -w
 eval "$(starship init zsh)"
