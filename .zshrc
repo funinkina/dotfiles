@@ -42,7 +42,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 #aliases
-alias yeet="sudo pacman -Rns"
+alias yeet="sudo pacman -Rsc"
 alias update="sudo pacman -Syyu && yay"
 alias install="install_package"
 alias search="search_package"
