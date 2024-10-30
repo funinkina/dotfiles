@@ -44,7 +44,7 @@ fi
 #aliases
 alias yeet="sudo pacman -Rsc"
 alias update="sudo pacman -Syyu && yay"
-alias install="install_package"
+alias get="yay -S"
 alias search="search_package"
 alias list="pacman -Q | grep"
 alias info="pacman -Qi"
@@ -63,13 +63,6 @@ alias ll="ls -alF"  # Detailed listing with file types
 alias la="ls -A"  # List all except . and ..
 alias l="ls -CF"  # List only directories
 alias gc="git clone"
-
-install_package() {
-    if ! sudo pacman -S "$1"; then
-        echo "\e[38;2;94;255;190m\e[1mPackage not found in official repositories. Trying to install from AUR...\e[m\n"
-        yay -S "$1"
-    fi
-}
 
 search_package() {
     echo "\e[38;2;94;255;190m\e[1m$1 in official repositories:\e[m"
