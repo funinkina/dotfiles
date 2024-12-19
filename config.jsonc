@@ -58,11 +58,6 @@
             "keyColor": "34",
         },
     {
-      "type": "custom",
-      "format": "  󰊤 GitHub : funinkina",
-      "keyColor": "\u001b[38;5;75m"
-    },
-    {
       "type": "battery",
       "key": "   Battery",
       "keyColor": "38;5;228"  // Light Yellow

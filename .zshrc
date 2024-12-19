@@ -70,8 +70,5 @@ search_package() {
     echo "\n\e[38;2;94;255;190m\e[1m$1 in AUR:\e[m"
     yay -Ss "$1"
 }
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-  tmux attach-session -t default || tmux new-session -s default
-fi
 eval "$(starship init zsh)"
 eval $(thefuck --alias)
