@@ -48,7 +48,7 @@ alias get="yay -S"
 alias search="search_package"
 alias list="pacman -Q | grep"
 alias info="pacman -Qi"
-alias edit="sudo nvim"
+alias edit="sudo vim"
 alias sse="sudo systemctl enable"
 alias ssd="sudo systemctl disable"
 alias sstart="sudo systemctl start"
@@ -71,4 +71,3 @@ search_package() {
     yay -Ss "$1"
 }
 eval "$(starship init zsh)"
-eval $(thefuck --alias)
