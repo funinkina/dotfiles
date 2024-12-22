@@ -42,12 +42,12 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 #aliases
-alias yeet="sudo pacman -Rsc"
-alias update="sudo pacman -Syyu && yay"
-alias get="yay -S"
-alias search="search_package"
-alias list="pacman -Q | grep"
-alias info="pacman -Qi"
+alias yeet="sudo dnf remove --remove-leaves"
+alias update="sudo dnf upgrade --refresh && sudo dnf autoremove"
+alias get="sudo dnf install"
+alias search="dnf search"
+alias list="dnf list installed | grep"
+alias info="dnf info"
 alias edit="sudo vim"
 alias sse="sudo systemctl enable"
 alias ssd="sudo systemctl disable"
