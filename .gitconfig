@@ -13,9 +13,7 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	type = cat-file -t
 	dump = cat-file -p
-[credential]
-	helper = /usr/bin/git-credential-libsecret
-	credentialStore = secretservice
+
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [init]
@@ -25,3 +23,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[credential]
+	helper = store
