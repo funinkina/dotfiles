@@ -42,12 +42,12 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 #aliases
-alias yeet="sudo dnf remove --remove-leaves"
-alias update="sudo dnf upgrade --refresh && sudo dnf autoremove"
-alias get="sudo dnf install"
-alias search="dnf search"
-alias list="dnf list installed | grep"
-alias info="dnf info"
+alias yeet="sudo pacman -Rsnc"
+alias update="yay && flatpak update"
+alias get="yay -S"
+alias search="search_package"
+alias list="pacman -Q | grep"
+alias info="pacman -Qi"
 alias edit="sudo vim"
 alias sse="sudo systemctl enable"
 alias ssd="sudo systemctl disable"
@@ -71,3 +71,6 @@ search_package() {
     yay -Ss "$1"
 }
 eval "$(starship init zsh)"
+
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
