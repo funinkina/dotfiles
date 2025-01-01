@@ -63,6 +63,7 @@ alias ll="ls -alF"  # Detailed listing with file types
 alias la="ls -A"  # List all except . and ..
 alias l="ls -CF"  # List only directories
 alias gc="git clone"
+alias cdir='cd "${_%/*}"'
 
 search_package() {
     echo "\e[38;2;94;255;190m\e[1m$1 in official repositories:\e[m"
