@@ -1,7 +1,7 @@
 [user]
 	name = Aryan Kushwaha
 	email = 59092136+funinkina@users.noreply.github.com
-	signingkey = DE21A4B61C1B09D447857E154827892C53B72CC5
+	signingkey = 589810BEC26EB343
 
 [core]
 	editor = nano
@@ -27,10 +27,8 @@
 	process = git-lfs filter-process
 	required = true
 [gpg]
-	format = ssh
-[gpg "ssh"]
-	allowedSignersFile = /home/funinkina/.ssh/allowed_signers
+	program = /bin/gpg
 [commit]
-	gpgSign = true
+	gpgsign = true
 [tag]
 	gpgsign = true
