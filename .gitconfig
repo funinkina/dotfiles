@@ -15,8 +15,8 @@
 	type = cat-file -t
 	dump = cat-file -p
 [credential]
-	helper = /usr/bin/git-credential-manager
 	credentialStore = secretservice
+	helper = /bin/git-credential-manager
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [init]
