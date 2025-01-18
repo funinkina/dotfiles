@@ -8,6 +8,7 @@ export PATH=$PATH:/home/funinkina/.local/bin
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+fpath+=~/.zfunc
 
 autoload -U compinit && compinit
 
@@ -22,6 +23,7 @@ HISTSIZE=2000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
+HISTIGNORE="ls*:pwd*:c:clear"
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
