@@ -6,6 +6,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 export PATH=$PATH:/home/funinkina/.local/bin
 export LANG=en_IN.UTF-8
 export LC_ALL=en_IN.UTF-8
+export STARSHIP_CONFIG=~/dotfiles/starship.toml
 
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
