@@ -11,6 +11,7 @@ export STARSHIP_CONFIG=~/dotfiles/starship.toml
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+
 fpath+=~/.zfunc
 
 autoload -U compinit && compinit
@@ -50,7 +51,7 @@ fi
 alias yeet="sudo pacman -Rcnus"
 alias update="yay"
 alias get="yay -S"
-alias search="search_package"
+alias search="pacman -Ss"
 alias list="pacman -Q | grep"
 alias info="pacman -Qi"
 alias edit="sudo vim"
@@ -71,12 +72,6 @@ alias gc="git clone"
 alias cdir='cd "${_%/*}"'
 alias python="python3"
 
-search_package() {
-    echo "\e[38;2;94;255;190m\e[1m$1 in official repositories:\e[m"
-    pacman -Ss "$1"
-    echo "\n\e[38;2;94;255;190m\e[1m$1 in AUR:\e[m"
-    yay -Ss "$1"
-}
 eval "$(starship init zsh)"
 
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
