@@ -65,12 +65,14 @@ alias s="sudo"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ~="cd ~"
-alias ll="ls -alF"  # Detailed listing with file types
-alias la="ls -A"  # List all except . and ..
-alias l="ls -CF"  # List only directories
+alias ll="ls -alF"
+alias la="ls -A"
+alias l="ls -CF"
 alias gc="git clone"
 alias cdir='cd "${_%/*}"'
 alias python="python3"
+
+source <(fzf --zsh)
 
 eval "$(starship init zsh)"
 
