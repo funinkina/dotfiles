@@ -74,7 +74,7 @@ alias python="python3"
 
 source <(fzf --zsh)
 
-eval "$(starship init zsh)"
-
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+eval "$(starship init zsh)"

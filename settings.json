@@ -7,6 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "assistant": {
+    "default_model": {
+      "provider": "google",
+      "model": "gemini-2.0-flash"
+    },
+    "version": "2"
+  },
   "icon_theme": "Material Icon Theme",
   "features": {
     "edit_prediction_provider": "zed"
@@ -25,7 +32,7 @@
   "border_size": 3,
   "autosave": "on_window_change",
   "base_keymap": "VSCode",
-  "centered_layout": { "left_padding": 2, "right_padding": 2 },
+  // "centered_layout": { "left_padding": 2, "right_padding": 2 },
   "edit_predictions": {
     "disabled_globs": [
       "**/.env*",
@@ -82,10 +89,10 @@
     "shell": "system",
     "toolbar": {
       "breadcrumbs": true
-    },
-    "working_directory": "current_project_directory",
-    "scrollbar": {
-      "show": null
     }
+    // "working_directory": "current_project_directory",
+    // "scrollbar": {
+    //   "show": null
+    // }
   }
 }
