@@ -9,8 +9,8 @@
 {
   "assistant": {
     "default_model": {
-      "provider": "google",
-      "model": "gemini-2.0-flash"
+      "provider": "copilot_chat",
+      "model": "gpt-4o"
     },
     "version": "2"
   },
@@ -22,7 +22,7 @@
   "buffer_font_features": { "cv01": 7 },
   "buffer_line_height": "comfortable",
   "ui_font_size": 16,
-  "ui_font_family": "Inter",
+  "ui_font_family": "SF Pro Display",
   "buffer_font_size": 13,
   "theme": {
     "mode": "system",
@@ -94,5 +94,6 @@
     // "scrollbar": {
     //   "show": null
     // }
-  }
+  },
+  "chat_panel": {}
 }

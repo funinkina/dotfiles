@@ -71,6 +71,7 @@ alias l="ls -CF"
 alias gc="git clone"
 alias cdir='cd "${_%/*}"'
 alias python="python3"
+alias cat="bat"
 
 source <(fzf --zsh)
 
