@@ -27,7 +27,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Github Dark"
+    "dark": "GitHub Dark Default"
   },
   "border_size": 3,
   "autosave": "on_window_change",
