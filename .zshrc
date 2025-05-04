@@ -73,9 +73,8 @@ alias cdir='cd "${_%/*}"'
 alias python="python3"
 alias cat="bat"
 
+echo "🕒 It's $(date '+%A, %B %d at %H:%M')"
+echo "⏳ System has been up for $(uptime -p | sed 's/up //')."
 source <(fzf --zsh)
-
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 eval "$(starship init zsh)"

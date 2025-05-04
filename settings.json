@@ -20,10 +20,10 @@
   },
   "buffer_font_family": "MartianMono Nerd Font",
   "buffer_font_features": { "cv01": 7 },
+  "buffer_font_size": 14,
   "buffer_line_height": "comfortable",
-  "ui_font_size": 16,
-  "ui_font_family": "SF Pro Display",
-  "buffer_font_size": 13,
+  "ui_font_family": "Adwaita Sans",
+  "ui_font_size": 15,
   "theme": {
     "mode": "system",
     "light": "One Light",
@@ -34,6 +34,7 @@
   "base_keymap": "VSCode",
   // "centered_layout": { "left_padding": 2, "right_padding": 2 },
   "edit_predictions": {
+    "mode": "subtle",
     "disabled_globs": [
       "**/.env*",
       "**/*.pem",
