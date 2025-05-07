@@ -26,7 +26,7 @@ SOURCE_DIRS=(
 # SET THE *BASE* PATH TO YOUR EXTERNAL DISK MOUNT POINT / BACKUP AREA HERE
 # Example: DEST_BASE_DIR="/media/your_username/MyExternalUSB/Backups"
 # Ensure this directory exists and you have write permissions.
-DEST_BASE_DIR="/mnt/Elements/" # <<< --- CHANGE THIS ---
+DEST_BASE_DIR="/run/media/funinkina/WD_Blue" # <<< --- CHANGE THIS ---
 
 # --- !!! IMPORTANT: Destination Subfolder Name !!! ---
 # Define the name of the FOLDER *INSIDE* DEST_BASE_DIR where this specific backup will go.

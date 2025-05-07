@@ -61,7 +61,8 @@ alias sstart="sudo systemctl start"
 alias sstop="sudo systemctl stop"
 alias c="clear"
 alias e="exit"
-alias s="sudo"
+alias s="sudo-rs"
+alias sudo="sudo-rs"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ~="cd ~"
@@ -73,6 +74,7 @@ alias cdir='cd "${_%/*}"'
 alias python="python3"
 alias cat="bat"
 
+echo ""
 echo "🕒 It's $(date '+%A, %B %d at %H:%M')"
 echo "⏳ System has been up for $(uptime -p | sed 's/up //')."
 source <(fzf --zsh)
