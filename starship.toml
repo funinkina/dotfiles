@@ -11,16 +11,14 @@ format = 'on [$hostname](bold yellow) '
 trim_at = "."
 disabled = false
 
-# Replace the "❯" symbol in the prompt with "➜"
-[character]                            # The name of the module we are configuring is "character"
-success_symbol = "[\\$](bold green)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
+[character]
+success_symbol = "[\\$](bold green)"
 error_symbol = "[✗](bold red)"
-#  
-# configure directory
+
 [directory]
 read_only = " "
 truncation_length = 10
-truncate_to_repo = true # truncates directory to root folder if in github repo
+truncate_to_repo = true
 style = "bold italic blue"
 
 [cmd_duration]

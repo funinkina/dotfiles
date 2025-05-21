@@ -34,9 +34,11 @@ setopt hist_ignore_space
 setopt hist_ignore_dups
 setopt hist_ignore_all_dups
 setopt hist_find_no_dups
+setopt HIST_EXPIRE_DUPS_FIRST
+
 
 #completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' menu select
 
 # Enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -61,8 +63,7 @@ alias sstart="sudo systemctl start"
 alias sstop="sudo systemctl stop"
 alias c="clear"
 alias e="exit"
-alias s="sudo-rs"
-alias sudo="sudo-rs"
+alias s="sudo"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ~="cd ~"
@@ -72,7 +73,6 @@ alias l="ls -CF"
 alias gc="git clone"
 alias cdir='cd "${_%/*}"'
 alias python="python3"
-alias cat="bat"
 
 echo ""
 echo "🕒 It's $(date '+%A, %B %d at %H:%M')"
