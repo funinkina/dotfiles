@@ -70,7 +70,7 @@ end
 
 # Aliases
 alias yeet="sudo pacman -Rcnus"
-alias update="sudo pacman -Syyu && sudo pkgfile --update"
+alias update="sudo pacman -Syyu; sudo pkgfile --update"
 alias get="yay -S"
 alias search="pacman -Ss"
 alias list="pacman -Q | grep"
