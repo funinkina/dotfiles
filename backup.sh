@@ -17,6 +17,11 @@ SOURCE_DIRS=(
     "Projects"
     ".mozilla"
     ".ssh"
+    ".local/share/gnome-boxes"
+    ".vscode"
+    ".config/Code"
+    ".config/easyeffects"
+    ".config/gnome-boxes"
     # Add more directories here...
     # ".config"  # Be careful with large hidden dirs, they might contain caches too
     # ".local/share/some_app" # Example of nested path
@@ -132,23 +137,18 @@ processed_count=0
 # to ensure source folders are created *inside* it.
 DEST_PARENT_FOR_RSYNC="$FULL_DEST_PATH/"
 
-for src_dir in "${SOURCE_DIRS[@]}"; do
-    SOURCE_PATH="$HOME/$src_dir"
+cd "$HOME" || { echo "Failed to cd to \$HOME"; exit 1; }
 
+for src_dir in "${SOURCE_DIRS[@]}"; do
     echo "--- Processing: '$src_dir' ---"
 
-    # Check if source exists
-    if [ ! -e "$SOURCE_PATH" ]; then
-        echo "WARNING: Source '$SOURCE_PATH' does not exist. Skipping."
-        echo "--------------------------------------"
-        continue # Move to the next directory
+    if [ ! -e "$src_dir" ]; then
+        echo "WARNING: Source '$HOME/$src_dir' does not exist. Skipping."
+        continue
     fi
 
-    # Execute rsync for the current directory
-    # Copies $SOURCE_PATH into $DEST_PARENT_FOR_RSYNC
-    # e.g., copies ~/Documents to $FULL_DEST_PATH/Documents
-    echo "Running: rsync ${RSYNC_OPTS[*]} \"$SOURCE_PATH\" \"$DEST_PARENT_FOR_RSYNC\""
-    rsync "${RSYNC_OPTS[@]}" "$SOURCE_PATH" "$DEST_PARENT_FOR_RSYNC"
+    echo "Running: rsync ${RSYNC_OPTS[*]} -R \"$src_dir\" \"$DEST_PARENT_FOR_RSYNC\""
+    rsync "${RSYNC_OPTS[@]}" -R "$src_dir" "$DEST_PARENT_FOR_RSYNC"
 
     # Check rsync's exit status
     rsync_exit_status=$?
