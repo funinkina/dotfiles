@@ -5,7 +5,14 @@
 
 [core]
 	editor = nano
+	whitespace = error
+	preloadindex = true
 	excludesfile = /home/funinkina/.gitignore_global
+	
+[status]
+	branch = true
+	showStash = true
+	
 [alias]
 	co = checkout
 	ci = commit
