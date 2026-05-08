@@ -20,8 +20,10 @@ SOURCE_DIRS=(
     ".local/share/gnome-boxes"
     ".vscode"
     ".config/Code"
-    ".config/easyeffects"
     ".config/gnome-boxes"
+    ".config/net.imput.helium"
+    ".config/google-chrome"
+    "/.local/share/gnome-boxes"
     # Add more directories here...
     # ".config"  # Be careful with large hidden dirs, they might contain caches too
     # ".local/share/some_app" # Example of nested path

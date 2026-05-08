@@ -1,7 +1,7 @@
 [user]
 	name = Aryan Kushwaha
-	email = 59092136+funinkina@users.noreply.github.com
-	signingkey = E70D73C7E355C11766AAE1CA65FECC628D3FC130
+	email = 59092136+funinkina@users.noreply.github.com 
+	signingkey = 80AE5FF5B635D634BA8FF7BBB0F114D8E94AD5E5 
 
 [core]
 	editor = nano
@@ -39,3 +39,6 @@
 	gpgsign = true
 [tag]
 	gpgsign = true
+[credential]
+	helper = 
+	helper = /usr/local/bin/git-credential-manager
