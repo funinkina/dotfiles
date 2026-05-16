@@ -1,7 +1,7 @@
 [user]
 	name = Aryan Kushwaha
 	email = 59092136+funinkina@users.noreply.github.com 
-	signingkey = 80AE5FF5B635D634BA8FF7BBB0F114D8E94AD5E5 
+	signingkey = 4E2EEC9087516326DAEC7AFCC82715A7337D235B
 
 [core]
 	editor = nano
@@ -21,24 +21,35 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	type = cat-file -t
 	dump = cat-file -p
+
 [credential]
-	credentialStore = secretservice
-	helper = /bin/git-credential-manager
+	helper = libsecret
+
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+
 [init]
 	defaultBranch = main
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [gpg]
 	program = /bin/gpg
+
 [commit]
 	gpgsign = true
+
 [tag]
 	gpgsign = true
-[credential]
-	helper = 
-	helper = /usr/local/bin/git-credential-manager
+
+[sendemail]
+    smtpServer = smtp.gmail.com
+    smtpServerPort = 587
+    smtpEncryption = tls
+    smtpUser = aryankushwaha3101@gmail.com
+    from = Aryan Kushwaha <aryankushwaha3101@gmail.com>
+    confirm = always
