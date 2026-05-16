@@ -1,6 +1,5 @@
 set fish_greeting 
 
-
 export STARSHIP_CONFIG=/home/funinkina/dotfiles/starship.toml
 set -gx PATH ~/.npm-global/bin $PATH
 set FZF_DEFAULT_OPTS "--layout=reverse --exact --border=bold --border=rounded --margin=3% --color=dark"
@@ -21,7 +20,15 @@ function fish_command_not_found
             echo -e "$i. \e[1;36m$results[$i]\e[0m"
         end
 
-        read -P "Enter the number of the package to install, or 0 to cancel: " choice
+        read -P "Enter the number of the package to install, or 0 to cancel. [1]: " choice
+        or begin
+            echo ""
+            return
+        end
+
+        if test -z "$choice"
+            set choice 1
+        end
 
         if test "$choice" -gt 0 -a "$choice" -le (count $results)
             set -l selected_pkg $results[$choice]
@@ -71,7 +78,7 @@ end
 
 # Aliases
 alias yeet="sudo pacman -Rcnus"
-alias update="sudo pacman -Syyu; sudo pkgfile --update"
+alias update="sudo pacman -Syyu && sudo pkgfile --update"
 alias get="yay -S"
 alias search="pacman -Ss"
 alias list="pacman -Q | grep"
