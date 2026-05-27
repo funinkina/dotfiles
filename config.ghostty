@@ -4,6 +4,7 @@ window-height = 28
 window-width = 112
 theme = Adwaita Dark
 bold-color = bright
+font-size = 11
 
 gtk-toolbar-style = raised
 gtk-titlebar-style = native
