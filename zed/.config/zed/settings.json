@@ -7,18 +7,29 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "window_decorations": "server",
+  "use_system_window_tabs": false,
+  "git_panel": {
+    "file_icons": true,
+    "status_style": "label_color",
+    "dock": "left"
+  },
+  "project_panel": {
+    "dock": "left",
+    "hide_gitignore": false
+  },
+  "title_bar": {
+    "show_branch_status_icon": true
+  },
   "agent": {
+    "dock": "right",
     "default_model": {
       "provider": "zed.dev",
-      "model": "claude-3-7-sonnet"
+      "model": "claude-3-7-sonnet",
     },
-    "version": "2"
   },
-  "icon_theme": "Material Icon Theme",
-  "features": {
-    "edit_prediction_provider": "zed"
-  },
-  "buffer_font_family": "MartianMono Nerd Font",
+  "icon_theme": "JetBrains New UI Icons (Dark)",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
   "buffer_font_features": { "cv01": 7 },
   "buffer_font_size": 14,
   "buffer_line_height": "comfortable",
@@ -27,13 +38,14 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Ayu Dark"
+    "dark": "macOS Classic Dark",
   },
   "border_size": 3,
   "autosave": "on_window_change",
   "base_keymap": "VSCode",
   // "centered_layout": { "left_padding": 2, "right_padding": 2 },
   "edit_predictions": {
+    "provider": "zed",
     "mode": "subtle",
     "disabled_globs": [
       "**/.env*",
@@ -41,40 +53,41 @@
       "**/*.key",
       "**/*.cert",
       "**/*.crt",
-      "**/secrets.yml"
-    ]
+      "**/secrets.yml",
+    ],
   },
   "tab_bar": {
     "show": true,
     "show_nav_history_buttons": true,
-    "show_tab_bar_buttons": true
+    "show_tab_bar_buttons": true,
   },
   "tabs": {
     "close_position": "right",
     "file_icons": true,
     "git_status": false,
     "activate_on_close": "history",
-    "show_close_button": "hover"
+    "show_close_button": "hover",
   },
   "toolbar": {
     "breadcrumbs": true,
-    "quick_actions": true
+    "quick_actions": true,
   },
   "git": {
     "git_gutter": "tracked_files",
     "inline_blame": {
       "enabled": true,
-      "delay_ms": 300
-    }
+      "delay_ms": 300,
+    },
   },
   "indent_guides": {
     "enabled": true,
     "line_width": 1,
     "active_line_width": 1,
     "coloring": "indent_aware",
-    "background_coloring": "disabled"
+    "background_coloring": "disabled",
   },
   "terminal": {
+    "font_family": "JetBrainsMono Nerd Font",
     "alternate_scroll": "off",
     "blinking": "terminal_controlled",
     "copy_on_select": false,
@@ -82,19 +95,19 @@
     "detect_venv": {
       "on": {
         "directories": [".env", "env", ".venv", "venv"],
-        "activate_script": "default"
-      }
+        "activate_script": "default",
+      },
     },
     "env": {},
     "button": false,
     "shell": "system",
     "toolbar": {
-      "breadcrumbs": true
-    }
+      "breadcrumbs": true,
+    },
     // "working_directory": "current_project_directory",
     // "scrollbar": {
     //   "show": null
     // }
   },
-  "chat_panel": {}
+  "chat_panel": {},
 }
