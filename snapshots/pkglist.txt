@@ -14,7 +14,6 @@ chaotic-mirrorlist
 claude-cowork-service
 claude-desktop-bin
 colord
-cpu-x
 cups
 decibels
 dosfstools
@@ -167,3 +166,4 @@ xdg-user-dirs-gtk
 xorg-xeyes
 yay-bin
 yelp
+zed
