@@ -1,0 +1,14 @@
+emojify-bin
+figma-linux-next
+morewaita-icon-theme
+nautilus-admin-gtk4
+nautilus-checksums
+ttf-ms-win11-auto
+ttf-ms-win11-auto-japanese
+ttf-ms-win11-auto-korean
+ttf-ms-win11-auto-other
+ttf-ms-win11-auto-sea
+ttf-ms-win11-auto-thai
+ttf-ms-win11-auto-zh_cn
+ttf-ms-win11-auto-zh_tw
+yay-bin
