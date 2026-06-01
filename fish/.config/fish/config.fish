@@ -1,6 +1,6 @@
 set fish_greeting 
 
-export STARSHIP_CONFIG=/home/funinkina/dotfiles/starship.toml
+export STARSHIP_CONFIG=/home/funinkina/.config/starship.toml
 set -gx PATH ~/.npm-global/bin $PATH
 set FZF_DEFAULT_OPTS "--layout=reverse --exact --border=bold --border=rounded --margin=3% --color=dark"
 
