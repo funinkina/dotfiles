@@ -20,8 +20,8 @@ SECRET_KEYS_REGEX='^(github[-_]?token|gitlab[-_]?token|api[-_]?key|api[-_]?token
 # Patterns: GitHub PATs (classic + fine-grained + app tokens), Slack, OpenAI, AWS, generic JWT/UUID-ish high entropy.
 TOKEN_VALUE_PATTERNS="(github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{30,}|ghs_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|ghu_[A-Za-z0-9]{30,}|ghr_[A-Za-z0-9]{30,}|xox[abprs]-[A-Za-z0-9-]{10,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|eyJ[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+\\.[A-Za-z0-9_=-]+)"
 
-echo "Dumping dconf -> $DCONF_OUT (filtering secrets)"
-dconf dump / | \
+echo "Dumping dconf /org/gnome/ -> $DCONF_OUT (filtering secrets)"
+dconf dump /org/gnome/ | \
     sed -E "/${SECRET_KEYS_REGEX}/Id" | \
     sed -E "s/'${TOKEN_VALUE_PATTERNS}'/'REDACTED'/g" \
     > "$DCONF_OUT"

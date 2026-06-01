@@ -30,12 +30,12 @@ stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig co
 
 `snapshots/` holds point-in-time exports that are **not** symlinked — they're inputs for restoring state on a fresh machine.
 
-| File                             | Content                                                             | Restore                                                          |
-| -------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `snapshots/gnome-dconf.ini`      | Full `dconf` dump (GNOME keybinds, extension prefs, theme settings) | `dconf load / < snapshots/gnome-dconf.ini`                       |
-| `snapshots/gnome-extensions.txt` | Installed GNOME shell extensions                                    | Reinstall via Extensions app / `gnome-extensions install`        |
-| `snapshots/pkglist.txt`          | Explicitly installed pacman packages                                | `sudo pacman -S --needed - < snapshots/pkglist.txt`              |
-| `snapshots/aurlist.txt`          | AUR / foreign packages                                              | Install via your AUR helper (`yay -S - < snapshots/aurlist.txt`) |
+| File                             | Content                                                                            | Restore                                                          |
+| -------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `snapshots/gnome-dconf.ini`      | `dconf` dump of `/org/gnome/` (system + extensions + GNOME apps, secrets filtered) | `dconf load /org/gnome/ < snapshots/gnome-dconf.ini`             |
+| `snapshots/gnome-extensions.txt` | Installed GNOME shell extensions                                                   | Reinstall via Extensions app / `gnome-extensions install`        |
+| `snapshots/pkglist.txt`          | Explicitly installed pacman packages                                               | `sudo pacman -S --needed - < snapshots/pkglist.txt`              |
+| `snapshots/aurlist.txt`          | AUR / foreign packages                                                             | Install via your AUR helper (`yay -S - < snapshots/aurlist.txt`) |
 
 Regenerate snapshots: `./snapshot.sh`. Run before committing dotfiles changes.
 
@@ -68,10 +68,38 @@ sudo pacman -S stow
 stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron
 
 # 3. Restore GNOME settings
-dconf load / < snapshots/gnome-dconf.ini
+dconf load /org/gnome/ < snapshots/gnome-dconf.ini
 
 # 4. Reinstall GNOME extensions listed in snapshots/gnome-extensions.txt (via Extensions app)
 ```
+
+## Backing up changes
+
+Stowed configs are symlinks — editing the live file (e.g. `~/.zshrc`) edits the repo file directly. To capture changes:
+
+```bash
+cd ~/dotfiles
+
+# 1. Refresh snapshots (dconf dump, extension list, pkglist, aurlist).
+./snapshot.sh
+
+# 2. Review what changed.
+git status
+git diff
+
+# 3. Stage + commit + push.
+git add -A
+git commit -m "update configs"
+git push
+```
+
+Run `./snapshot.sh` whenever:
+
+- You change a GNOME setting via Settings / Tweaks / an extension.
+- You install or remove a package (`pacman -S`, `paru -S`, etc.).
+- You install or remove a GNOME shell extension.
+
+The script auto-filters known secret patterns (GitHub PATs, OpenAI keys, AWS keys, etc.) from the dconf dump and bails if a token-shaped value survives. If you add an extension that stores credentials under a new key name, extend `SECRET_KEYS_REGEX` in `snapshot.sh`.
 
 ## Adding a new app
 
