@@ -15,15 +15,9 @@ SOURCE_DIRS=(
     "Hackathons"
     "Notes"
     "Projects"
-    ".mozilla"
     ".ssh"
-    ".local/share/gnome-boxes"
-    ".vscode"
-    ".config/Code"
-    ".config/gnome-boxes"
     ".config/net.imput.helium"
     ".config/google-chrome"
-    ".config/libvirt/storage"
     # Add more directories here...
     # ".config"  # Be careful with large hidden dirs, they might contain caches too
     # ".local/share/some_app" # Example of nested path
