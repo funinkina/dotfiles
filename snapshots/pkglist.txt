@@ -9,6 +9,7 @@ base-devel
 bluez
 bluez-utils
 btop
+celluloid
 chaotic-keyring
 chaotic-mirrorlist
 claude-cowork-service
@@ -28,7 +29,6 @@ file-roller
 firefox
 fish
 fprintd
-fragments
 fwupd
 fzf
 gdm
@@ -127,6 +127,7 @@ plasma-workspace-wallpapers
 power-profiles-daemon
 proton-vpn-gtk-app
 python-pipx
+qbittorrent
 reflector
 rsync
 sbctl
@@ -155,6 +156,7 @@ ttf-ms-win11-auto-zh_tw
 ufw
 unzip
 usbutils
+uv
 vesktop
 vim
 visual-studio-code-bin
