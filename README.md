@@ -4,21 +4,21 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 
 ## Stow packages
 
-| Package      | Target                                              | App                                            |
-| ------------ | --------------------------------------------------- | ---------------------------------------------- |
-| `fish`       | `~/.config/fish/config.fish`                        | Fish shell                                     |
-| `zsh`        | `~/.zshrc`                                          | Zsh                                            |
-| `tmux`       | `~/.tmux.conf`                                      | Tmux                                           |
-| `git`        | `~/.gitconfig`                                      | Git                                            |
-| `ghostty`    | `~/.config/ghostty/config`                          | Ghostty terminal                               |
-| `starship`   | `~/.config/starship.toml`                           | Starship prompt                                |
-| `fastfetch`  | `~/.config/fastfetch/config.jsonc`                  | Fastfetch                                      |
-| `zed`        | `~/.config/zed/settings.json`                       | Zed editor                                     |
-| `fontconfig` | `~/.config/fontconfig/fonts.conf`                   | Fontconfig (Apple font aliases → Adwaita Sans) |
-| `color`      | `~/.local/share/color/icc/sRGB-v2-magic.icc`        | sRGB v2 ICC color profile                      |
-| `gnome`      | `~/.config/monitors.xml`, `~/.config/mimeapps.list` | GNOME display layout + default apps            |
-| `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                            |
-| `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)              |
+| Package      | Target                                              | App                                               |
+| ------------ | --------------------------------------------------- | ------------------------------------------------- |
+| `fish`       | `~/.config/fish/config.fish`                        | Fish shell                                        |
+| `zsh`        | `~/.zshrc`                                          | Zsh                                               |
+| `tmux`       | `~/.tmux.conf`                                      | Tmux                                              |
+| `git`        | `~/.gitconfig`                                      | Git                                               |
+| `ghostty`    | `~/.config/ghostty/config`                          | Ghostty terminal                                  |
+| `starship`   | `~/.config/starship.toml`                           | Starship prompt                                   |
+| `fastfetch`  | `~/.config/fastfetch/config.jsonc`                  | Fastfetch                                         |
+| `zed`        | `~/.config/zed/settings.json`                       | Zed editor                                        |
+| `fontconfig` | `~/.config/fontconfig/fonts.conf`                   | Fontconfig (Apple font aliases → Adwaita Sans)    |
+| `color`      | `~/.local/share/color/icc/sRGB-v2-magic.icc`        | sRGB v2 ICC color profile                         |
+| `gnome`      | `~/.config/monitors.xml`, `~/.config/mimeapps.list` | GNOME display layout + default apps               |
+| `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                               |
+| `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)                 |
 | `scripts`    | `~/.local/bin/*`                                    | Custom user scripts (e.g. `toggle-power-profile`) |
 
 All packages installed:
@@ -44,7 +44,6 @@ Regenerate snapshots: `./snapshot.sh`. Run before committing dotfiles changes.
 
 - `pacman.conf` — system file, copy manually to `/etc/pacman.conf` if needed.
 - `backup.sh` — rsync-based external disk backup script. Edit `DEST_BASE_DIR` before use.
-- `sf-pro.zip` — SF Pro font archive.
 
 ## Deliberately excluded
 
