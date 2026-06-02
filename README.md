@@ -19,11 +19,12 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `gnome`      | `~/.config/monitors.xml`, `~/.config/mimeapps.list` | GNOME display layout + default apps            |
 | `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                            |
 | `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)              |
+| `scripts`    | `~/.local/bin/*`                                    | Custom user scripts (e.g. `toggle-power-profile`) |
 
 All packages installed:
 
 ```bash
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts
 ```
 
 ## Snapshots (not stowed)
@@ -65,7 +66,7 @@ yay -S --needed - < snapshots/aurlist.txt
 
 # 2. Install stow + apply configs
 sudo pacman -S stow
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts
 
 # 3. Restore GNOME settings
 dconf load /org/gnome/ < snapshots/gnome-dconf.ini

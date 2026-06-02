@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+current=$(powerprofilesctl get)
+
+case "$current" in
+    power-saver) next=balanced ;;
+    balanced)    next=performance ;;
+    performance) next=power-saver ;;
+    *)           next=balanced ;;
+esac
+
+powerprofilesctl set "$next"
+
+case "$next" in
+    power-saver) icon=power-profile-power-saver-symbolic;  label="Power Saver" ;;
+    balanced)    icon=power-profile-balanced-symbolic;     label="Balanced" ;;
+    performance) icon=power-profile-performance-symbolic;  label="Performance" ;;
+esac
+
+notify-send \
+    -t 1500 \
+    -i "$icon" \
+    -h string:x-canonical-private-synchronous:power-profile \
+    "Power Profile" \
+    "$label"

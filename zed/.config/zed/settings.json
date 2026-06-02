@@ -7,6 +7,14 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "agent_servers": {
+    "codex-acp": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
   "window_decorations": "server",
   "use_system_window_tabs": false,
   "git_panel": {
@@ -24,8 +32,10 @@
   "agent": {
     "dock": "right",
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-7-sonnet",
+      "effort": "medium",
+      "enable_thinking": true,
+      "provider": "openai-subscribed",
+      "model": "gpt-5.5",
     },
   },
   "icon_theme": "JetBrains New UI Icons (Dark)",
@@ -38,7 +48,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "macOS Classic Dark",
+    "dark": "Ayu Dark",
   },
   "border_size": 3,
   "autosave": "on_window_change",
