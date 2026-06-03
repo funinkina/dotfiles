@@ -14,6 +14,8 @@ grand-theft-focus@zalckos.github.com
 caffeine@patapon.info
 googletasks@ztluwu.dev
 vscode-search-provider@mrmarble.github.com
+xwayland-indicator@swsnr.de
 editdesktopfiles@dannflower
 medialine@funinkina.co.in
 gsconnect@andyholmes.github.io
+panel-corners@aunetx
