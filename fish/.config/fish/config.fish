@@ -80,7 +80,9 @@ end
 alias yeet="sudo pacman -Rcnus"
 alias update="sudo pacman -Syyu"
 alias get="yay -S"
-alias search="pacman -Ss"
+function search
+    yay -Slq | fzf --preview 'yay -Si {}' --height=97% --layout=reverse --bind 'enter:execute(yay -Si {} | less)' --query "$argv"
+end
 alias list="pacman -Q | grep"
 alias pacinfo="pacman -Qi"
 alias activate="source .venv/bin/activate.fish"
@@ -128,3 +130,8 @@ alias newtag='git tag -a'
 fzf_key_bindings
 
 starship init fish | source
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /home/funinkina/.lmstudio/bin
+# End of LM Studio CLI section
+

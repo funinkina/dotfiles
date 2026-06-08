@@ -78,3 +78,8 @@ echo "⏳ System has been up for $(uptime -p | sed 's/up //')."
 source <(fzf --zsh)
 
 eval "$(starship init zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/funinkina/.lmstudio/bin"
+# End of LM Studio CLI section
+
