@@ -1,7 +1,8 @@
+medialine@funinkina.co.in
 auto-power-profile@dmy3k.github.io
+panel-corners@aunetx
 blur-my-shell@aunetx
 appnameindicator@dev64.xyz
-weekly-commits@funinkina.is-a.dev
 appindicatorsupport@rgcjonas.gmail.com
 drive-menu@gnome-shell-extensions.gcampax.github.com
 pinned-apps-in-appgrid@brunosilva.io
@@ -13,9 +14,9 @@ clipboard-indicator@tudmotu.com
 grand-theft-focus@zalckos.github.com
 caffeine@patapon.info
 googletasks@ztluwu.dev
-vscode-search-provider@mrmarble.github.com
 xwayland-indicator@swsnr.de
 editdesktopfiles@dannflower
-medialine@funinkina.co.in
+mediashell@wstxda.github.com
+weekly-commits@funinkina.is-a.dev
 gsconnect@andyholmes.github.io
-panel-corners@aunetx
+transparent-top-bar@ftpix.com

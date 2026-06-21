@@ -81,7 +81,13 @@ alias yeet="sudo pacman -Rcnus"
 alias update="sudo pacman -Syyu"
 alias get="yay -S"
 function search
-    yay -Slq | fzf --preview 'yay -Si {}' --height=97% --layout=reverse --bind 'enter:execute(yay -Si {} | less)' --query "$argv"
+    yay -Slq | fzf \
+        --preview 'yay -Si {}' \
+        --preview-window=right:60%:wrap \
+        --height=97% --layout=reverse \
+        --bind 'enter:become(yay -S {})' \
+        --bind 'ctrl-o:execute-silent(xdg-open "$(yay -Si {} | grep -m1 -oP "https?://\S+")")' \
+        --query "$argv"
 end
 alias list="pacman -Q | grep"
 alias pacinfo="pacman -Qi"
@@ -135,3 +141,4 @@ starship init fish | source
 set -gx PATH $PATH /home/funinkina/.lmstudio/bin
 # End of LM Studio CLI section
 
+set -gx PATH /home/funinkina/.npm-global/bin:/home/funinkina/.npm-global/bin:/home/funinkina/.local/bin:/home/funinkina/.npm-global/bin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/funinkina/.lmstudio/bin:/home/funinkina/.lmstudio/bin /home/funinkina/.jiotv_go/bin
