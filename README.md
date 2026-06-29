@@ -20,7 +20,7 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                               |
 | `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)                 |
 | `scripts`    | `~/.local/bin/*`                                    | Custom user scripts (e.g. `toggle-power-profile`) |
-| `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/50-ab13x-soft-volume.conf` | AB13X USB-C DAC: software volume (smooth low end, no cutoff) + device renames |
+| `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/` | `00-plasma-pa.conf` (device renames) + `50-ab13x-soft-volume.conf` (AB13X USB-C DAC: software volume, smooth low end / no cutoff) |
 
 All packages installed:
 
