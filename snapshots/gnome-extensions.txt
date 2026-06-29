@@ -15,8 +15,12 @@ grand-theft-focus@zalckos.github.com
 caffeine@patapon.info
 googletasks@ztluwu.dev
 xwayland-indicator@swsnr.de
+openeffects@funinkina.co.in
 editdesktopfiles@dannflower
 mediashell@wstxda.github.com
+transparent-top-bar@ftpix.com
+claude-usage@dvdstelt.github.io
+compiz-alike-magic-lamp-effect@hermes83.github.com
+pigeon@subz69.github
 weekly-commits@funinkina.is-a.dev
 gsconnect@andyholmes.github.io
-transparent-top-bar@ftpix.com

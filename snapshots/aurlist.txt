@@ -5,7 +5,6 @@ nautilus-admin-gtk4
 nautilus-checksums
 nfpm-bin
 opencode-antigravity-auth
-openeffects
 openeffectsd
 ttf-ms-win11-auto
 ttf-ms-win11-auto-japanese

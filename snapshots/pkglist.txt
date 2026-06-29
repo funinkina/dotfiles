@@ -1,6 +1,7 @@
 7zip
 adw-gtk-theme
 alsa-firmware
+alsa-utils
 android-tools
 authenticator
 baobab
@@ -87,6 +88,7 @@ hugo
 hunspell
 hunspell-en_us
 hw-probe
+icon-library
 intel-compute-runtime
 intel-media-driver
 intel-ucode
@@ -121,13 +123,13 @@ onlyoffice-bin
 onnxruntime-cpu
 opencode
 opencode-antigravity-auth
-openeffects
 openeffectsd
 papers
 perl-authen-sasl
 perl-io-socket-ssl
 pipewire-alsa
 pkgfile
+pnpm
 power-profiles-daemon
 proton-vpn-gtk-app
 python-pillow
@@ -146,6 +148,7 @@ seahorse
 showtime
 snapshot
 sof-firmware
+spotify
 stow
 sudo
 sushi

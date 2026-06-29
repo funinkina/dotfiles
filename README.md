@@ -20,11 +20,12 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                               |
 | `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)                 |
 | `scripts`    | `~/.local/bin/*`                                    | Custom user scripts (e.g. `toggle-power-profile`) |
+| `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/50-ab13x-soft-volume.conf` | AB13X USB-C DAC: software volume (smooth low end, no cutoff) + device renames |
 
 All packages installed:
 
 ```bash
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber
 ```
 
 ## Snapshots (not stowed)
@@ -65,12 +66,17 @@ yay -S --needed - < snapshots/aurlist.txt
 
 # 2. Install stow + apply configs
 sudo pacman -S stow
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber
 
 # 3. Restore GNOME settings
 dconf load /org/gnome/ < snapshots/gnome-dconf.ini
 
 # 4. Reinstall GNOME extensions listed in snapshots/gnome-extensions.txt (via Extensions app)
+
+# 5. (wireplumber pkg) pin the AB13X DAC hardware mixer at 0 dB for full
+#    headroom under software volume, then persist it so reboot/replug keeps it:
+amixer -c "$(cat /proc/asound/cards | awk '/AB13X/{print $1; exit}')" sset PCM 100%
+sudo alsactl store
 ```
 
 ## Backing up changes
