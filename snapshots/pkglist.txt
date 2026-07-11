@@ -13,14 +13,15 @@ btop
 cameractrls
 chaotic-keyring
 chaotic-mirrorlist
+cine
 clinfo
+cloudflare-warp-bin
 colord
 cups
 decibels
 dosfstools
 efibootmgr
 efitools
-epiphany
 eza
 fastfetch
 figma-linux-next
@@ -131,6 +132,7 @@ pipewire-alsa
 pkgfile
 pnpm
 power-profiles-daemon
+powertop
 proton-vpn-gtk-app
 python-pillow
 python-pipx
@@ -145,7 +147,6 @@ rsync
 sbctl
 sbsigntools
 seahorse
-showtime
 snapshot
 sof-firmware
 spotify
@@ -158,6 +159,7 @@ tealdeer
 tecla
 telegram-desktop
 texlive-bin
+thermald
 tree
 ttf-jetbrains-mono-nerd
 ttf-ms-win11-auto

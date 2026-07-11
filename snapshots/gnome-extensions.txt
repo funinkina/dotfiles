@@ -2,7 +2,6 @@ medialine@funinkina.co.in
 auto-power-profile@dmy3k.github.io
 panel-corners@aunetx
 blur-my-shell@aunetx
-appnameindicator@dev64.xyz
 appindicatorsupport@rgcjonas.gmail.com
 drive-menu@gnome-shell-extensions.gcampax.github.com
 pinned-apps-in-appgrid@brunosilva.io
@@ -17,10 +16,10 @@ googletasks@ztluwu.dev
 xwayland-indicator@swsnr.de
 openeffects@funinkina.co.in
 editdesktopfiles@dannflower
-mediashell@wstxda.github.com
-transparent-top-bar@ftpix.com
+classic-app-switcher@mr-pixel-dev
 claude-usage@dvdstelt.github.io
 compiz-alike-magic-lamp-effect@hermes83.github.com
 pigeon@subz69.github
 weekly-commits@funinkina.is-a.dev
+window-title-pro@eprahemi.github.io
 gsconnect@andyholmes.github.io

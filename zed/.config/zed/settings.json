@@ -7,6 +7,12 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
   "agent_servers": {
     "opencode": {
       "default_config_options": {
@@ -19,6 +25,10 @@
       "type": "registry"
     },
     "claude-acp": {
+      "default_config_options": {
+        "effort": "max",
+        "model": "opus[1m]"
+      },
       "type": "registry"
     }
   },
@@ -55,7 +65,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Ayu Dark",
+    "dark": "GitHub Dark",
   },
   "border_size": 3,
   "autosave": "on_focus_change",
