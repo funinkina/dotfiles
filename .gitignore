@@ -1,1 +1,5 @@
 .directory
+helium-backup_*.tar.gz
+helium-backup_*.tar.gz.sha256
+helium-backup_*.tar.partial
+__pycache__
