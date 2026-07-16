@@ -3,6 +3,9 @@
 	email = 59092136+funinkina@users.noreply.github.com 
 	signingkey = 4E2EEC9087516326DAEC7AFCC82715A7337D235B
 
+[includeIf "gitdir:~/LIbra/"]
+    path = ~/LIbra/.gitconfig-work
+
 [core]
 	editor = nano
 	whitespace = error

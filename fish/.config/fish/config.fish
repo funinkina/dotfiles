@@ -142,3 +142,36 @@ set -gx PATH $PATH /home/funinkina/.lmstudio/bin
 # End of LM Studio CLI section
 
 set -gx PATH /home/funinkina/.npm-global/bin:/home/funinkina/.npm-global/bin:/home/funinkina/.local/bin:/home/funinkina/.npm-global/bin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/funinkina/.lmstudio/bin:/home/funinkina/.lmstudio/bin /home/funinkina/.jiotv_go/bin
+
+# nvm.fish: activate the Node version pinned by the nearest .nvmrc/.node-version.
+# Must stay after the PATH line above, which would otherwise clobber the activation.
+if status is-interactive
+    function _nvm_auto_use --on-variable PWD -d "Activate the Node version pinned by the nearest .nvmrc"
+        status is-command-substitution; and return
+
+        # Self-contained find-up: nvm.fish's _nvm_find_up lives inside functions/nvm.fish
+        # and has no file of its own, so fish cannot autoload it here.
+        set -l dir $PWD
+        set -l want
+        while test -n "$dir"
+            for f in .nvmrc .node-version
+                test -r $dir/$f; and read -l line <$dir/$f; and set want (string trim -- $line); and break
+            end
+            test -n "$want"; and break
+            set dir (string replace --regex -- '/[^/]*$' "" $dir)
+        end
+        test -z "$want"; and set want system
+
+        # Skip the work only if the pin AND the live version are both unchanged,
+        # so a manual `nvm use` still gets corrected on the next cd.
+        set -l have (set -q nvm_current_version; and echo $nvm_current_version; or echo system)
+        test "$want" = "$_nvm_auto_want"; and test "$have" = "$_nvm_auto_have"; and return
+
+        nvm use --silent $want
+        set -g _nvm_auto_want $want
+        set -g _nvm_auto_have (set -q nvm_current_version; and echo $nvm_current_version; or echo system)
+    end
+
+    # --on-variable PWD does not fire for the directory the shell opens in.
+    _nvm_auto_use
+end

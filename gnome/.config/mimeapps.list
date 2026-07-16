@@ -70,6 +70,7 @@ video/3gpp=io.github.diegopvlk.Cine.desktop;
 video/3gpp2=io.github.diegopvlk.Cine.desktop;
 video/dv=io.github.diegopvlk.Cine.desktop;
 video/vnd.avi=io.github.diegopvlk.Cine.desktop;
+application/xhtml+xml=google-chrome.desktop;
 
 [Default Applications]
 application/rss+xml=userapp-Thunderbird-DMXKP3.desktop
@@ -148,3 +149,7 @@ video/3gpp=io.github.diegopvlk.Cine.desktop
 video/3gpp2=io.github.diegopvlk.Cine.desktop
 video/dv=io.github.diegopvlk.Cine.desktop
 video/vnd.avi=io.github.diegopvlk.Cine.desktop
+x-scheme-handler/slack=slack.desktop
+application/xhtml+xml=google-chrome.desktop
+x-scheme-handler/about=helium.desktop
+x-scheme-handler/unknown=helium.desktop
