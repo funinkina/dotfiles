@@ -33,6 +33,8 @@ PanelWindow {
             contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2);
         ShellState.clockX = Qt.binding(() =>
             contentArea.x + rightRow.x + clockW.x + clockW.width / 2);
+        ShellState.weatherX = Qt.binding(() =>
+            contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2);
     }
 
     Item {
@@ -67,6 +69,7 @@ PanelWindow {
             BacklightWidget { id: backlightW }
             NetworkWidget { id: netW }
             BatteryWidget { id: battW }
+            WeatherWidget { id: weatherW }
             ClockWidget { id: clockW }
             NotifWidget {}
         }

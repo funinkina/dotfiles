@@ -37,6 +37,7 @@ ShellRoot {
             AudioPanel { modelData: s.modelData }
             DisplayPanel { modelData: s.modelData }
             CalendarPanel { modelData: s.modelData }
+            WeatherPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }
