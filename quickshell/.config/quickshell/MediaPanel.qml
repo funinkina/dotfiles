@@ -16,7 +16,7 @@ PanelWindow {
 
     anchors { top: true; left: true }
     margins {
-        top: Theme.barHeight
+        top: Theme.barHeight + 8
         left: ShellState.mediaX < 0 ? Theme.dockWidth + 8
             : Math.max(Theme.dockWidth + 8,
                 Math.min(ShellState.mediaX - implicitWidth / 2,
@@ -58,9 +58,9 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.bg
+        border.color: Theme.border
+        border.width: 1
     }
-
-    TopSeparator {}
 
     Column {
         id: col

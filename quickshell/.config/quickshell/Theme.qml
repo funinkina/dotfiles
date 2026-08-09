@@ -8,6 +8,7 @@ Singleton {
     readonly property color dim: "#b0b0b0"
     readonly property color muted: "#8a8a8a"
     readonly property color faint: "#555555"
+    readonly property color border: "#bcbcbc"
     readonly property color accent: "#ffffff"
     readonly property color urgent: "#f2555a"
 

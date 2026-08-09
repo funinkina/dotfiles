@@ -18,7 +18,7 @@ PanelWindow {
 
     anchors { top: true; right: true }
     margins {
-        top: Theme.barHeight
+        top: Theme.barHeight + 8
         right: anchorX < 0 ? 16
             : Math.max(8, ShellState.screenW - anchorX - implicitWidth / 2)
     }
@@ -100,11 +100,11 @@ PanelWindow {
         y: osd.shown ? 0 : -height
         opacity: osd.shown ? 1 : 0
         color: Theme.bg
+        border.color: Theme.border
+        border.width: 1
 
         Behavior on y { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
-
-        TopSeparator {}
 
         Column {
             anchors.centerIn: parent

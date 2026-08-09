@@ -14,7 +14,6 @@ singleton NotifService 1.0 NotifService.qml
 singleton ShellState 1.0 ShellState.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
-TopSeparator 1.0 TopSeparator.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
 FocusedApp 1.0 FocusedApp.qml
 MediaWidget 1.0 MediaWidget.qml

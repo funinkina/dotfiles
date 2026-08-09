@@ -16,7 +16,7 @@ PanelWindow {
 
     anchors { top: true; right: true }
     margins {
-        top: Theme.barHeight
+        top: Theme.barHeight + 8
         right: ShellState.batteryX < 0 ? 16
             : Math.max(8, ShellState.screenW - ShellState.batteryX - implicitWidth / 2)
     }
@@ -78,9 +78,9 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.bg
+        border.color: Theme.border
+        border.width: 1
     }
-
-    TopSeparator {}
 
     Column {
         id: col

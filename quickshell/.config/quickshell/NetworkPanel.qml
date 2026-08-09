@@ -18,7 +18,7 @@ PanelWindow {
 
     anchors { top: true; right: true }
     margins {
-        top: Theme.barHeight
+        top: Theme.barHeight + 8
         right: ShellState.networkX < 0 ? 16
             : Math.max(8, ShellState.screenW - ShellState.networkX - implicitWidth / 2)
     }
@@ -213,9 +213,9 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.bg
+        border.color: Theme.border
+        border.width: 1
     }
-
-    TopSeparator {}
 
     Flickable {
         id: flick

@@ -4,17 +4,17 @@ import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import QtQuick
 
-// Transient notification popups: top-center below the bar,
-// sliding down from its edge. History lives in the notification center.
+// Transient notification popups: top-right below the bar,
+// sliding in from the right screen edge. History lives in the center.
 PanelWindow {
     id: win
 
     WlrLayershell.namespace: "quickshell-notifications"
 
-    anchors { top: true }
-    margins { top: Theme.barHeight }
+    anchors { top: true; right: true }
+    margins { top: Theme.barHeight + 8; right: 8 }
     exclusionMode: ExclusionMode.Ignore
-    implicitWidth: 420
+    implicitWidth: 380
     implicitHeight: Math.max(1, stack.implicitHeight + 20)
     color: "transparent"
 
@@ -42,13 +42,11 @@ PanelWindow {
         id: slide
         width: parent.width
         height: stack.implicitHeight
-        y: win.shown ? 0 : -height - Theme.barHeight
+        x: win.shown ? 0 : width + 16
         opacity: win.shown ? 1 : 0
 
-        Behavior on y { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+        Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
-
-        TopSeparator { z: 1 }
 
         Column {
             id: stack
@@ -65,6 +63,8 @@ PanelWindow {
                     width: stack.width
                     implicitHeight: cardRow.implicitHeight + 24
                     color: Theme.bg
+                    border.color: Theme.border
+                    border.width: 1
 
                     opacity: 0
                     Component.onCompleted: opacity = 1

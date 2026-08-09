@@ -24,9 +24,9 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.bg
+        border.color: Theme.border
+        border.width: 1
     }
-
-    TopSeparator {}
 
     Flickable {
         id: flick
