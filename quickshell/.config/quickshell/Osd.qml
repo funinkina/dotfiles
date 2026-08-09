@@ -72,9 +72,20 @@ PanelWindow {
         function onOsdRequested(mode) {
             osd.show(mode, mode === "brightness" ? osd.brightVal : osd.vol);
         }
+        function onOpenPanelChanged() {
+            if (osd.shown && (ShellState.openPanel === "audio"
+                    || ShellState.openPanel === "display")) {
+                osd.shown = false;
+                hideTimer.stop();
+                unmapTimer.restart();
+            }
+        }
     }
 
     function show(m, v) {
+        // The audio/display panels already show live values — no OSD on top
+        if (ShellState.openPanel === "audio" || ShellState.openPanel === "display")
+            return;
         mode = m;
         value = v;
         visible = true;
