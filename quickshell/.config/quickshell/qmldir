@@ -7,6 +7,7 @@ NetworkPanel 1.0 NetworkPanel.qml
 BatteryPanel 1.0 BatteryPanel.qml
 AudioPanel 1.0 AudioPanel.qml
 DisplayPanel 1.0 DisplayPanel.qml
+CalendarPanel 1.0 CalendarPanel.qml
 MediaPanel 1.0 MediaPanel.qml
 DismissLayer 1.0 DismissLayer.qml
 NotificationPopup 1.0 NotificationPopup.qml

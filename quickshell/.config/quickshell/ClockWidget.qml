@@ -21,4 +21,10 @@ Item {
         font.pixelSize: Theme.fontSize
         font.weight: Font.Medium
     }
+
+    MouseArea {
+        anchors.fill: parent
+        anchors.margins: -6
+        onClicked: ShellState.togglePanel("clock")
+    }
 }
