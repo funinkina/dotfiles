@@ -46,6 +46,7 @@ PanelWindow {
             spacing: 16
 
             WorkspaceDots {}
+            PrivacyWidget {}
             MediaWidget { id: mediaW }
         }
 

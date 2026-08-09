@@ -71,6 +71,7 @@ video/3gpp2=io.github.diegopvlk.Cine.desktop;
 video/dv=io.github.diegopvlk.Cine.desktop;
 video/vnd.avi=io.github.diegopvlk.Cine.desktop;
 application/xhtml+xml=google-chrome.desktop;helium.desktop;
+image/png=org.gnome.Loupe.desktop;
 
 [Default Applications]
 application/rss+xml=userapp-Thunderbird-DMXKP3.desktop
@@ -153,3 +154,4 @@ x-scheme-handler/slack=slack.desktop
 application/xhtml+xml=helium.desktop
 x-scheme-handler/about=helium.desktop
 x-scheme-handler/unknown=helium.desktop
+image/png=org.gnome.Loupe.desktop

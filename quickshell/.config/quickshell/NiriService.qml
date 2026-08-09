@@ -9,6 +9,7 @@ Singleton {
     property var workspaces: []
     property var windows: ({})
     property var focusedWindowId: null
+    property var casts: []
     readonly property var focusedWindow: focusedWindowId !== null
         ? (windows[focusedWindowId] ?? null) : null
 
@@ -89,6 +90,13 @@ Singleton {
                         root.focusedWindowId = null;
                 } else if (ev.WindowFocusChanged) {
                     root.focusedWindowId = ev.WindowFocusChanged.id ?? null;
+                } else if (ev.CastsChanged) {
+                    root.casts = ev.CastsChanged.casts;
+                } else if (ev.CastStartedOrChanged) {
+                    const c = ev.CastStartedOrChanged.cast;
+                    root.casts = root.casts.filter(x => x.id !== c.id).concat([c]);
+                } else if (ev.CastStopped) {
+                    root.casts = root.casts.filter(x => x.id !== ev.CastStopped.id);
                 }
             }
         }
