@@ -14,6 +14,12 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-dismiss"
 
+    // Take the keyboard while a panel is open so Escape can close it.
+    // The network panel manages its own keyboard (password entry + Esc).
+    WlrLayershell.keyboardFocus:
+        ShellState.openPanel !== "" && ShellState.openPanel !== "network"
+            ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
     anchors { top: true; bottom: true; left: true; right: true }
     margins { top: Theme.barHeight; left: Theme.dockWidth }
     exclusionMode: ExclusionMode.Ignore
@@ -26,5 +32,11 @@ PanelWindow {
     MouseArea {
         anchors.fill: parent
         onClicked: ShellState.closePanels()
+    }
+
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onEscapePressed: ShellState.closePanels()
     }
 }

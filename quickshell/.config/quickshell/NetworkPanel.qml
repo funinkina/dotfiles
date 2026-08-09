@@ -12,7 +12,7 @@ PanelWindow {
     screen: modelData
 
     WlrLayershell.namespace: "quickshell-network"
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
     visible: ShellState.openPanel === "network"
 
@@ -224,6 +224,14 @@ PanelWindow {
         contentHeight: col.implicitHeight
         clip: true
         boundsBehavior: Flickable.StopAtBounds
+        focus: true
+        // Esc: collapse an open password row first, then close the panel
+        Keys.onEscapePressed: {
+            if (panel.expandedSsid !== "")
+                panel.expandedSsid = "";
+            else
+                ShellState.closePanels();
+        }
 
         Column {
             id: col
