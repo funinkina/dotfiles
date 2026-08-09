@@ -23,8 +23,8 @@ PanelWindow {
                     ShellState.screenW - implicitWidth - 8))
     }
     exclusionMode: ExclusionMode.Ignore
-    implicitWidth: 360
-    implicitHeight: col.implicitHeight + 32
+    implicitWidth: 420
+    implicitHeight: col.implicitHeight + 30
     color: "transparent"
 
     readonly property var player: {
@@ -57,25 +57,24 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        radius: 14
         color: Theme.bg
     }
 
     Column {
         id: col
-        x: 16
-        y: 16
-        width: parent.width - 32
-        spacing: 10
+        x: 14
+        y: 14
+        width: parent.width - 28
+        spacing: 6
 
         Row {
             spacing: 16
             width: parent.width
 
             ClippingRectangle {
-                width: 92
-                height: 92
-                radius: 10
+                width: 78
+                height: 78
+                radius: 8
                 color: "#161616"
 
                 Image {
@@ -87,7 +86,7 @@ PanelWindow {
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width - 108
+                width: parent.width - 94
                 spacing: 6
 
                 Text {
@@ -95,7 +94,7 @@ PanelWindow {
                     text: panel.player?.trackTitle ?? ""
                     color: Theme.fg
                     font.family: Theme.uiFont
-                    font.pixelSize: 18
+                    font.pixelSize: 17
                     font.weight: Font.Bold
                     elide: Text.ElideRight
                 }
@@ -115,11 +114,11 @@ PanelWindow {
             }
         }
 
-        Item { width: 1; height: 2 }
+        Item { width: 1; height: 6 }
 
         Item {
             width: parent.width
-            height: 14
+            height: 13
 
             Text {
                 anchors.left: parent.left
@@ -140,7 +139,7 @@ PanelWindow {
 
         Item {
             width: parent.width
-            height: 12
+            height: 10
 
             Rectangle {
                 id: track
@@ -170,11 +169,11 @@ PanelWindow {
             }
         }
 
-        Item { width: 1; height: 2 }
+        Item { width: 1; height: 8 }
 
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 34
+            spacing: 40
 
             ColorIcon {
                 anchors.verticalCenter: parent.verticalCenter
@@ -208,7 +207,7 @@ PanelWindow {
                 name: panel.playing
                     ? "media-playback-pause-symbolic"
                     : "media-playback-start-symbolic"
-                size: 30
+                size: 28
                 MouseArea {
                     anchors.fill: parent
                     anchors.margins: -6

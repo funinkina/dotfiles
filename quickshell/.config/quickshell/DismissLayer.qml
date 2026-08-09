@@ -2,8 +2,11 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 
-// Invisible full-screen catcher: any click outside the bar/dock closes
-// whichever popout panel is open. Stacks below the panels (created first).
+// Invisible click-away catcher for the popout panels.
+// Always mapped (so it stays stacked BELOW the panels, which map later);
+// only its input mask toggles. When no panel is open the mask is empty and
+// every click passes through; when one is open, clicks outside the panels
+// land here and close them. Excludes the bar and dock via margins.
 PanelWindow {
     id: layer
     property var modelData
@@ -11,12 +14,14 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-dismiss"
 
-    visible: ShellState.openPanel !== ""
-
     anchors { top: true; bottom: true; left: true; right: true }
     margins { top: Theme.barHeight; left: Theme.dockWidth }
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
+
+    mask: ShellState.openPanel !== "" ? null : emptyRegion
+
+    Region { id: emptyRegion }
 
     MouseArea {
         anchors.fill: parent

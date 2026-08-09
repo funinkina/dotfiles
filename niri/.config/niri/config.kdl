@@ -59,7 +59,7 @@ spawn-at-startup "swayidle" "-w" "timeout" "600" "swaylock -f -c 0a0a0a" "timeou
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 hotkey-overlay {
-    // skip-at-startup
+    skip-at-startup
 }
 
 window-rule {

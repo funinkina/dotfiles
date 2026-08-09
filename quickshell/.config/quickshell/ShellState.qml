@@ -16,7 +16,7 @@ Singleton {
     function showOsd(mode) { osdRequested(mode); }
 
     // Dock visibility, toggled via `qs ipc call dock toggle` (Mod+Shift+D)
-    property bool dockVisible: true
+    property bool dockVisible: false
 
     // Exclusive popout panels: "", "network", or "battery"
     property string openPanel: ""
