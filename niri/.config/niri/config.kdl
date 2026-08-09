@@ -53,7 +53,7 @@ environment {
 spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"
 spawn-at-startup "/home/funinkina/.local/bin/setwall"
 spawn-at-startup "vicinae" "server"
-spawn-at-startup "swayidle" "-w" "timeout" "600" "swaylock -f -c 0a0a0a" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "swaylock -f -c 0a0a0a"
+spawn-at-startup "swayidle" "-w" "timeout" "600" "qs -p /home/funinkina/.config/quickshell ipc call lock lock" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "qs -p /home/funinkina/.config/quickshell ipc call lock lock"
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
@@ -71,7 +71,7 @@ binds {
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
     Mod+Space hotkey-overlay-title="Launcher: vicinae" { spawn "vicinae" "toggle"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
-    Mod+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock" "-f" "-c" "0a0a0a"; }
+    Mod+L hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
@@ -94,7 +94,6 @@ binds {
     Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
-    Mod+L     { focus-column-right; }
 
     Mod+Ctrl+Left  { move-column-left; }
     Mod+Ctrl+Down  { move-window-down; }

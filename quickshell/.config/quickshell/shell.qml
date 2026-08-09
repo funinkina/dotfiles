@@ -10,8 +10,16 @@ ShellRoot {
         }
     }
 
+    IpcHandler {
+        target: "lock"
+        function lock(): void { LockService.lock(); }
+        function unlock(): void { LockService.unlock(); }
+    }
+
     // One instance (owns the org.freedesktop.Notifications DBus name)
     NotificationPopup {}
+
+    LockScreen {}
 
     Variants {
         model: Quickshell.screens

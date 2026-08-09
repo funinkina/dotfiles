@@ -12,6 +12,8 @@ NotificationCenter 1.0 NotificationCenter.qml
 NotifWidget 1.0 NotifWidget.qml
 singleton NotifService 1.0 NotifService.qml
 singleton ShellState 1.0 ShellState.qml
+singleton LockService 1.0 LockService.qml
+LockScreen 1.0 LockScreen.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
