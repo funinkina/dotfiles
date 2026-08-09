@@ -22,6 +22,11 @@ ShellRoot {
         function all(): void { HideService.toggleAll(); }
     }
 
+    IpcHandler {
+        target: "power"
+        function toggle(): void { ShellState.togglePanel("power"); }
+    }
+
     // One instance (owns the org.freedesktop.Notifications DBus name)
     NotificationPopup {}
 
@@ -44,6 +49,7 @@ ShellRoot {
             DisplayPanel { modelData: s.modelData }
             CalendarPanel { modelData: s.modelData }
             WeatherPanel { modelData: s.modelData }
+            PowerMenu { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }

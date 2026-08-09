@@ -2,6 +2,8 @@
 // Validate with: niri validate
 
 input {
+    disable-power-key-handling
+
     keyboard {
         xkb {
         }
@@ -182,6 +184,11 @@ binds {
     Alt+Print  { screenshot-window; }
 
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+    // Hardware power/sleep keys open the power menu (logind ignores them)
+    XF86PowerOff { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }
+    XF86Sleep   { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }
+    XF86Suspend { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }
 
     Mod+Shift+E { quit; }
     Ctrl+Alt+Delete { quit; }

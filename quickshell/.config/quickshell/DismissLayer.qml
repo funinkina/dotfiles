@@ -15,9 +15,10 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-dismiss"
 
     // Take the keyboard while a panel is open so Escape can close it.
-    // The network panel manages its own keyboard (password entry + Esc).
+    // Network (password entry) and power (arrow nav) manage their own.
     WlrLayershell.keyboardFocus:
         ShellState.openPanel !== "" && ShellState.openPanel !== "network"
+            && ShellState.openPanel !== "power"
             ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     anchors { top: true; bottom: true; left: true; right: true }
