@@ -51,7 +51,6 @@ environment {
 }
 
 spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"
-spawn-at-startup "mako"
 spawn-at-startup "/home/funinkina/.local/bin/setwall"
 spawn-at-startup "vicinae" "server"
 spawn-at-startup "swayidle" "-w" "timeout" "600" "swaylock -f -c 0a0a0a" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "swaylock -f -c 0a0a0a"

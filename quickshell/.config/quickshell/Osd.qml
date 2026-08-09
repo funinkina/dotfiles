@@ -104,6 +104,8 @@ PanelWindow {
         Behavior on y { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
 
+        TopSeparator {}
+
         Column {
             anchors.centerIn: parent
             width: parent.width - 32

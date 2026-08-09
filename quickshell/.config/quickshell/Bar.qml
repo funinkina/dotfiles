@@ -65,6 +65,7 @@ PanelWindow {
             NetworkWidget { id: netW }
             BatteryWidget { id: battW }
             ClockWidget {}
+            NotifWidget {}
         }
     }
 }

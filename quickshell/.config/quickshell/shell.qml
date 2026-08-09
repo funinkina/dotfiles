@@ -10,6 +10,9 @@ ShellRoot {
         }
     }
 
+    // One instance (owns the org.freedesktop.Notifications DBus name)
+    NotificationPopup {}
+
     Variants {
         model: Quickshell.screens
 
@@ -24,6 +27,7 @@ ShellRoot {
             NetworkPanel { modelData: s.modelData }
             BatteryPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
+            NotificationCenter { modelData: s.modelData }
         }
     }
 }

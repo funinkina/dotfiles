@@ -80,6 +80,8 @@ PanelWindow {
         color: Theme.bg
     }
 
+    TopSeparator {}
+
     Column {
         id: col
         x: 18
