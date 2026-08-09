@@ -33,17 +33,5 @@ Item {
             font.weight: Font.Medium
             Layout.alignment: Qt.AlignVCenter
         }
-
-        Text {
-            readonly property string title: NiriService.focusedWindow?.title ?? ""
-            text: title
-            visible: title.length > 0 && title !== root.info.name
-            color: Theme.muted
-            font.family: Theme.uiFont
-            font.pixelSize: Theme.fontSize
-            elide: Text.ElideRight
-            Layout.maximumWidth: 480
-            Layout.alignment: Qt.AlignVCenter
-        }
     }
 }
