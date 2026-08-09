@@ -10,6 +10,8 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-dock"
 
+    visible: ShellState.dockVisible
+
     anchors { left: true; top: true; bottom: true }
     implicitWidth: Theme.dockWidth
     color: "transparent"

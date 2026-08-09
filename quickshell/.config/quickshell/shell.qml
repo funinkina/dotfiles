@@ -1,7 +1,15 @@
 import Quickshell
+import Quickshell.Io
 import QtQuick
 
 ShellRoot {
+    IpcHandler {
+        target: "dock"
+        function toggle(): void {
+            ShellState.dockVisible = !ShellState.dockVisible;
+        }
+    }
+
     Variants {
         model: Quickshell.screens
 

@@ -70,7 +70,8 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
-    Mod+D hotkey-overlay-title="Launcher: vicinae" { spawn "vicinae" "toggle"; }
+    Mod+Space hotkey-overlay-title="Launcher: vicinae" { spawn "vicinae" "toggle"; }
+    Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock" "-f" "-c" "0a0a0a"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"; }
