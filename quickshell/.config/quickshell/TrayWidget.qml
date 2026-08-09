@@ -15,7 +15,7 @@ RowLayout {
             id: trayItem
             required property var modelData
             implicitWidth: 16
-            implicitHeight: 16
+            implicitHeight: Theme.barHeight
             Layout.alignment: Qt.AlignVCenter
 
             HoverBg {
@@ -24,7 +24,8 @@ RowLayout {
             }
 
             IconImage {
-                anchors.fill: parent
+                anchors.centerIn: parent
+                implicitSize: 16
                 source: trayItem.modelData.icon
             }
 

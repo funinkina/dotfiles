@@ -6,7 +6,7 @@ import Quickshell.Services.Mpris
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
     visible: player !== null && title !== ""
 
     readonly property var player: {

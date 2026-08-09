@@ -3,7 +3,7 @@ import Quickshell
 
 Item {
     implicitWidth: t.implicitWidth
-    implicitHeight: t.implicitHeight
+    implicitHeight: Theme.barHeight
 
     SystemClock {
         id: clock

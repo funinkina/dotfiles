@@ -4,13 +4,14 @@ import QtQuick
 Item {
     id: root
     implicitWidth: 18
-    implicitHeight: 18
+    implicitHeight: Theme.barHeight
 
     readonly property bool hasNotifs: NotifService.all.length > 0
 
     HoverBg {}
 
     ColorIcon {
+        id: bell
         anchors.centerIn: parent
         name: "preferences-system-notifications-symbolic"
         size: 16
@@ -19,8 +20,10 @@ Item {
 
     Rectangle {
         visible: root.hasNotifs
-        anchors.right: parent.right
-        anchors.top: parent.top
+        anchors.right: bell.right
+        anchors.rightMargin: -2
+        anchors.top: bell.top
+        anchors.topMargin: -2
         width: 7
         height: 7
         radius: 3.5

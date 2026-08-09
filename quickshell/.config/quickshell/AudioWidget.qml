@@ -5,7 +5,7 @@ import Quickshell.Services.Pipewire
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
 
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property real vol: sink?.audio?.volume ?? 0

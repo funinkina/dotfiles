@@ -6,7 +6,7 @@ import Quickshell.Widgets
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
     visible: NiriService.focusedWindow !== null
 
     readonly property var info: NiriService.appInfo(NiriService.focusedWindow)

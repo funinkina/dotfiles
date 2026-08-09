@@ -5,7 +5,7 @@ import Quickshell.Services.UPower
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
 
     readonly property var dev: UPower.displayDevice
     readonly property int percent: Math.round((dev?.percentage ?? 0) * 100)

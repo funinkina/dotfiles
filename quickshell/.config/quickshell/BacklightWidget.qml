@@ -6,7 +6,7 @@ import Quickshell.Io
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
 
     readonly property int current: parseInt(curFile.text()) || 0
     readonly property int max: parseInt(maxFile.text()) || 1

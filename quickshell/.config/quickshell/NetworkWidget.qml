@@ -5,7 +5,7 @@ import Quickshell.Io
 Item {
     id: root
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
+    implicitHeight: Theme.barHeight
 
     property string netType: ""
     property string netName: "offline"
