@@ -43,7 +43,7 @@ Item {
                 if (root.sink?.audio)
                     root.sink.audio.muted = !root.sink.audio.muted;
             } else {
-                ShellState.showOsd("volume");
+                ShellState.togglePanel("audio");
             }
         }
         onWheel: wheel => {

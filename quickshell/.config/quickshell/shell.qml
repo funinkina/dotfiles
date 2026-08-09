@@ -34,6 +34,8 @@ ShellRoot {
             DismissLayer { modelData: s.modelData }
             NetworkPanel { modelData: s.modelData }
             BatteryPanel { modelData: s.modelData }
+            AudioPanel { modelData: s.modelData }
+            DisplayPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }
