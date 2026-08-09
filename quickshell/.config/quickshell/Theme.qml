@@ -12,7 +12,7 @@ Singleton {
     readonly property color accent: "#ffffff"
     readonly property color urgent: "#f2555a"
 
-    readonly property string uiFont: "Inter"
+    readonly property string uiFont: "SF Pro Text"
     readonly property int fontSize: 15
     readonly property int barHeight: 34
     readonly property int dockWidth: 52
