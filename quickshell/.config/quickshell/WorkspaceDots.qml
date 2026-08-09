@@ -28,7 +28,7 @@ Item {
             anchors.margins: 1
 
             Repeater {
-                model: NiriService.workspaces
+                model: NiriService.workspaces.filter(w => w.name !== "hidden")
 
                 Rectangle {
                     required property var modelData

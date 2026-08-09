@@ -16,6 +16,12 @@ ShellRoot {
         function unlock(): void { LockService.unlock(); }
     }
 
+    IpcHandler {
+        target: "hide"
+        function active(): void { HideService.hideActive(); }
+        function all(): void { HideService.toggleAll(); }
+    }
+
     // One instance (owns the org.freedesktop.Notifications DBus name)
     NotificationPopup {}
 

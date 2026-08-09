@@ -97,9 +97,11 @@ binds {
     Mod+Down  { focus-window-down; }
     Mod+Up    { focus-window-up; }
     Mod+Right { focus-column-right; }
-    Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
+
+    Mod+H hotkey-overlay-title="Hide window" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "hide" "active"; }
+    Mod+D hotkey-overlay-title="Hide/show all windows" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "hide" "all"; }
 
     Mod+Ctrl+Left  { move-column-left; }
     Mod+Ctrl+Down  { move-window-down; }
