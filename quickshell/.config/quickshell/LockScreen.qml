@@ -45,27 +45,74 @@ WlSessionLock {
         }
 
         Column {
-            anchors.centerIn: parent
-            spacing: 10
+            id: clockCol
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: parent.height * 0.33 - height / 2
+            spacing: 6
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: Qt.formatDateTime(clock.date, "HH:mm")
                 color: Theme.fg
                 font.family: Theme.uiFont
-                font.pixelSize: 72
+                font.pixelSize: 108
                 font.weight: Font.Bold
             }
 
-            Text {
+            Row {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: Qt.formatDateTime(clock.date, "dddd, d MMMM")
-                color: Theme.muted
-                font.family: Theme.uiFont
-                font.pixelSize: 16
-            }
+                spacing: 10
 
-            Item { width: 1; height: 22 }
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: Qt.formatDateTime(clock.date, "dddd, d MMMM")
+                    color: Theme.fg
+                    font.family: Theme.uiFont
+                    font.pixelSize: 20
+                }
+
+                Text {
+                    visible: WeatherService.data !== null
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "·"
+                    color: Theme.muted
+                    font.family: Theme.uiFont
+                    font.pixelSize: 20
+                }
+
+                ColorIcon {
+                    visible: WeatherService.data !== null
+                    anchors.verticalCenter: parent.verticalCenter
+                    name: WeatherService.iconFor()
+                    size: 20
+                }
+
+                Text {
+                    visible: WeatherService.data !== null
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: Math.round(WeatherService.temp) + "°"
+                    color: Theme.fg
+                    font.family: Theme.uiFont
+                    font.pixelSize: 20
+                }
+            }
+        }
+
+        Image {
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: 24
+            source: "file:///usr/share/pixmaps/archlinux-logo-text-dark.svg"
+            sourceSize.height: 80
+            fillMode: Image.PreserveAspectFit
+            opacity: 0.85
+        }
+
+        Column {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 72
+            spacing: 10
 
             ClippingRectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -95,7 +142,7 @@ WlSessionLock {
             Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 300
-                height: 42
+                height: 34
                 color: "#0d0d0d"
                 border.color: pwIn.activeFocus ? Theme.fg : Theme.border
                 border.width: 1

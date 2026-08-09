@@ -1,0 +1,7 @@
+[SddmGreeterTheme]
+Name=noir
+Description=Flat black theme matching the niri/quickshell desktop
+Author=Aryan Kushwaha
+Theme-Id=noir
+MainScript=Main.qml
+QtVersion=6
