@@ -26,6 +26,17 @@ Item {
         anchors.centerIn: parent
         spacing: 6
 
+        // Current power profile
+        ColorIcon {
+            name: PowerProfiles.profile === PowerProfile.PowerSaver
+                ? "power-profile-power-saver-symbolic"
+                : PowerProfiles.profile === PowerProfile.Performance
+                    ? "power-profile-performance-symbolic"
+                    : "power-profile-balanced-symbolic"
+            size: 15
+            Layout.alignment: Qt.AlignVCenter
+        }
+
         // Drawn battery: outline + charge-level fill + bolt when charging
         Item {
             implicitWidth: 25

@@ -23,8 +23,8 @@ PanelWindow {
             : Math.max(8, ShellState.screenW - anchorX - implicitWidth / 2)
     }
     exclusionMode: ExclusionMode.Ignore
-    implicitWidth: 230
-    implicitHeight: 44
+    implicitWidth: 270
+    implicitHeight: 68
     color: "transparent"
 
     // Click-through
@@ -40,6 +40,10 @@ PanelWindow {
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property real vol: sink?.audio?.volume ?? 0
     readonly property bool muted: sink?.audio?.muted ?? false
+
+    readonly property string deviceName: mode === "brightness"
+        ? (osd.screen?.name ?? "Display")
+        : (sink?.nickname || sink?.description || "Audio")
 
     PwObjectTracker { objects: [Pipewire.defaultAudioSink] }
 
@@ -100,32 +104,66 @@ PanelWindow {
         Behavior on y { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
 
-        Row {
+        Column {
             anchors.centerIn: parent
-            spacing: 12
+            width: parent.width - 32
+            spacing: 9
 
-            ColorIcon {
-                anchors.verticalCenter: parent.verticalCenter
-                size: 18
-                name: osd.mode === "brightness" ? "display-brightness-symbolic"
-                    : osd.muted ? "audio-volume-muted-symbolic"
-                    : osd.value > 0.66 ? "audio-volume-high-symbolic"
-                    : osd.value > 0.33 ? "audio-volume-medium-symbolic"
-                    : "audio-volume-low-symbolic"
-                tint: osd.mode === "volume" && osd.muted ? Theme.faint : Theme.fg
+            Text {
+                width: parent.width
+                text: osd.deviceName
+                color: Theme.fg
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+                font.family: Theme.uiFont
+                font.pixelSize: 12
+                font.weight: Font.Medium
             }
 
-            Rectangle {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 148
-                height: 5
-                color: Theme.faint
+            Item {
+                width: parent.width
+                height: 18
+
+                ColorIcon {
+                    id: osdIcon
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    size: 16
+                    name: osd.mode === "brightness" ? "display-brightness-symbolic"
+                        : osd.muted ? "audio-volume-muted-symbolic"
+                        : osd.value > 0.66 ? "audio-volume-high-symbolic"
+                        : osd.value > 0.33 ? "audio-volume-medium-symbolic"
+                        : "audio-volume-low-symbolic"
+                    tint: osd.mode === "volume" && osd.muted ? Theme.faint : Theme.fg
+                }
+
+                Text {
+                    id: osdPct
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 34
+                    horizontalAlignment: Text.AlignRight
+                    text: Math.round(osd.value * 100) + "%"
+                    color: osd.mode === "volume" && osd.muted ? Theme.faint : Theme.fg
+                    font.family: Theme.uiFont
+                    font.pixelSize: 12
+                }
 
                 Rectangle {
-                    width: parent.width * Math.min(1, osd.value)
-                    height: parent.height
-                    color: osd.mode === "volume" && osd.muted ? Theme.muted : Theme.accent
-                    Behavior on width { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+                    anchors.left: osdIcon.right
+                    anchors.right: osdPct.left
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 5
+                    color: Theme.faint
+
+                    Rectangle {
+                        width: parent.width * Math.min(1, osd.value)
+                        height: parent.height
+                        color: osd.mode === "volume" && osd.muted ? Theme.muted : Theme.accent
+                        Behavior on width { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+                    }
                 }
             }
         }

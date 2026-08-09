@@ -98,19 +98,147 @@ PanelWindow {
 
         Item { width: 1; height: 4 }
 
-        Text {
-            text: info["percentage"] ?? "—"
-            color: Theme.fg
-            font.family: Theme.uiFont
-            font.pixelSize: 26
-            font.weight: Font.DemiBold
+        Item {
+            width: parent.width
+            height: 52
+
+            Column {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 4
+
+                Text {
+                    text: info["percentage"] ?? "—"
+                    color: Theme.fg
+                    font.family: Theme.uiFont
+                    font.pixelSize: 26
+                    font.weight: Font.DemiBold
+                }
+
+                Text {
+                    text: panel.stateLabel()
+                    color: Theme.muted
+                    font.family: Theme.uiFont
+                    font.pixelSize: 12
+                }
+            }
+
+            // Vertical battery, filled to the current charge level
+            Item {
+                readonly property real pct: UPower.displayDevice?.percentage ?? 0
+                readonly property color tone: pct <= 0.1 ? Theme.urgent : Theme.fg
+
+                id: vbatt
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: 24
+                height: 50
+
+                Rectangle {
+                    width: 10
+                    height: 3
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: vbatt.tone
+                }
+
+                Rectangle {
+                    id: vbody
+                    y: 3
+                    width: 24
+                    height: 47
+                    color: "transparent"
+                    border.color: vbatt.tone
+                    border.width: 1
+
+                    Rectangle {
+                        x: 2
+                        width: parent.width - 4
+                        height: Math.max(1, (parent.height - 4) * vbatt.pct)
+                        y: parent.height - 2 - height
+                        color: vbatt.tone
+                        Behavior on height { NumberAnimation { duration: 200 } }
+                    }
+                }
+            }
         }
 
+        Item { width: 1; height: 10 }
+
         Text {
-            text: panel.stateLabel()
+            text: "Power profile"
             color: Theme.muted
             font.family: Theme.uiFont
             font.pixelSize: 12
+            font.weight: Font.DemiBold
+            font.capitalization: Font.AllUppercase
+        }
+
+        Item { width: 1; height: 4 }
+
+        // Full-width segmented switcher: shared borders, filled bg on active
+        Rectangle {
+            readonly property var profs: {
+                const m = [
+                    { label: "Saver", val: PowerProfile.PowerSaver },
+                    { label: "Balanced", val: PowerProfile.Balanced }
+                ];
+                if (PowerProfiles.hasPerformanceProfile)
+                    m.push({ label: "Performance", val: PowerProfile.Performance });
+                return m;
+            }
+
+            id: segments
+            width: parent.width
+            height: 30
+            color: "transparent"
+            border.color: Theme.faint
+            border.width: 1
+
+            Row {
+                anchors.fill: parent
+                anchors.margins: 1
+
+                Repeater {
+                    model: segments.profs
+
+                    Rectangle {
+                        required property var modelData
+                        required property int index
+                        readonly property bool active:
+                            PowerProfiles.profile === modelData.val
+                        width: parent.width / segments.profs.length
+                        height: parent.height
+                        color: active ? Theme.accent
+                            : segMouse.containsMouse ? "#1f1f1f" : "transparent"
+
+                        Behavior on color { ColorAnimation { duration: 120 } }
+
+                        Rectangle {
+                            visible: parent.index > 0
+                            anchors.left: parent.left
+                            width: 1
+                            height: parent.height
+                            color: Theme.faint
+                        }
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: parent.modelData.label
+                            color: parent.active ? "#000000" : Theme.fg
+                            font.family: Theme.uiFont
+                            font.pixelSize: 12
+                            font.weight: Font.Medium
+                        }
+
+                        MouseArea {
+                            id: segMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: PowerProfiles.profile = parent.modelData.val
+                        }
+                    }
+                }
+            }
         }
 
         Item { width: 1; height: 8 }
@@ -147,64 +275,5 @@ PanelWindow {
             }
         }
 
-        Item { width: 1; height: 8 }
-
-        Rectangle { width: parent.width; height: 1; color: Theme.faint }
-
-        Item { width: 1; height: 8 }
-
-        Text {
-            text: "Power profile"
-            color: Theme.muted
-            font.family: Theme.uiFont
-            font.pixelSize: 12
-            font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
-        }
-
-        Item { width: 1; height: 4 }
-
-        Row {
-            spacing: 6
-
-            Repeater {
-                model: [
-                    { label: "Saver", val: PowerProfile.PowerSaver },
-                    { label: "Balanced", val: PowerProfile.Balanced },
-                    { label: "Performance", val: PowerProfile.Performance }
-                ]
-
-                Rectangle {
-                    required property var modelData
-                    readonly property bool active: PowerProfiles.profile === modelData.val
-                    visible: modelData.val !== PowerProfile.Performance
-                        || PowerProfiles.hasPerformanceProfile
-                    width: label.implicitWidth + 20
-                    height: 26
-                    radius: 5
-                    color: active ? Theme.accent
-                        : profMouse.containsMouse ? "#2a2a2a" : "#161616"
-
-                    Behavior on color { ColorAnimation { duration: 120 } }
-
-                    Text {
-                        id: label
-                        anchors.centerIn: parent
-                        text: parent.modelData.label
-                        color: parent.active ? "#000000" : Theme.fg
-                        font.family: Theme.uiFont
-                        font.pixelSize: 12
-                        font.weight: Font.Medium
-                    }
-
-                    MouseArea {
-                        id: profMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: PowerProfiles.profile = parent.modelData.val
-                    }
-                }
-            }
-        }
     }
 }
