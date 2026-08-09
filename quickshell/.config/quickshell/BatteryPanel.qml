@@ -129,6 +129,12 @@ PanelWindow {
             Item {
                 readonly property real pct: UPower.displayDevice?.percentage ?? 0
                 readonly property color tone: pct <= 0.1 ? Theme.urgent : Theme.fg
+                readonly property bool charging: {
+                    const s = UPower.displayDevice?.state;
+                    return s === UPowerDeviceState.Charging
+                        || s === UPowerDeviceState.PendingCharge
+                        || s === UPowerDeviceState.FullyCharged;
+                }
 
                 id: vbatt
                 anchors.right: parent.right
@@ -159,6 +165,28 @@ PanelWindow {
                         y: parent.height - 2 - height
                         color: vbatt.tone
                         Behavior on height { NumberAnimation { duration: 200 } }
+                    }
+                }
+
+                Canvas {
+                    visible: vbatt.charging
+                    width: 14
+                    height: 18
+                    anchors.centerIn: vbody
+                    onPaint: {
+                        const ctx = getContext("2d");
+                        ctx.reset();
+                        ctx.scale(1.75, 1.8);
+                        ctx.fillStyle = "#39d353";
+                        ctx.beginPath();
+                        ctx.moveTo(5, 0);
+                        ctx.lineTo(0, 5.5);
+                        ctx.lineTo(3.2, 5.5);
+                        ctx.lineTo(2.6, 10);
+                        ctx.lineTo(8, 4.2);
+                        ctx.lineTo(4.4, 4.2);
+                        ctx.closePath();
+                        ctx.fill();
                     }
                 }
             }

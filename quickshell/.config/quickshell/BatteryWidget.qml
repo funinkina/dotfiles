@@ -71,13 +71,14 @@ Item {
 
             Canvas {
                 visible: root.charging
-                width: 8
-                height: 10
+                width: 12
+                height: 16
                 anchors.centerIn: body
                 onPaint: {
                     const ctx = getContext("2d");
                     ctx.reset();
-                    ctx.fillStyle = "#000000";
+                    ctx.scale(1.5, 1.6);
+                    ctx.fillStyle = "#168e1c";
                     ctx.beginPath();
                     ctx.moveTo(5, 0);
                     ctx.lineTo(0, 5.5);

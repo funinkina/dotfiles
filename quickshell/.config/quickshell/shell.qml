@@ -1,3 +1,4 @@
+//@ pragma UseQApplication
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -50,6 +51,7 @@ ShellRoot {
             CalendarPanel { modelData: s.modelData }
             WeatherPanel { modelData: s.modelData }
             PowerMenu { modelData: s.modelData }
+            TrayMenuPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }

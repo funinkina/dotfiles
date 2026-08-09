@@ -29,21 +29,21 @@ RowLayout {
                 source: trayItem.modelData.icon
             }
 
-            QsMenuAnchor {
-                id: menuAnchor
-                menu: trayItem.modelData.menu
-                anchor.item: trayItem
-                anchor.edges: Edges.Bottom
-            }
-
             MouseArea {
                 anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
                 onClicked: mouse => {
-                    if (mouse.button === Qt.RightButton && trayItem.modelData.hasMenu)
-                        menuAnchor.open();
-                    else
-                        trayItem.modelData.activate();
+                    const item = trayItem.modelData;
+                    if (mouse.button === Qt.MiddleButton) {
+                        item.secondaryActivate();
+                    } else if (mouse.button === Qt.LeftButton && !item.onlyMenu) {
+                        item.activate();
+                    } else if (item.hasMenu) {
+                        ShellState.openTrayMenu(item.menu,
+                            trayItem.mapToItem(null, trayItem.width / 2, 0).x);
+                    } else {
+                        item.activate();
+                    }
                 }
             }
         }

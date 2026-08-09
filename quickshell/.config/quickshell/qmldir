@@ -10,6 +10,7 @@ DisplayPanel 1.0 DisplayPanel.qml
 CalendarPanel 1.0 CalendarPanel.qml
 WeatherPanel 1.0 WeatherPanel.qml
 PowerMenu 1.0 PowerMenu.qml
+TrayMenuPanel 1.0 TrayMenuPanel.qml
 WeatherWidget 1.0 WeatherWidget.qml
 singleton WeatherService 1.0 WeatherService.qml
 MediaPanel 1.0 MediaPanel.qml

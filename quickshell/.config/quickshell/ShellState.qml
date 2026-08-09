@@ -20,6 +20,15 @@ Singleton {
     // Dock visibility, toggled via `qs ipc call dock toggle` (Mod+Shift+D)
     property bool dockVisible: false
 
+    // Custom-styled tray menu state
+    property real trayMenuX: -1
+    property var trayMenuHandle: null
+    function openTrayMenu(handle, x) {
+        trayMenuHandle = handle;
+        trayMenuX = x;
+        openPanel = "traymenu";
+    }
+
     // Exclusive popout panels: "", "network", or "battery"
     property string openPanel: ""
     function togglePanel(name) { openPanel = openPanel === name ? "" : name; }
