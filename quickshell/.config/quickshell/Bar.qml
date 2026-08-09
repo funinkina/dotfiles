@@ -29,6 +29,8 @@ PanelWindow {
             contentArea.x + rightRow.x + netW.x + netW.width / 2);
         ShellState.batteryX = Qt.binding(() =>
             contentArea.x + rightRow.x + battW.x + battW.width / 2);
+        ShellState.mediaX = Qt.binding(() =>
+            contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2);
     }
 
     Item {
@@ -38,11 +40,13 @@ PanelWindow {
         anchors.rightMargin: 14
 
         RowLayout {
+            id: leftRow
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             spacing: 16
 
             WorkspaceDots {}
+            MediaWidget { id: mediaW }
         }
 
         FocusedApp {

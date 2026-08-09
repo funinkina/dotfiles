@@ -23,6 +23,7 @@ ShellRoot {
             DismissLayer { modelData: s.modelData }
             NetworkPanel { modelData: s.modelData }
             BatteryPanel { modelData: s.modelData }
+            MediaPanel { modelData: s.modelData }
         }
     }
 }

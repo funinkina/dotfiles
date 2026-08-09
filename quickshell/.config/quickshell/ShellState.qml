@@ -9,6 +9,7 @@ Singleton {
     property real brightnessX: -1
     property real networkX: -1
     property real batteryX: -1
+    property real mediaX: -1
     property real screenW: 0
 
     signal osdRequested(string mode)

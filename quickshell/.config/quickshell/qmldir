@@ -5,12 +5,14 @@ Dock 1.0 Dock.qml
 Osd 1.0 Osd.qml
 NetworkPanel 1.0 NetworkPanel.qml
 BatteryPanel 1.0 BatteryPanel.qml
+MediaPanel 1.0 MediaPanel.qml
 DismissLayer 1.0 DismissLayer.qml
 singleton ShellState 1.0 ShellState.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
 FocusedApp 1.0 FocusedApp.qml
+MediaWidget 1.0 MediaWidget.qml
 ClockWidget 1.0 ClockWidget.qml
 AudioWidget 1.0 AudioWidget.qml
 BacklightWidget 1.0 BacklightWidget.qml
