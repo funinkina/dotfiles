@@ -12,41 +12,59 @@ Item {
         }
     }
 
-    Row {
+    // Boxy segmented row: shared 1px borders, no gaps, no rounding
+    Rectangle {
         id: row
         anchors.centerIn: parent
-        spacing: 5
+        implicitWidth: cells.implicitWidth + 2
+        implicitHeight: 22
+        color: "transparent"
+        border.color: Theme.faint
+        border.width: 1
 
-        Repeater {
-            model: NiriService.workspaces
+        Row {
+            id: cells
+            anchors.fill: parent
+            anchors.margins: 1
 
-            Rectangle {
-                required property var modelData
-                width: 24
-                height: 20
-                radius: 5
-                anchors.verticalCenter: parent.verticalCenter
-                color: modelData.is_active ? Theme.accent
-                    : modelData.is_urgent ? Theme.urgent
-                    : chipMouse.containsMouse ? "#2a2a2a" : "#161616"
+            Repeater {
+                model: NiriService.workspaces
 
-                Behavior on color { ColorAnimation { duration: 150 } }
+                Rectangle {
+                    required property var modelData
+                    required property int index
+                    width: 26
+                    height: parent.height
+                    color: modelData.is_active ? Theme.accent
+                        : modelData.is_urgent ? Theme.urgent
+                        : chipMouse.containsMouse ? "#1f1f1f" : "transparent"
 
-                Text {
-                    anchors.centerIn: parent
-                    text: modelData.idx
-                    color: modelData.is_active ? "#000000"
-                        : modelData.is_urgent ? "#000000" : Theme.muted
-                    font.family: Theme.uiFont
-                    font.pixelSize: 12
-                    font.weight: Font.DemiBold
-                }
+                    Behavior on color { ColorAnimation { duration: 150 } }
 
-                MouseArea {
-                    id: chipMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: NiriService.dispatch(["focus-workspace", String(modelData.idx)])
+                    Rectangle {
+                        visible: parent.index > 0
+                        anchors.left: parent.left
+                        width: 1
+                        height: parent.height
+                        color: Theme.faint
+                    }
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: modelData.idx
+                        color: modelData.is_active || modelData.is_urgent
+                            ? "#000000" : Theme.muted
+                        font.family: Theme.uiFont
+                        font.pixelSize: 12
+                        font.weight: Font.DemiBold
+                    }
+
+                    MouseArea {
+                        id: chipMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: NiriService.dispatch(["focus-workspace", String(modelData.idx)])
+                    }
                 }
             }
         }
