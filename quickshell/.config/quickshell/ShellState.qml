@@ -1,0 +1,21 @@
+pragma Singleton
+import Quickshell
+import QtQuick
+
+// Shared state between the bar, OSD and popout panels.
+Singleton {
+    // Bar icon anchor positions (center-x in screen coords)
+    property real volumeX: -1
+    property real brightnessX: -1
+    property real networkX: -1
+    property real batteryX: -1
+    property real screenW: 0
+
+    signal osdRequested(string mode)
+    function showOsd(mode) { osdRequested(mode); }
+
+    // Exclusive popout panels: "", "network", or "battery"
+    property string openPanel: ""
+    function togglePanel(name) { openPanel = openPanel === name ? "" : name; }
+    function closePanels() { openPanel = ""; }
+}

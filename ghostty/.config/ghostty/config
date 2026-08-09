@@ -5,6 +5,8 @@ window-width = 112
 theme = Adwaita Dark
 bold-color = bright
 font-size = 11
+background-opacity = 0.85
+background-blur = true
 
 gtk-toolbar-style = flat
 gtk-titlebar-style = native

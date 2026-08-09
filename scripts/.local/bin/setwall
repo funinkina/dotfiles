@@ -1,0 +1,17 @@
+#!/bin/bash
+# setwall [image] — set wallpaper now and persist it for niri startup.
+# No argument: re-apply the saved wallpaper (used by spawn-at-startup).
+link="$HOME/.config/wallpaper"
+
+if [ -n "$1" ]; then
+    img="$(realpath "$1")" || exit 1
+    [ -f "$img" ] || { echo "no such file: $img" >&2; exit 1; }
+    ln -sf "$img" "$link"
+fi
+
+pkill -x swaybg
+if [ -e "$link" ]; then
+    setsid -f swaybg -i "$link" -m fill >/dev/null 2>&1
+else
+    setsid -f swaybg -c '#0a0a0a' >/dev/null 2>&1
+fi

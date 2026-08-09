@@ -7,6 +7,11 @@ set FZF_DEFAULT_OPTS "--layout=reverse --exact --border=bold --border=rounded --
 function fish_user_key_bindings
   fish_default_key_bindings
   # fish_vi_key_bindings
+  bind ctrl-backspace backward-kill-word
+  bind ctrl-h backward-kill-word # Konsole sends ^H for ctrl+backspace on the legacy keyboard protocol
+  bind ctrl-delete kill-word
+  bind ctrl-left backward-word
+  bind ctrl-right forward-word
 end
 
 function fish_command_not_found
@@ -120,6 +125,7 @@ alias python="python3"
 
 #git
 alias addup='git add -u'
+alias merge-main='git merge origin/main'
 alias addall='git add .'
 alias branch='git branch'
 alias checkout='git checkout'
@@ -136,10 +142,6 @@ alias newtag='git tag -a'
 fzf_key_bindings
 
 starship init fish | source
-
-# Added by LM Studio CLI (lms)
-set -gx PATH $PATH /home/funinkina/.lmstudio/bin
-# End of LM Studio CLI section
 
 set -gx PATH /home/funinkina/.npm-global/bin:/home/funinkina/.npm-global/bin:/home/funinkina/.local/bin:/home/funinkina/.npm-global/bin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/funinkina/.lmstudio/bin:/home/funinkina/.lmstudio/bin /home/funinkina/.jiotv_go/bin
 
