@@ -17,7 +17,10 @@ Item {
     ColorIcon {
         id: bell
         anchors.centerIn: parent
-        name: "preferences-system-notifications-symbolic"
+        // A plain bell, not "-new-" (which carries its own dot, and this
+        // widget draws its own badge) and not the "preferences-" name, which
+        // is a settings gear in most icon themes.
+        name: "notification-symbolic"
         size: 16
         tint: root.hasNotifs ? Theme.fg : Theme.faint
     }
