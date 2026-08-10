@@ -52,6 +52,7 @@ ShellRoot {
             WeatherPanel { modelData: s.modelData }
             PowerMenu { modelData: s.modelData }
             TrayMenuPanel { modelData: s.modelData }
+            BluetoothPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }

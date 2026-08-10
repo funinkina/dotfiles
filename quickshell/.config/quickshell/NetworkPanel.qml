@@ -32,6 +32,7 @@ PanelWindow {
     color: "transparent"
 
     property string ip: ""
+    property bool wifiOn: true
     property var nets: []
     property var saved: []
     readonly property var current: nets.find(n => n.active) ?? null
@@ -43,6 +44,7 @@ PanelWindow {
 
     onVisibleChanged: {
         if (visible) {
+            radioProc.running = true;
             refresh();
             savedProc.running = true;
             scanProc.running = true;
@@ -61,6 +63,33 @@ PanelWindow {
             return;
         listProc.running = true;
         ipProc.running = true;
+    }
+
+    Process {
+        id: radioProc
+        command: ["nmcli", "radio", "wifi"]
+        stdout: StdioCollector {
+            onStreamFinished: panel.wifiOn = text.trim() === "enabled"
+        }
+    }
+
+    function setWifi(on) {
+        wifiOn = on;
+        Quickshell.execDetached(["nmcli", "radio", "wifi", on ? "on" : "off"]);
+        if (on) {
+            scanTimer.restart();
+        } else {
+            nets = [];
+        }
+    }
+
+    Timer {
+        id: scanTimer
+        interval: 1500
+        onTriggered: {
+            scanProc.running = true;
+            panel.refresh();
+        }
     }
 
     function connect(ssid, password) {
@@ -242,19 +271,85 @@ PanelWindow {
             width: flick.width
             spacing: 4
 
-            Text {
-                text: "Wi-Fi"
-                color: Theme.muted
-                font.family: Theme.uiFont
-                font.pixelSize: 12
-                font.weight: Font.DemiBold
-                font.capitalization: Font.AllUppercase
+            Item {
+                width: parent.width
+                height: 24
+
+                Text {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Wi-Fi"
+                    color: Theme.muted
+                    font.family: Theme.uiFont
+                    font.pixelSize: 12
+                    font.weight: Font.DemiBold
+                    font.capitalization: Font.AllUppercase
+                }
+
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 92
+                    height: 22
+                    color: "transparent"
+                    border.color: Theme.faint
+                    border.width: 1
+
+                    Row {
+                        anchors.fill: parent
+                        anchors.margins: 1
+
+                        Repeater {
+                            model: [
+                                { label: "On", val: true },
+                                { label: "Off", val: false }
+                            ]
+
+                            Rectangle {
+                                required property var modelData
+                                required property int index
+                                readonly property bool active: panel.wifiOn === modelData.val
+                                width: parent.width / 2
+                                height: parent.height
+                                color: active ? Theme.accent
+                                    : wtMouse.containsMouse ? "#1f1f1f" : "transparent"
+
+                                Behavior on color { ColorAnimation { duration: 120 } }
+
+                                Rectangle {
+                                    visible: parent.index > 0
+                                    anchors.left: parent.left
+                                    width: 1
+                                    height: parent.height
+                                    color: Theme.faint
+                                }
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: parent.modelData.label
+                                    color: parent.active ? "#000000" : Theme.fg
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 11
+                                    font.weight: Font.Medium
+                                }
+
+                                MouseArea {
+                                    id: wtMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: panel.setWifi(parent.modelData.val)
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             Item { width: 1; height: 4 }
 
             Text {
-                text: panel.current ? panel.current.ssid : "Not connected"
+                text: !panel.wifiOn ? "Wi-Fi is off"
+                    : panel.current ? panel.current.ssid : "Not connected"
                 color: Theme.fg
                 font.family: Theme.uiFont
                 font.pixelSize: 16
@@ -302,7 +397,7 @@ PanelWindow {
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
                 font.capitalization: Font.AllUppercase
-                visible: panel.others.length > 0
+                visible: panel.wifiOn && panel.others.length > 0
             }
 
             Item { width: 1; height: 2 }
@@ -451,7 +546,7 @@ PanelWindow {
             }
 
             Text {
-                visible: panel.others.length === 0
+                visible: panel.wifiOn && panel.others.length === 0
                 text: "No other networks found"
                 color: Theme.faint
                 font.family: Theme.uiFont

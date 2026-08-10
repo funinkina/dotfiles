@@ -24,6 +24,7 @@ PanelWindow {
     readonly property real briX: contentArea.x + rightRow.x + backlightW.x + backlightW.width / 2
     readonly property real netX: contentArea.x + rightRow.x + netW.x + netW.width / 2
     readonly property real battX: contentArea.x + rightRow.x + battW.x + battW.width / 2
+    readonly property real btX: contentArea.x + rightRow.x + btW.x + btW.width / 2
     readonly property real clkX: contentArea.x + rightRow.x + clockW.x + clockW.width / 2
     readonly property real weaX: contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2
     readonly property real medX: contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2
@@ -32,6 +33,7 @@ PanelWindow {
     onBriXChanged: ShellState.setAnchor(sname, "brightness", briX)
     onNetXChanged: ShellState.setAnchor(sname, "network", netX)
     onBattXChanged: ShellState.setAnchor(sname, "battery", battX)
+    onBtXChanged: ShellState.setAnchor(sname, "bluetooth", btX)
     onClkXChanged: ShellState.setAnchor(sname, "clock", clkX)
     onWeaXChanged: ShellState.setAnchor(sname, "weather", weaX)
     onMedXChanged: ShellState.setAnchor(sname, "media", medX)
@@ -41,6 +43,7 @@ PanelWindow {
         ShellState.setAnchor(sname, "brightness", briX);
         ShellState.setAnchor(sname, "network", netX);
         ShellState.setAnchor(sname, "battery", battX);
+        ShellState.setAnchor(sname, "bluetooth", btX);
         ShellState.setAnchor(sname, "clock", clkX);
         ShellState.setAnchor(sname, "weather", weaX);
         ShellState.setAnchor(sname, "media", medX);
@@ -77,6 +80,7 @@ PanelWindow {
             AudioWidget { id: audioW }
             BacklightWidget { id: backlightW }
             NetworkWidget { id: netW }
+            BluetoothWidget { id: btW }
             BatteryWidget { id: battW }
             WeatherWidget { id: weatherW }
             ClockWidget { id: clockW }
