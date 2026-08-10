@@ -7,7 +7,7 @@ Singleton {
     id: root
 
     // Per-screen anchor positions: screenName -> { key: centerX }
-    // Keys: volume, brightness, network, battery, media, clock, weather, window
+    // Keys: volume, brightness, network, battery, media, clock, weather, window, claude
     property var anchorMap: ({})
     function setAnchor(screen, key, x) {
         const m = Object.assign({}, anchorMap);

@@ -6,6 +6,7 @@ import Quickshell
 Rectangle {
     anchors.fill: parent
     color: Theme.bg
+    radius: Theme.panelRadius
     border.color: Theme.border
     border.width: 1
     opacity: (QsWindow.window?.visible ?? false) ? 1 : 0

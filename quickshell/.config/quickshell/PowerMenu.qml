@@ -74,6 +74,7 @@ PanelWindow {
                 readonly property bool current: panel.selected === index
                 width: 104
                 height: 96
+                radius: Theme.radius
                 color: tileMouse.pressed ? Theme.press
                     : current || tileMouse.containsMouse ? Theme.hover : Theme.surface
                 border.color: current ? Theme.fg : Theme.border

@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import Quickshell.Io
 import Quickshell.Services.UPower
 import QtQuick
@@ -206,7 +207,7 @@ PanelWindow {
         Item { width: 1; height: 4 }
 
         // Full-width segmented switcher: shared borders, filled bg on active
-        Rectangle {
+        ClippingRectangle {
             readonly property var profs: {
                 const m = [
                     { label: "Saver", val: PowerProfile.PowerSaver },
@@ -220,13 +221,14 @@ PanelWindow {
             id: segments
             width: parent.width
             height: 30
+            radius: Theme.radius
+            contentInsideBorder: true
             color: "transparent"
             border.color: Theme.border
             border.width: 1
 
             Row {
                 anchors.fill: parent
-                anchors.margins: 1
 
                 Repeater {
                     model: segments.profs

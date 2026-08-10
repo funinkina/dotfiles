@@ -113,6 +113,7 @@ PanelWindow {
         y: osd.shown ? 0 : -height
         opacity: osd.shown ? 1 : 0
         color: Theme.bg
+        radius: Theme.panelRadius
         border.color: Theme.border
         border.width: 1
 

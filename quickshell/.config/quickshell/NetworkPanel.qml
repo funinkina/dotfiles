@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import Quickshell.Io
 import QtQuick
 
@@ -282,18 +283,19 @@ PanelWindow {
                     font.capitalization: Font.AllUppercase
                 }
 
-                Rectangle {
+                ClippingRectangle {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     width: 92
                     height: 22
+                    radius: Theme.radius
+                    contentInsideBorder: true
                     color: "transparent"
                     border.color: Theme.border
                     border.width: 1
 
                     Row {
                         anchors.fill: parent
-                        anchors.margins: 1
 
                         Repeater {
                             model: [
@@ -479,6 +481,7 @@ PanelWindow {
                         visible: netItem.expanded
                         width: parent.width
                         height: 36
+                        radius: Theme.radius
                         color: Theme.surface
                         border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
                         border.width: 1

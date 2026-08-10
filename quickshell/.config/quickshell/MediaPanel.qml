@@ -76,7 +76,7 @@ PanelWindow {
             ClippingRectangle {
                 width: 78
                 height: 78
-                radius: 8
+                radius: Theme.radius
                 color: Theme.surface
 
                 Image {

@@ -28,5 +28,6 @@ Singleton {
     readonly property int fontSize: 15
     readonly property int barHeight: 34
     readonly property int dockWidth: 52
-    readonly property int radius: 6
+    readonly property int radius: 6       // inner elements: rows, pills, inputs
+    readonly property int panelRadius: 12 // popout panels, OSD, cards — matches niri windows
 }

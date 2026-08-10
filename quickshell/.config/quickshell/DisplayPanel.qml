@@ -338,6 +338,7 @@ PanelWindow {
                     required property var modelData
                     width: (col.width - 8) / 3
                     height: 28
+                    radius: Theme.radius
                     color: modelData.active ? Theme.accent
                         : rateMouse.pressed ? Theme.press
                         : rateMouse.containsMouse ? Theme.hover : "transparent"

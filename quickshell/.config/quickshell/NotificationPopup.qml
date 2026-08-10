@@ -63,6 +63,7 @@ PanelWindow {
                     width: stack.width
                     implicitHeight: cardRow.implicitHeight + 24
                     color: cardMouse.containsMouse ? Theme.surface : Theme.bg
+                    radius: Theme.panelRadius
                     border.color: cardMouse.containsMouse ? Theme.borderBright : Theme.border
                     border.width: 1
                     Behavior on color { ColorAnimation { duration: 100 } }

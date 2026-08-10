@@ -218,7 +218,7 @@ PanelWindow {
                         anchors.centerIn: parent
                         width: 26
                         height: 26
-                        radius: 5
+                        radius: Theme.radius
                         color: parent.modelData.today ? Theme.accent : "transparent"
 
                         Text {

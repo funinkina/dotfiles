@@ -98,6 +98,7 @@ PanelWindow {
             Rectangle {
                 visible: panel.editing
                 anchors.fill: parent
+                radius: Theme.radius
                 color: Theme.surface
                 border.color: cityIn.activeFocus ? Theme.borderBright : Theme.border
                 border.width: 1

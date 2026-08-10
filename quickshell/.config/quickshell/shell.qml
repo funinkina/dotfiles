@@ -62,6 +62,7 @@ ShellRoot {
             BluetoothPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
             WindowPanel { modelData: s.modelData }
+            ClaudePanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }
     }

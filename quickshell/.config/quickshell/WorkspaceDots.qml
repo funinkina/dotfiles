@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell.Widgets
 
 Item {
     // Connector name of the monitor this bar lives on (e.g. "eDP-1")
@@ -15,12 +16,14 @@ Item {
         }
     }
 
-    // Boxy segmented row: shared 1px borders, no gaps, no rounding
-    Rectangle {
+    // Segmented row: shared 1px borders, no gaps, rounded ends
+    ClippingRectangle {
         id: row
         anchors.centerIn: parent
         implicitWidth: cells.implicitWidth + 2
         implicitHeight: 22
+        radius: Theme.radius
+        contentInsideBorder: true
         color: "transparent"
         border.color: Theme.border
         border.width: 1
@@ -28,7 +31,6 @@ Item {
         Row {
             id: cells
             anchors.fill: parent
-            anchors.margins: 1
 
             Repeater {
                 model: NiriService.workspaces.filter(w =>

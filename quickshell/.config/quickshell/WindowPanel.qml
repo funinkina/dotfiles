@@ -181,16 +181,17 @@ PanelWindow {
         Item { width: 1; height: 4 }
 
         // Segmented workspace picker; the window's current one is marked
-        Rectangle {
+        ClippingRectangle {
             width: parent.width
             height: 28
+            radius: Theme.radius
+            contentInsideBorder: true
             color: "transparent"
             border.color: Theme.border
             border.width: 1
 
             Row {
                 anchors.fill: parent
-                anchors.margins: 1
 
                 Repeater {
                     model: panel.wsOptions

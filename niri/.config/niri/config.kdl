@@ -73,6 +73,12 @@ hotkey-overlay {
     skip-at-startup
 }
 
+// Rounded corners on every window, matching the shell's panel radius
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
+
 window-rule {
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true

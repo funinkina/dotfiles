@@ -143,6 +143,7 @@ WlSessionLock {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 300
                 height: 34
+                radius: Theme.radius
                 color: Theme.surface
                 border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
                 border.width: 1

@@ -36,9 +36,11 @@ PanelWindow {
     readonly property real weaX: contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2
     readonly property real medX: contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2
     readonly property real winX: contentArea.x + focusedApp.x + focusedApp.width / 2
+    readonly property real claX: contentArea.x + leftRow.x + claudeW.x + claudeW.width / 2
 
     onVolXChanged: ShellState.setAnchor(sname, "volume", volX)
     onWinXChanged: ShellState.setAnchor(sname, "window", winX)
+    onClaXChanged: ShellState.setAnchor(sname, "claude", claX)
     onBriXChanged: ShellState.setAnchor(sname, "brightness", briX)
     onNetXChanged: ShellState.setAnchor(sname, "network", netX)
     onBattXChanged: ShellState.setAnchor(sname, "battery", battX)
@@ -57,6 +59,7 @@ PanelWindow {
         ShellState.setAnchor(sname, "weather", weaX);
         ShellState.setAnchor(sname, "media", medX);
         ShellState.setAnchor(sname, "window", winX);
+        ShellState.setAnchor(sname, "claude", claX);
     }
 
     Item {
@@ -102,6 +105,7 @@ PanelWindow {
             WorkspaceDots { screenName: bar.screen?.name ?? "" }
             PrivacyWidget {}
             MediaWidget { id: mediaW }
+            ClaudeWidget { id: claudeW }
         }
 
         FocusedApp {

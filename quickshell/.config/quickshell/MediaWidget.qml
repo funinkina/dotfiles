@@ -56,8 +56,9 @@ Item {
             color: Theme.fg
             font.family: Theme.uiFont
             font.pixelSize: Theme.fontSize
+            font.weight: Font.Medium
             elide: Text.ElideRight
-            Layout.maximumWidth: 160
+            Layout.maximumWidth: 220
             Layout.alignment: Qt.AlignVCenter
         }
     }

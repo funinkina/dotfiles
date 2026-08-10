@@ -16,6 +16,9 @@ WeatherWidget 1.0 WeatherWidget.qml
 singleton WeatherService 1.0 WeatherService.qml
 MediaPanel 1.0 MediaPanel.qml
 WindowPanel 1.0 WindowPanel.qml
+singleton ClaudeService 1.0 ClaudeService.qml
+ClaudeWidget 1.0 ClaudeWidget.qml
+ClaudePanel 1.0 ClaudePanel.qml
 DismissLayer 1.0 DismissLayer.qml
 NotificationPopup 1.0 NotificationPopup.qml
 NotificationCenter 1.0 NotificationCenter.qml
