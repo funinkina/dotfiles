@@ -21,7 +21,7 @@ PanelWindow {
         "helium",
         "org.gnome.Nautilus",
         "chrome-cinhimbnkkaeohfgghhklpknlkffjgod-Default",
-        "com.mitchellh.ghostty",
+        "kitty",
         "code",
         "dev.zed.Zed",
         "chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default",

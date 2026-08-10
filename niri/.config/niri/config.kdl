@@ -76,6 +76,14 @@ window-rule {
     open-floating true
 }
 
+// Semi-transparent terminals: don't paint the focus ring as a backdrop
+// behind the window — it covers the blur when focused
+window-rule {
+    match app-id="kitty"
+    match app-id="com.mitchellh.ghostty"
+    draw-border-with-background false
+}
+
 // Keep notification popups out of screenshares
 layer-rule {
     match namespace="^quickshell-notifications$"
@@ -84,7 +92,7 @@ layer-rule {
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
+    Mod+T hotkey-overlay-title="Terminal: kitty" { spawn "kitty" "--single-instance"; }
     Mod+E hotkey-overlay-title="Files: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
