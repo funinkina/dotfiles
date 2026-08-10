@@ -2,6 +2,9 @@ set fish_greeting
 
 export STARSHIP_CONFIG=/home/funinkina/.config/starship.toml
 set -gx PATH ~/.npm-global/bin $PATH
+# Quickshell system icons (also set in niri config for autostart);
+# without this, restarting qs from a shell reverts icons to Adwaita
+set -gx QS_ICON_THEME Fluent-symbolic
 set FZF_DEFAULT_OPTS "--layout=reverse --exact --border=bold --border=rounded --margin=3% --color=dark"
 
 function fish_user_key_bindings

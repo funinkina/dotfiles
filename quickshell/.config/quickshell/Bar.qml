@@ -35,8 +35,10 @@ PanelWindow {
     readonly property real clkX: contentArea.x + rightRow.x + clockW.x + clockW.width / 2
     readonly property real weaX: contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2
     readonly property real medX: contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2
+    readonly property real winX: contentArea.x + focusedApp.x + focusedApp.width / 2
 
     onVolXChanged: ShellState.setAnchor(sname, "volume", volX)
+    onWinXChanged: ShellState.setAnchor(sname, "window", winX)
     onBriXChanged: ShellState.setAnchor(sname, "brightness", briX)
     onNetXChanged: ShellState.setAnchor(sname, "network", netX)
     onBattXChanged: ShellState.setAnchor(sname, "battery", battX)
@@ -54,6 +56,7 @@ PanelWindow {
         ShellState.setAnchor(sname, "clock", clkX);
         ShellState.setAnchor(sname, "weather", weaX);
         ShellState.setAnchor(sname, "media", medX);
+        ShellState.setAnchor(sname, "window", winX);
     }
 
     Item {
@@ -102,6 +105,7 @@ PanelWindow {
         }
 
         FocusedApp {
+            id: focusedApp
             anchors.centerIn: parent
         }
 

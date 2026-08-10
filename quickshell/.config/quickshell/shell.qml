@@ -28,6 +28,14 @@ ShellRoot {
         function toggle(): void { ShellState.togglePanel("power"); }
     }
 
+    // e.g. `qs ipc call panel toggle window eDP-1` — any popout, any screen
+    IpcHandler {
+        target: "panel"
+        function toggle(name: string, screen: string): void {
+            ShellState.togglePanel(name, screen);
+        }
+    }
+
     // One instance (owns the org.freedesktop.Notifications DBus name)
     NotificationPopup {}
 
@@ -53,6 +61,7 @@ ShellRoot {
             PowerMenu { modelData: s.modelData }
             BluetoothPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }
+            WindowPanel { modelData: s.modelData }
             NotificationCenter { modelData: s.modelData }
         }
     }

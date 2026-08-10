@@ -11,7 +11,11 @@ Item {
 
     readonly property var info: NiriService.appInfo(NiriService.focusedWindow)
 
-    // Purely informational — no hover state, nothing to click
+    HoverBg {
+        active: ShellState.isOpen("window", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
+
     RowLayout {
         id: content
         anchors.centerIn: parent
@@ -32,5 +36,13 @@ Item {
             font.weight: Font.Medium
             Layout.alignment: Qt.AlignVCenter
         }
+    }
+
+    MouseArea {
+        id: ma
+        anchors.fill: parent
+        anchors.margins: -6
+        cursorShape: Qt.PointingHandCursor
+        onClicked: ShellState.togglePanel("window", QsWindow.window?.screen?.name ?? "")
     }
 }
