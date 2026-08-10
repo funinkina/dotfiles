@@ -1,0 +1,5 @@
+theme = "noir"
+keybind_symbols = true
+# Exclusive keyboard while open — required with focus-follows-mouse,
+# which otherwise steals focus to whatever is under the cursor
+force_keyboard_focus = true

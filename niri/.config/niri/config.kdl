@@ -61,7 +61,8 @@ environment {
 
 spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"
 spawn-at-startup "/home/funinkina/.local/bin/setwall"
-spawn-at-startup "vicinae" "server"
+spawn-at-startup "elephant"
+spawn-at-startup "walker" "--gapplication-service"
 spawn-at-startup "swayidle" "-w" "timeout" "600" "qs -p /home/funinkina/.config/quickshell ipc call lock lock" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "qs -p /home/funinkina/.config/quickshell ipc call lock lock"
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
@@ -84,7 +85,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
-    Mod+Space hotkey-overlay-title="Launcher: vicinae" { spawn "vicinae" "toggle"; }
+    Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+L hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }
 

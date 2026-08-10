@@ -162,7 +162,7 @@ PanelWindow {
             id: launcherMouse
             anchors.fill: parent
             hoverEnabled: true
-            onClicked: Quickshell.execDetached(["vicinae", "toggle"])
+            onClicked: Quickshell.execDetached(["walker"])
         }
     }
 }
