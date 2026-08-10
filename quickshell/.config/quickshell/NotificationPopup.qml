@@ -48,6 +48,15 @@ PanelWindow {
         Behavior on x { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
 
+        // Hold the stack open while it's under the pointer, so action buttons
+        // stay clickable instead of timing out mid-reach.
+        HoverHandler { id: stackHover }
+        Binding {
+            target: NotifService
+            property: "paused"
+            value: stackHover.hovered && win.shown
+        }
+
         Column {
             id: stack
             width: parent.width
@@ -60,11 +69,12 @@ PanelWindow {
                     id: card
                     required property var modelData
                     readonly property var n: modelData.n
+                    readonly property var acts: NotifService.buttons(n)
                     width: stack.width
-                    implicitHeight: cardRow.implicitHeight + 24
-                    color: cardMouse.containsMouse ? Theme.surface : Theme.bg
+                    implicitHeight: body.implicitHeight + 24
+                    color: cardHover.hovered ? Theme.surface : Theme.bg
                     radius: Theme.panelRadius
-                    border.color: cardMouse.containsMouse ? Theme.borderBright : Theme.border
+                    border.color: cardHover.hovered ? Theme.borderBright : Theme.border
                     border.width: 1
                     Behavior on color { ColorAnimation { duration: 100 } }
                     Behavior on border.color { ColorAnimation { duration: 100 } }
@@ -72,6 +82,18 @@ PanelWindow {
                     opacity: 0
                     Component.onCompleted: opacity = 1
                     Behavior on opacity { NumberAnimation { duration: 180 } }
+
+                    // Tracks hover across the whole card, including while the
+                    // pointer sits on an action button.
+                    HoverHandler { id: cardHover }
+
+                    // Declared before the content so the action buttons, which
+                    // stack above it, take the click first.
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: NotifService.activate(card.n)
+                    }
 
                     Rectangle {
                         visible: card.n.urgency === NotificationUrgency.Critical
@@ -84,72 +106,99 @@ PanelWindow {
                         color: Theme.urgent
                     }
 
-                    Row {
-                        id: cardRow
+                    Column {
+                        id: body
                         x: 16
                         y: 12
                         width: parent.width - 32
-                        spacing: 12
+                        spacing: 10
 
-                        IconImage {
-                            readonly property string icon: card.n.image || card.n.appIcon
-                            visible: icon !== ""
-                            source: icon.startsWith("/") || icon.includes("://")
-                                ? icon : Quickshell.iconPath(icon, "dialog-information")
-                            implicitSize: 34
-                            anchors.verticalCenter: parent.verticalCenter
+                        Row {
+                            id: cardRow
+                            width: parent.width
+                            spacing: 12
+
+                            IconImage {
+                                id: bigIcon
+                                readonly property string icon: card.n.image || card.n.appIcon
+                                visible: icon !== ""
+                                source: icon.startsWith("/") || icon.includes("://")
+                                    ? icon : Quickshell.iconPath(icon, "dialog-information")
+                                implicitSize: 34
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Column {
+                                width: parent.width - (bigIcon.visible ? 46 : 0)
+                                spacing: 3
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                Row {
+                                    width: parent.width
+                                    spacing: 5
+                                    visible: appLabel.text !== ""
+
+                                    AppGlyph {
+                                        notification: card.n
+                                        size: 12
+                                        tint: Theme.muted
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+
+                                    Text {
+                                        id: appLabel
+                                        width: parent.width - 17
+                                        text: card.n.appName
+                                        color: Theme.muted
+                                        font.family: Theme.uiFont
+                                        font.pixelSize: 10
+                                        font.weight: Font.DemiBold
+                                        font.capitalization: Font.AllUppercase
+                                        elide: Text.ElideRight
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+
+                                Text {
+                                    width: parent.width
+                                    text: card.n.summary
+                                    color: Theme.fg
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 13
+                                    font.weight: Font.DemiBold
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 2
+                                    elide: Text.ElideRight
+                                }
+
+                                Text {
+                                    width: parent.width
+                                    text: card.n.body
+                                    visible: text !== ""
+                                    color: Theme.dim
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 12
+                                    textFormat: Text.StyledText
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 3
+                                    elide: Text.ElideRight
+                                }
+                            }
                         }
 
-                        Column {
-                            width: parent.width - (parent.children[0].visible ? 46 : 0)
-                            spacing: 3
-                            anchors.verticalCenter: parent.verticalCenter
+                        Flow {
+                            width: parent.width
+                            spacing: 6
+                            visible: card.acts.length > 0
 
-                            Text {
-                                width: parent.width
-                                text: card.n.appName
-                                visible: text !== ""
-                                color: Theme.muted
-                                font.family: Theme.uiFont
-                                font.pixelSize: 10
-                                font.weight: Font.DemiBold
-                                font.capitalization: Font.AllUppercase
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                width: parent.width
-                                text: card.n.summary
-                                color: Theme.fg
-                                font.family: Theme.uiFont
-                                font.pixelSize: 13
-                                font.weight: Font.DemiBold
-                                wrapMode: Text.Wrap
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                width: parent.width
-                                text: card.n.body
-                                visible: text !== ""
-                                color: Theme.dim
-                                font.family: Theme.uiFont
-                                font.pixelSize: 12
-                                textFormat: Text.StyledText
-                                wrapMode: Text.Wrap
-                                maximumLineCount: 3
-                                elide: Text.ElideRight
+                            Repeater {
+                                model: card.acts
+                                NotifAction {
+                                    required property var modelData
+                                    action: modelData
+                                }
                             }
                         }
-                    }
-
-                    MouseArea {
-                        id: cardMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: card.n.dismiss()
                     }
                 }
             }

@@ -96,8 +96,9 @@ PanelWindow {
                 Rectangle {
                     id: card
                     required property var modelData
+                    readonly property var acts: NotifService.buttons(modelData)
                     width: col.width
-                    implicitHeight: cardRow.implicitHeight + 20
+                    implicitHeight: body.implicitHeight + 20
                     radius: Theme.radius
                     color: Theme.surface
 
@@ -112,63 +113,98 @@ PanelWindow {
                         color: Theme.urgent
                     }
 
-                    Row {
-                        id: cardRow
+                    Column {
+                        id: body
                         x: 12
                         y: 10
                         width: parent.width - 46
-                        spacing: 10
+                        spacing: 8
 
-                        IconImage {
-                            readonly property string icon:
-                                card.modelData.image || card.modelData.appIcon
-                            visible: icon !== ""
-                            source: icon.startsWith("/") || icon.includes("://")
-                                ? icon : Quickshell.iconPath(icon, "dialog-information")
-                            implicitSize: 30
-                            anchors.verticalCenter: parent.verticalCenter
+                        Row {
+                            id: cardRow
+                            width: parent.width
+                            spacing: 10
+
+                            IconImage {
+                                id: bigIcon
+                                readonly property string icon:
+                                    card.modelData.image || card.modelData.appIcon
+                                visible: icon !== ""
+                                source: icon.startsWith("/") || icon.includes("://")
+                                    ? icon : Quickshell.iconPath(icon, "dialog-information")
+                                implicitSize: 30
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Column {
+                                width: parent.width - (bigIcon.visible ? 40 : 0)
+                                spacing: 2
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                Row {
+                                    width: parent.width
+                                    spacing: 5
+                                    visible: appLabel.text !== ""
+
+                                    AppGlyph {
+                                        notification: card.modelData
+                                        size: 12
+                                        tint: Theme.muted
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+
+                                    Text {
+                                        id: appLabel
+                                        width: parent.width - 17
+                                        text: card.modelData.appName
+                                        color: Theme.muted
+                                        font.family: Theme.uiFont
+                                        font.pixelSize: 10
+                                        font.weight: Font.DemiBold
+                                        font.capitalization: Font.AllUppercase
+                                        elide: Text.ElideRight
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+
+                                Text {
+                                    width: parent.width
+                                    text: card.modelData.summary
+                                    color: Theme.fg
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 13
+                                    font.weight: Font.DemiBold
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 2
+                                    elide: Text.ElideRight
+                                }
+
+                                Text {
+                                    width: parent.width
+                                    text: card.modelData.body
+                                    visible: text !== ""
+                                    color: Theme.dim
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 12
+                                    textFormat: Text.StyledText
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 3
+                                    elide: Text.ElideRight
+                                }
+                            }
                         }
 
-                        Column {
-                            width: parent.width - (parent.children[0].visible ? 40 : 0)
-                            spacing: 2
-                            anchors.verticalCenter: parent.verticalCenter
+                        Flow {
+                            width: parent.width
+                            spacing: 6
+                            visible: card.acts.length > 0
 
-                            Text {
-                                width: parent.width
-                                text: card.modelData.appName
-                                visible: text !== ""
-                                color: Theme.muted
-                                font.family: Theme.uiFont
-                                font.pixelSize: 10
-                                font.weight: Font.DemiBold
-                                font.capitalization: Font.AllUppercase
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                width: parent.width
-                                text: card.modelData.summary
-                                color: Theme.fg
-                                font.family: Theme.uiFont
-                                font.pixelSize: 13
-                                font.weight: Font.DemiBold
-                                wrapMode: Text.Wrap
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                width: parent.width
-                                text: card.modelData.body
-                                visible: text !== ""
-                                color: Theme.dim
-                                font.family: Theme.uiFont
-                                font.pixelSize: 12
-                                textFormat: Text.StyledText
-                                wrapMode: Text.Wrap
-                                maximumLineCount: 3
-                                elide: Text.ElideRight
+                            Repeater {
+                                model: card.acts
+                                NotifAction {
+                                    required property var modelData
+                                    action: modelData
+                                }
                             }
                         }
                     }
@@ -177,7 +213,8 @@ PanelWindow {
                     ColorIcon {
                         anchors.right: parent.right
                         anchors.rightMargin: 10
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 16
                         name: "window-close-symbolic"
                         size: 14
                         tint: xMouse.containsMouse ? Theme.fg : Theme.muted

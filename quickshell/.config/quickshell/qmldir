@@ -23,6 +23,8 @@ DismissLayer 1.0 DismissLayer.qml
 NotificationPopup 1.0 NotificationPopup.qml
 NotificationCenter 1.0 NotificationCenter.qml
 NotifWidget 1.0 NotifWidget.qml
+NotifAction 1.0 NotifAction.qml
+AppGlyph 1.0 AppGlyph.qml
 singleton NotifService 1.0 NotifService.qml
 singleton ShellState 1.0 ShellState.qml
 singleton LockService 1.0 LockService.qml
