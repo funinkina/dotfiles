@@ -22,8 +22,8 @@ Item {
         ClippingRectangle {
             visible: root.art !== ""
             anchors.verticalCenter: parent.verticalCenter
-            width: 70
-            height: 70
+            width: 88
+            height: 88
             radius: Theme.radius
             color: Theme.surface
 
@@ -68,7 +68,7 @@ Item {
 
             Row {
                 id: controls
-                spacing: 22
+                spacing: 25
 
                 IconButton {
                     icon: "media-skip-backward-symbolic"
@@ -82,7 +82,7 @@ Item {
                     icon: MediaService.playing
                         ? "media-playback-pause-symbolic"
                         : "media-playback-start-symbolic"
-                    size: 26
+                    size: 22
                     anchors.verticalCenter: parent.verticalCenter
                     onClicked: root.player?.togglePlaying()
                 }
