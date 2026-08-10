@@ -4,10 +4,11 @@ import QtQuick
 
 Singleton {
     // Surfaces, darkest to lightest
-    readonly property color bg: "#121212"       // bar, dock, panels
+    readonly property color bg: "#121212"       // dock, panels
+    readonly property color barBg: '#b9121212'  // bar: translucent, matches kitty's 0.85
     readonly property color surface: "#1d1d1d"  // cards, inputs, idle tiles
-    readonly property color hover: "#282828"
-    readonly property color press: "#343434"
+    readonly property color hover: '#32282828'
+    readonly property color press: '#a5343434'
 
     // Text
     readonly property color fg: "#f2f2f2"

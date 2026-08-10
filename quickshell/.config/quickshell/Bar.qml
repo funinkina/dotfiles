@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Wayland._BackgroundEffect
 import QtQuick
 import QtQuick.Layouts
 
@@ -10,21 +11,61 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-bar"
 
+    // Compositor blur behind the translucent bar (same protocol kitty uses)
+    BackgroundEffect.blurRegion: Region {
+        width: bar.width
+        height: Theme.barHeight
+    }
+
     anchors { top: true; left: true; right: true }
-    implicitHeight: Theme.barHeight
+    // Extra height for the inverted corner fillets below the bar
+    implicitHeight: Theme.barHeight + Theme.panelRadius
+    exclusiveZone: Theme.barHeight
     color: "transparent"
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
+    // Only the bar strip takes clicks; the fillet strip passes through
+    mask: Region {
+        width: bar.width
+        height: Theme.barHeight
     }
 
-    // Hairline separating the bar from window content
     Rectangle {
-        anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-        height: 1
-        color: Theme.line
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        height: Theme.barHeight
+        color: Theme.barBg
     }
+
+    // Inverted corners: concave fillets so the content area's top corners
+    // are rounded with the same radius as the windows
+    component CornerFillet: Canvas {
+        property bool mirrored: false
+        y: Theme.barHeight
+        width: Theme.panelRadius
+        height: Theme.panelRadius
+        onPaint: {
+            const ctx = getContext("2d");
+            const r = width;
+            ctx.reset();
+            ctx.fillStyle = Theme.barBg;
+            ctx.beginPath();
+            if (mirrored) {
+                ctx.moveTo(0, 0);
+                ctx.lineTo(r, 0);
+                ctx.lineTo(r, r);
+                ctx.arc(0, r, r, 0, -Math.PI / 2, true);
+            } else {
+                ctx.moveTo(r, 0);
+                ctx.lineTo(0, 0);
+                ctx.lineTo(0, r);
+                ctx.arc(r, r, r, Math.PI, 3 * Math.PI / 2, false);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    CornerFillet { anchors.left: parent.left }
+    CornerFillet { anchors.right: parent.right; mirrored: true }
 
     readonly property string sname: bar.screen?.name ?? ""
     readonly property real volX: contentArea.x + rightRow.x + audioW.x + audioW.width / 2
@@ -64,7 +105,8 @@ PanelWindow {
 
     Item {
         id: contentArea
-        anchors.fill: parent
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        height: Theme.barHeight
         anchors.leftMargin: 14
         anchors.rightMargin: 14
 
