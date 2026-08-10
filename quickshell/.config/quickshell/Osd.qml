@@ -13,14 +13,16 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-osd"
 
     // Center under the icon whose value is being shown
-    readonly property real anchorX: mode === "brightness"
-        ? ShellState.brightnessX : ShellState.volumeX
+    readonly property string sname: screen?.name ?? ""
+    readonly property real anchorX: (mode === "brightness"
+        ? ShellState.anchorMap[sname]?.brightness
+        : ShellState.anchorMap[sname]?.volume) ?? -1
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
         right: anchorX < 0 ? 16
-            : Math.max(8, ShellState.screenW - anchorX - implicitWidth / 2)
+            : Math.max(8, (screen?.width ?? 1920) - anchorX - implicitWidth / 2)
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 270

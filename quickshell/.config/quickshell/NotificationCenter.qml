@@ -12,7 +12,8 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-notifcenter"
 
-    visible: ShellState.openPanel === "notifs"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "notifs" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins { top: Theme.barHeight; right: 8 }

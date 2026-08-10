@@ -25,6 +25,6 @@ Item {
     MouseArea {
         anchors.fill: parent
         anchors.margins: -6
-        onClicked: ShellState.togglePanel("clock")
+        onClicked: ShellState.togglePanel("clock", QsWindow.window?.screen?.name ?? "")
     }
 }

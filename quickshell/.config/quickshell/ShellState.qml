@@ -4,15 +4,17 @@ import QtQuick
 
 // Shared state between the bar, OSD and popout panels.
 Singleton {
-    // Bar icon anchor positions (center-x in screen coords)
-    property real volumeX: -1
-    property real brightnessX: -1
-    property real networkX: -1
-    property real batteryX: -1
-    property real mediaX: -1
-    property real clockX: -1
-    property real weatherX: -1
-    property real screenW: 0
+    id: root
+
+    // Per-screen anchor positions: screenName -> { key: centerX }
+    // Keys: volume, brightness, network, battery, media, clock, weather, traymenu
+    property var anchorMap: ({})
+    function setAnchor(screen, key, x) {
+        const m = Object.assign({}, anchorMap);
+        m[screen] = Object.assign({}, m[screen] ?? {});
+        m[screen][key] = x;
+        anchorMap = m;
+    }
 
     signal osdRequested(string mode)
     function showOsd(mode) { osdRequested(mode); }
@@ -21,16 +23,26 @@ Singleton {
     property bool dockVisible: false
 
     // Custom-styled tray menu state
-    property real trayMenuX: -1
     property var trayMenuHandle: null
-    function openTrayMenu(handle, x) {
+    function openTrayMenu(handle, x, screen) {
         trayMenuHandle = handle;
-        trayMenuX = x;
+        setAnchor(screen, "traymenu", x);
+        panelScreen = screen;
         openPanel = "traymenu";
     }
 
-    // Exclusive popout panels: "", "network", or "battery"
+    // Exclusive popout panels; panelScreen is the screen they open on
+    // ("" = every screen, used by the centered power menu via IPC)
     property string openPanel: ""
-    function togglePanel(name) { openPanel = openPanel === name ? "" : name; }
+    property string panelScreen: ""
+    function togglePanel(name, screen) {
+        screen = screen ?? "";
+        if (openPanel === name && panelScreen === screen) {
+            openPanel = "";
+        } else {
+            panelScreen = screen;
+            openPanel = name;
+        }
+    }
     function closePanels() { openPanel = ""; }
 }

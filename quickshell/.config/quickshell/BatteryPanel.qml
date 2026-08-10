@@ -12,13 +12,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-battery"
 
-    visible: ShellState.openPanel === "battery"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "battery" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.batteryX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.batteryX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.battery ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 300

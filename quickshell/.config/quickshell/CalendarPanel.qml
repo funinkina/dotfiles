@@ -10,13 +10,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-calendar"
 
-    visible: ShellState.openPanel === "clock"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "clock" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.clockX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.clockX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.clock ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 302

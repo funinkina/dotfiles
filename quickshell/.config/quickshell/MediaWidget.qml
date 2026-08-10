@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
@@ -61,6 +62,6 @@ Item {
     MouseArea {
         anchors.fill: parent
         anchors.margins: -6
-        onClicked: ShellState.togglePanel("media")
+        onClicked: ShellState.togglePanel("media", QsWindow.window?.screen?.name ?? "")
     }
 }

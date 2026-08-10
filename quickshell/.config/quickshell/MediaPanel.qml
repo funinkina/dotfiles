@@ -12,15 +12,19 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-media"
 
-    visible: ShellState.openPanel === "media"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "media" && ShellState.panelScreen === sname
 
     anchors { top: true; left: true }
     margins {
         top: Theme.barHeight + 8
-        left: ShellState.mediaX < 0 ? Theme.dockWidth + 8
-            : Math.max(Theme.dockWidth + 8,
-                Math.min(ShellState.mediaX - implicitWidth / 2,
-                    ShellState.screenW - implicitWidth - 8))
+        left: {
+            const ax = ShellState.anchorMap[sname]?.media ?? -1;
+            return ax < 0 ? Theme.dockWidth + 8
+                : Math.max(Theme.dockWidth + 8,
+                    Math.min(ax - implicitWidth / 2,
+                        (screen?.width ?? 1920) - implicitWidth - 8));
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 420

@@ -11,13 +11,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-traymenu"
 
-    visible: ShellState.openPanel === "traymenu"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "traymenu" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.trayMenuX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.trayMenuX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.traymenu ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 260

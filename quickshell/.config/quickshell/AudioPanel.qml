@@ -11,13 +11,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-audio"
 
-    visible: ShellState.openPanel === "audio"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "audio" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.volumeX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.volumeX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.volume ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 320

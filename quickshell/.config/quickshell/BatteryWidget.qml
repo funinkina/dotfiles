@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import Quickshell.Services.UPower
 
@@ -109,6 +110,6 @@ Item {
         anchors.rightMargin: -8
         anchors.topMargin: -8
         anchors.bottomMargin: -8
-        onClicked: ShellState.togglePanel("battery")
+        onClicked: ShellState.togglePanel("battery", QsWindow.window?.screen?.name ?? "")
     }
 }

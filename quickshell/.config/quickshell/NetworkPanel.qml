@@ -14,13 +14,17 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-network"
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
-    visible: ShellState.openPanel === "network"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "network" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.networkX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.networkX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.network ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 320

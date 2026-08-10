@@ -15,11 +15,18 @@ input {
     }
     mouse {
     }
-    // focus-follows-mouse max-scroll-amount="0%"
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+// External LG above, laptop below (centered under it); logical coordinates
+output "HDMI-A-1" {
+    scale 1.25
+    position x=0 y=0
 }
 
 output "eDP-1" {
     scale 1.5
+    position x=576 y=1728
 }
 
 layout {
@@ -130,8 +137,16 @@ binds {
 
     Mod+Shift+Page_Down { move-workspace-down; }
     Mod+Shift+Page_Up   { move-workspace-up; }
-    Mod+Shift+U         { move-workspace-down; }
-    Mod+Shift+I         { move-workspace-up; }
+
+    // Send the current workspace to the other monitor
+    Mod+Shift+U { move-workspace-to-monitor-down; }
+    Mod+Shift+I { move-workspace-to-monitor-up; }
+
+    // Send the focused window (column) to the monitor in a direction
+    Mod+Shift+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Right { move-column-to-monitor-right; }
+    Mod+Shift+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Down  { move-column-to-monitor-down; }
 
     Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
     Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }

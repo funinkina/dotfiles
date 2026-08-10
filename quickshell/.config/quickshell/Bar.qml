@@ -19,22 +19,31 @@ PanelWindow {
         color: Theme.bg
     }
 
+    readonly property string sname: bar.screen?.name ?? ""
+    readonly property real volX: contentArea.x + rightRow.x + audioW.x + audioW.width / 2
+    readonly property real briX: contentArea.x + rightRow.x + backlightW.x + backlightW.width / 2
+    readonly property real netX: contentArea.x + rightRow.x + netW.x + netW.width / 2
+    readonly property real battX: contentArea.x + rightRow.x + battW.x + battW.width / 2
+    readonly property real clkX: contentArea.x + rightRow.x + clockW.x + clockW.width / 2
+    readonly property real weaX: contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2
+    readonly property real medX: contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2
+
+    onVolXChanged: ShellState.setAnchor(sname, "volume", volX)
+    onBriXChanged: ShellState.setAnchor(sname, "brightness", briX)
+    onNetXChanged: ShellState.setAnchor(sname, "network", netX)
+    onBattXChanged: ShellState.setAnchor(sname, "battery", battX)
+    onClkXChanged: ShellState.setAnchor(sname, "clock", clkX)
+    onWeaXChanged: ShellState.setAnchor(sname, "weather", weaX)
+    onMedXChanged: ShellState.setAnchor(sname, "media", medX)
+
     Component.onCompleted: {
-        ShellState.screenW = Qt.binding(() => bar.width);
-        ShellState.volumeX = Qt.binding(() =>
-            contentArea.x + rightRow.x + audioW.x + audioW.width / 2);
-        ShellState.brightnessX = Qt.binding(() =>
-            contentArea.x + rightRow.x + backlightW.x + backlightW.width / 2);
-        ShellState.networkX = Qt.binding(() =>
-            contentArea.x + rightRow.x + netW.x + netW.width / 2);
-        ShellState.batteryX = Qt.binding(() =>
-            contentArea.x + rightRow.x + battW.x + battW.width / 2);
-        ShellState.mediaX = Qt.binding(() =>
-            contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2);
-        ShellState.clockX = Qt.binding(() =>
-            contentArea.x + rightRow.x + clockW.x + clockW.width / 2);
-        ShellState.weatherX = Qt.binding(() =>
-            contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2);
+        ShellState.setAnchor(sname, "volume", volX);
+        ShellState.setAnchor(sname, "brightness", briX);
+        ShellState.setAnchor(sname, "network", netX);
+        ShellState.setAnchor(sname, "battery", battX);
+        ShellState.setAnchor(sname, "clock", clkX);
+        ShellState.setAnchor(sname, "weather", weaX);
+        ShellState.setAnchor(sname, "media", medX);
     }
 
     Item {
@@ -49,7 +58,7 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 16
 
-            WorkspaceDots {}
+            WorkspaceDots { screenName: bar.screen?.name ?? "" }
             PrivacyWidget {}
             MediaWidget { id: mediaW }
         }

@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import Quickshell.Io
 
@@ -68,6 +69,6 @@ Item {
         anchors.rightMargin: -8
         anchors.topMargin: -8
         anchors.bottomMargin: -8
-        onClicked: ShellState.togglePanel("network")
+        onClicked: ShellState.togglePanel("network", QsWindow.window?.screen?.name ?? "")
     }
 }

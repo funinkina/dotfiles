@@ -3,7 +3,10 @@ import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 
-// Display popout: brightness slider + refresh rate switcher.
+// Display popout, per monitor:
+//  - internal panel (eDP-*): backlight brightness slider
+//  - external monitors: DDC/CI brightness + contrast via ddcutil
+//  - refresh rate switcher (wrapping grid; externals expose many rates)
 PanelWindow {
     id: panel
     property var modelData
@@ -11,23 +14,39 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-display"
 
-    visible: ShellState.openPanel === "display"
+    readonly property string sname: screen?.name ?? ""
+    readonly property bool isInternal: sname.startsWith("eDP")
+
+    visible: ShellState.openPanel === "display" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.brightnessX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.brightnessX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.brightness ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 300
     implicitHeight: col.implicitHeight + 28
     color: "transparent"
 
-    // [{ label, mode, active }] for the current resolution
+    // ---- Refresh rates (niri) ----
     property var rates: []
 
-    onVisibleChanged: if (visible) outProc.running = true
+    onVisibleChanged: {
+        if (visible) {
+            outProc.running = true;
+            if (!isInternal) {
+                if (ddcNum < 0)
+                    ddcDetect.running = true;
+                else
+                    ddcGet.running = true;
+            }
+        }
+    }
 
     Process {
         id: outProc
@@ -36,7 +55,7 @@ PanelWindow {
             onStreamFinished: {
                 let outs;
                 try { outs = JSON.parse(text); } catch (e) { return; }
-                const o = outs[panel.screen?.name] ?? Object.values(outs)[0];
+                const o = outs[panel.sname];
                 if (!o)
                     return;
                 const cm = o.modes[o.current_mode];
@@ -59,12 +78,11 @@ PanelWindow {
     }
 
     function setMode(mode) {
-        Quickshell.execDetached(["niri", "msg", "output",
-            panel.screen?.name ?? "eDP-1", "mode", mode]);
+        Quickshell.execDetached(["niri", "msg", "output", panel.sname, "mode", mode]);
         refetchTimer.restart();
     }
 
-    // Brightness
+    // ---- Internal backlight ----
     readonly property int bCur: parseInt(bFile.text()) || 0
     readonly property int bMax: parseInt(bMaxFile.text()) || 1
     readonly property real bVal: bCur / bMax
@@ -81,10 +99,153 @@ PanelWindow {
         path: "/sys/class/backlight/intel_backlight/max_brightness"
     }
 
-    function setBrightness(v) {
+    function setBacklight(v) {
         v = Math.max(0.01, Math.min(1, v));
-        Quickshell.execDetached(["brightnessctl", "set",
-            Math.round(v * 100) + "%"]);
+        Quickshell.execDetached(["brightnessctl", "set", Math.round(v * 100) + "%"]);
+    }
+
+    // ---- External DDC/CI (ddcutil) ----
+    property int ddcNum: -1
+    property bool ddcReady: false
+    property real ddcBri: 0    // 0..1
+    property real ddcCon: 0
+
+    Process {
+        id: ddcDetect
+        command: ["ddcutil", "detect", "--terse"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let cur = -1;
+                for (const line of text.split("\n")) {
+                    const dm = line.match(/^Display (\d+)/);
+                    if (dm)
+                        cur = parseInt(dm[1]);
+                    else if (line.includes("DRM connector") && line.includes(panel.sname) && cur > 0) {
+                        panel.ddcNum = cur;
+                        ddcGet.running = true;
+                        return;
+                    } else if (line.startsWith("Invalid display")) {
+                        cur = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    Process {
+        id: ddcGet
+        command: ["ddcutil", "-d", String(panel.ddcNum), "getvcp", "10", "12", "--terse"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                for (const line of text.split("\n")) {
+                    const m = line.match(/^VCP (\d+) C (\d+) (\d+)/);
+                    if (!m)
+                        continue;
+                    const v = parseInt(m[2]) / parseInt(m[3]);
+                    if (m[1] === "10")
+                        panel.ddcBri = v;
+                    else if (m[1] === "12")
+                        panel.ddcCon = v;
+                    panel.ddcReady = true;
+                }
+            }
+        }
+    }
+
+    // Debounced writers: DDC is slow, apply only the latest value
+    Timer {
+        id: briWrite
+        interval: 250
+        onTriggered: Quickshell.execDetached(["ddcutil", "-d", String(panel.ddcNum),
+            "setvcp", "10", String(Math.round(panel.ddcBri * 100))])
+    }
+
+    Timer {
+        id: conWrite
+        interval: 250
+        onTriggered: Quickshell.execDetached(["ddcutil", "-d", String(panel.ddcNum),
+            "setvcp", "12", String(Math.round(panel.ddcCon * 100))])
+    }
+
+    function setDdcBri(v) {
+        ddcBri = Math.max(0, Math.min(1, v));
+        briWrite.restart();
+    }
+
+    function setDdcCon(v) {
+        ddcCon = Math.max(0, Math.min(1, v));
+        conWrite.restart();
+    }
+
+    // ---- UI ----
+    component SliderRow: Item {
+        id: srow
+        property real value: 0
+        property string iconName: "display-brightness-symbolic"
+        signal moved(real v)
+
+        width: col.width
+        height: 22
+
+        ColorIcon {
+            id: sIcon
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            size: 16
+            name: srow.iconName
+        }
+
+        Text {
+            id: sPct
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            width: 36
+            horizontalAlignment: Text.AlignRight
+            text: Math.round(srow.value * 100) + "%"
+            color: Theme.fg
+            font.family: Theme.uiFont
+            font.pixelSize: 12
+        }
+
+        Item {
+            anchors.left: sIcon.right
+            anchors.right: sPct.left
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            height: parent.height
+
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+                height: 5
+                color: Theme.faint
+
+                Rectangle {
+                    width: parent.width * Math.min(1, srow.value)
+                    height: parent.height
+                    color: Theme.accent
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: mouse => srow.moved(mouse.x / width)
+                onPositionChanged: mouse => {
+                    if (pressed)
+                        srow.moved(mouse.x / width);
+                }
+                onWheel: wheel => srow.moved(
+                    srow.value + (wheel.angleDelta.y > 0 ? 0.05 : -0.05))
+            }
+        }
+    }
+
+    component SectionLabel: Text {
+        color: Theme.muted
+        font.family: Theme.uiFont
+        font.pixelSize: 12
+        font.weight: Font.DemiBold
+        font.capitalization: Font.AllUppercase
     }
 
     Rectangle {
@@ -101,137 +262,86 @@ PanelWindow {
         width: parent.width - 36
         spacing: 6
 
-        Text {
-            text: "Brightness"
-            color: Theme.muted
-            font.family: Theme.uiFont
-            font.pixelSize: 12
-            font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
-        }
+        SectionLabel { text: panel.isInternal ? "Brightness" : "Brightness · DDC" }
 
         Item { width: 1; height: 2 }
 
-        Item {
-            width: parent.width
-            height: 22
+        // Internal: backlight
+        SliderRow {
+            visible: panel.isInternal
+            value: panel.bVal
+            onMoved: v => panel.setBacklight(v)
+        }
 
-            ColorIcon {
-                id: bIcon
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                size: 16
-                name: "display-brightness-symbolic"
-            }
+        // External: DDC brightness
+        SliderRow {
+            visible: !panel.isInternal && panel.ddcReady
+            value: panel.ddcBri
+            onMoved: v => panel.setDdcBri(v)
+        }
 
-            Text {
-                id: bPct
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                width: 36
-                horizontalAlignment: Text.AlignRight
-                text: Math.round(panel.bVal * 100) + "%"
-                color: Theme.fg
-                font.family: Theme.uiFont
-                font.pixelSize: 12
-            }
+        Text {
+            visible: !panel.isInternal && !panel.ddcReady
+            text: panel.ddcNum < 0 ? "Detecting monitor…" : "Reading values…"
+            color: Theme.faint
+            font.family: Theme.uiFont
+            font.pixelSize: 12
+        }
 
-            Item {
-                anchors.left: bIcon.right
-                anchors.right: bPct.left
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                height: parent.height
+        Item { visible: !panel.isInternal; width: 1; height: 8 }
 
-                Rectangle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width
-                    height: 5
-                    color: Theme.faint
+        SectionLabel { visible: !panel.isInternal; text: "Contrast" }
 
-                    Rectangle {
-                        width: parent.width * Math.min(1, panel.bVal)
-                        height: parent.height
-                        color: Theme.accent
-                    }
-                }
+        Item { visible: !panel.isInternal; width: 1; height: 2 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: mouse => panel.setBrightness(mouse.x / width)
-                    onPositionChanged: mouse => {
-                        if (pressed)
-                            panel.setBrightness(mouse.x / width);
-                    }
-                    onWheel: wheel => panel.setBrightness(
-                        panel.bVal + (wheel.angleDelta.y > 0 ? 0.05 : -0.05))
-                }
-            }
+        SliderRow {
+            visible: !panel.isInternal && panel.ddcReady
+            value: panel.ddcCon
+            iconName: "weather-clear-symbolic"
+            onMoved: v => panel.setDdcCon(v)
         }
 
         Item { width: 1; height: 10 }
 
-        Text {
-            text: "Refresh rate"
-            color: Theme.muted
-            font.family: Theme.uiFont
-            font.pixelSize: 12
-            font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
-        }
+        SectionLabel { text: "Refresh rate" }
 
         Item { width: 1; height: 4 }
 
-        // Full-width segmented switcher, same style as power profiles
-        Rectangle {
-            id: segments
-            width: parent.width
-            height: 30
-            color: "transparent"
-            border.color: Theme.faint
-            border.width: 1
+        // Wrapping grid: 3 per row, individually bordered cells
+        Grid {
+            columns: 3
+            columnSpacing: 4
+            rowSpacing: 4
             visible: panel.rates.length > 0
 
-            Row {
-                anchors.fill: parent
-                anchors.margins: 1
+            Repeater {
+                model: panel.rates
 
-                Repeater {
-                    model: panel.rates
+                Rectangle {
+                    required property var modelData
+                    width: (col.width - 8) / 3
+                    height: 28
+                    color: modelData.active ? Theme.accent
+                        : rateMouse.containsMouse ? "#1f1f1f" : "transparent"
+                    border.color: modelData.active ? Theme.accent : Theme.faint
+                    border.width: 1
 
-                    Rectangle {
-                        required property var modelData
-                        required property int index
-                        width: parent.width / panel.rates.length
-                        height: parent.height
-                        color: modelData.active ? Theme.accent
-                            : segMouse.containsMouse ? "#1f1f1f" : "transparent"
+                    Behavior on color { ColorAnimation { duration: 120 } }
 
-                        Behavior on color { ColorAnimation { duration: 120 } }
+                    Text {
+                        anchors.centerIn: parent
+                        text: parent.modelData.label
+                        color: parent.modelData.active ? "#000000" : Theme.fg
+                        font.family: Theme.uiFont
+                        font.pixelSize: 12
+                        font.weight: Font.Medium
+                    }
 
-                        Rectangle {
-                            visible: parent.index > 0
-                            anchors.left: parent.left
-                            width: 1
-                            height: parent.height
-                            color: Theme.faint
-                        }
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: parent.modelData.label
-                            color: parent.modelData.active ? "#000000" : Theme.fg
-                            font.family: Theme.uiFont
-                            font.pixelSize: 12
-                            font.weight: Font.Medium
-                        }
-
-                        MouseArea {
-                            id: segMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: panel.setMode(parent.modelData.mode)
-                        }
+                    MouseArea {
+                        id: rateMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: panel.setMode(parent.modelData.mode)
                     }
                 }
             }

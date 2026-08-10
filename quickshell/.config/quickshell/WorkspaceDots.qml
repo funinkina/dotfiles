@@ -1,6 +1,9 @@
 import QtQuick
 
 Item {
+    // Connector name of the monitor this bar lives on (e.g. "eDP-1")
+    property string screenName: ""
+
     implicitWidth: row.implicitWidth + 8
     implicitHeight: Theme.barHeight
 
@@ -28,7 +31,9 @@ Item {
             anchors.margins: 1
 
             Repeater {
-                model: NiriService.workspaces.filter(w => w.name !== "hidden")
+                model: NiriService.workspaces.filter(w =>
+                    w.name !== "hidden"
+                    && (screenName === "" || w.output === screenName))
 
                 Rectangle {
                     required property var modelData

@@ -13,7 +13,9 @@ PanelWindow {
     WlrLayershell.keyboardFocus: visible
         ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
+    readonly property string sname: screen?.name ?? ""
     visible: ShellState.openPanel === "power"
+        && (ShellState.panelScreen === "" || ShellState.panelScreen === sname)
 
     // No anchors: layer-shell centers the surface on screen
     exclusionMode: ExclusionMode.Ignore

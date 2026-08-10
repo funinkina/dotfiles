@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
@@ -43,7 +44,7 @@ Item {
                 if (root.sink?.audio)
                     root.sink.audio.muted = !root.sink.audio.muted;
             } else {
-                ShellState.togglePanel("audio");
+                ShellState.togglePanel("audio", QsWindow.window?.screen?.name ?? "");
             }
         }
         onWheel: wheel => {

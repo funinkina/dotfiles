@@ -44,7 +44,7 @@ Item {
         anchors.rightMargin: -8
         anchors.topMargin: -8
         anchors.bottomMargin: -8
-        onClicked: ShellState.togglePanel("display")
+        onClicked: ShellState.togglePanel("display", QsWindow.window?.screen?.name ?? "")
         onWheel: wheel => {
             Quickshell.execDetached(["brightnessctl", "set",
                 wheel.angleDelta.y > 0 ? "5%+" : "5%-"]);

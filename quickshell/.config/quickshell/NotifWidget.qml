@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 
 // Bar bell: dim when idle, white with a dot badge when notifications exist.
 Item {
@@ -35,6 +36,6 @@ Item {
     MouseArea {
         anchors.fill: parent
         anchors.margins: -8
-        onClicked: ShellState.togglePanel("notifs")
+        onClicked: ShellState.togglePanel("notifs", QsWindow.window?.screen?.name ?? "")
     }
 }

@@ -40,7 +40,8 @@ RowLayout {
                         item.activate();
                     } else if (item.hasMenu) {
                         ShellState.openTrayMenu(item.menu,
-                            trayItem.mapToItem(null, trayItem.width / 2, 0).x);
+                            trayItem.mapToItem(null, trayItem.width / 2, 0).x,
+                            QsWindow.window?.screen?.name ?? "");
                     } else {
                         item.activate();
                     }

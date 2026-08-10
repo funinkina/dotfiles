@@ -10,13 +10,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-weather"
 
-    visible: ShellState.openPanel === "weather"
+    readonly property string sname: screen?.name ?? ""
+    visible: ShellState.openPanel === "weather" && ShellState.panelScreen === sname
 
     anchors { top: true; right: true }
     margins {
         top: Theme.barHeight + 8
-        right: ShellState.weatherX < 0 ? 16
-            : Math.max(8, ShellState.screenW - ShellState.weatherX - implicitWidth / 2)
+        right: {
+            const ax = ShellState.anchorMap[sname]?.weather ?? -1;
+            return ax < 0 ? 16
+                : Math.max(8, (screen?.width ?? 1920) - ax - implicitWidth / 2);
+        }
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 300

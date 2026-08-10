@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Layouts
 
 // Bar weather: condition icon + temperature.
@@ -35,7 +36,7 @@ Item {
         anchors.margins: -6
         onClicked: {
             WeatherService.refresh();
-            ShellState.togglePanel("weather");
+            ShellState.togglePanel("weather", QsWindow.window?.screen?.name ?? "");
         }
     }
 }
