@@ -261,12 +261,23 @@ Rectangle {
         }
     }
 
-    // Power controls + logo, bottom right
-    Row {
+    // Arch logo, bottom right
+    Image {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 24
-        spacing: 18
+        source: "archlogo.svg"
+        sourceSize.height: 80
+        fillMode: Image.PreserveAspectFit
+        opacity: 0.85
+    }
+
+    // Power controls, top right
+    Row {
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: 24
+        spacing: 10
 
         Rectangle {
             width: rebootLabel.implicitWidth + 24
@@ -316,14 +327,6 @@ Rectangle {
                 hoverEnabled: true
                 onClicked: sddm.powerOff()
             }
-        }
-
-        Image {
-            anchors.verticalCenter: parent.verticalCenter
-            source: "archlogo.svg"
-            sourceSize.height: 80
-            fillMode: Image.PreserveAspectFit
-            opacity: 0.85
         }
     }
 }
