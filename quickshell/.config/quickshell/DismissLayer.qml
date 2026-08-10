@@ -18,7 +18,7 @@ PanelWindow {
     // Network (password entry) and power (arrow nav) manage their own.
     WlrLayershell.keyboardFocus:
         ShellState.openPanel !== "" && ShellState.openPanel !== "network"
-            && ShellState.openPanel !== "power"
+            && ShellState.openPanel !== "power" && ShellState.openPanel !== "weather"
             ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     anchors { top: true; bottom: true; left: true; right: true }
