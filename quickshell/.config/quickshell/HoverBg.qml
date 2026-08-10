@@ -1,8 +1,13 @@
 import QtQuick
 
-// Subtle hover background for bar items. Widgets span the full bar height,
-// so this reaches the screen edge; extends a little sideways past content.
+// Hover/active/pressed pill behind bar items. Widgets span the full bar
+// height; the pill is inset vertically and extends sideways past content.
+// `active` marks the widget whose popout panel is currently open.
 Item {
+    id: root
+    property bool active: false
+    property bool pressed: false
+
     anchors.fill: parent
     anchors.leftMargin: -8
     anchors.rightMargin: -8
@@ -10,7 +15,11 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: hh.hovered ? "#1f1f1f" : "transparent"
+        anchors.topMargin: 3
+        anchors.bottomMargin: 3
+        radius: Theme.radius
+        color: root.pressed || root.active ? Theme.press
+            : hh.hovered ? Theme.hover : "transparent"
         Behavior on color { ColorAnimation { duration: 100 } }
     }
 

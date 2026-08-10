@@ -171,11 +171,13 @@ PanelWindow {
                     anchors.rightMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
                     height: 5
-                    color: Theme.faint
+                    radius: 2.5
+                    color: Theme.press
 
                     Rectangle {
                         width: parent.width * Math.min(1, osd.value)
                         height: parent.height
+                        radius: parent.radius
                         color: osd.mode === "volume" && osd.muted ? Theme.muted : Theme.accent
                         Behavior on width { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
                     }

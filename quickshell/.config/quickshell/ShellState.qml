@@ -7,7 +7,7 @@ Singleton {
     id: root
 
     // Per-screen anchor positions: screenName -> { key: centerX }
-    // Keys: volume, brightness, network, battery, media, clock, weather, traymenu
+    // Keys: volume, brightness, network, battery, media, clock, weather
     property var anchorMap: ({})
     function setAnchor(screen, key, x) {
         const m = Object.assign({}, anchorMap);
@@ -21,15 +21,6 @@ Singleton {
 
     // Dock visibility, toggled via `qs ipc call dock toggle` (Mod+Shift+D)
     property bool dockVisible: false
-
-    // Custom-styled tray menu state
-    property var trayMenuHandle: null
-    function openTrayMenu(handle, x, screen) {
-        trayMenuHandle = handle;
-        setAnchor(screen, "traymenu", x);
-        panelScreen = screen;
-        openPanel = "traymenu";
-    }
 
     // Exclusive popout panels; panelScreen is the screen they open on
     // ("" = every screen, used by the centered power menu via IPC)
@@ -45,4 +36,8 @@ Singleton {
         }
     }
     function closePanels() { openPanel = ""; }
+    // For bar widgets to show an active state while their panel is open
+    function isOpen(name, screen) {
+        return openPanel === name && panelScreen === screen;
+    }
 }

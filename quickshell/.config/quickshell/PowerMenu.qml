@@ -44,12 +44,7 @@ PanelWindow {
             Quickshell.execDetached(["systemctl", action]);
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Item {
         anchors.fill: parent
@@ -68,6 +63,7 @@ PanelWindow {
         id: row
         anchors.centerIn: parent
         spacing: 12
+        opacity: surf.opacity
 
         Repeater {
             model: panel.entries
@@ -78,8 +74,9 @@ PanelWindow {
                 readonly property bool current: panel.selected === index
                 width: 104
                 height: 96
-                color: current || tileMouse.containsMouse ? "#1f1f1f" : "#0d0d0d"
-                border.color: current ? Theme.fg : Theme.faint
+                color: tileMouse.pressed ? Theme.press
+                    : current || tileMouse.containsMouse ? Theme.hover : Theme.surface
+                border.color: current ? Theme.fg : Theme.border
                 border.width: 1
 
                 Behavior on color { ColorAnimation { duration: 100 } }
@@ -108,6 +105,7 @@ PanelWindow {
                     id: tileMouse
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onEntered: panel.selected = parent.index
                     onClicked: panel.act(parent.modelData.action)
                 }

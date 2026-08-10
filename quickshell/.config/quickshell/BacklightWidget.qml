@@ -24,7 +24,10 @@ Item {
         path: "/sys/class/backlight/intel_backlight/max_brightness"
     }
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("display", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     RowLayout {
         id: content
@@ -39,11 +42,13 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.leftMargin: -8
         anchors.rightMargin: -8
         anchors.topMargin: -8
         anchors.bottomMargin: -8
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("display", QsWindow.window?.screen?.name ?? "")
         onWheel: wheel => {
             Quickshell.execDetached(["brightnessctl", "set",

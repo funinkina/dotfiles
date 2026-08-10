@@ -119,7 +119,7 @@ WlSessionLock {
                 width: 76
                 height: 76
                 radius: 38
-                color: "#141414"
+                color: Theme.surface
 
                 Image {
                     anchors.fill: parent
@@ -143,9 +143,10 @@ WlSessionLock {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 300
                 height: 34
-                color: "#0d0d0d"
-                border.color: pwIn.activeFocus ? Theme.fg : Theme.border
+                color: Theme.surface
+                border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
                 border.width: 1
+                Behavior on border.color { ColorAnimation { duration: 100 } }
 
                 TextInput {
                     id: pwIn

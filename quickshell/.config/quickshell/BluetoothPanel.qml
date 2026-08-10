@@ -42,12 +42,7 @@ PanelWindow {
         return d.battery <= 1 ? Math.round(d.battery * 100) : Math.round(d.battery);
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -55,6 +50,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 6
+        opacity: surf.opacity
 
         // Header: label + on/off segmented toggle
         Item {
@@ -79,7 +75,7 @@ PanelWindow {
                 width: 92
                 height: 22
                 color: "transparent"
-                border.color: Theme.faint
+                border.color: Theme.border
                 border.width: 1
 
                 Row {
@@ -99,7 +95,8 @@ PanelWindow {
                             width: parent.width / 2
                             height: parent.height
                             color: active ? Theme.accent
-                                : segMouse.containsMouse ? "#1f1f1f" : "transparent"
+                                : segMouse.pressed ? Theme.press
+                                : segMouse.containsMouse ? Theme.hover : "transparent"
 
                             Behavior on color { ColorAnimation { duration: 120 } }
 
@@ -108,13 +105,13 @@ PanelWindow {
                                 anchors.left: parent.left
                                 width: 1
                                 height: parent.height
-                                color: Theme.faint
+                                color: Theme.line
                             }
 
                             Text {
                                 anchors.centerIn: parent
                                 text: parent.modelData.label
-                                color: parent.active ? "#000000" : Theme.fg
+                                color: parent.active ? Theme.accentFg : Theme.fg
                                 font.family: Theme.uiFont
                                 font.pixelSize: 11
                                 font.weight: Font.Medium
@@ -124,6 +121,7 @@ PanelWindow {
                                 id: segMouse
                                 anchors.fill: parent
                                 hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: {
                                     if (panel.adapter)
                                         panel.adapter.enabled = parent.modelData.val;
@@ -154,13 +152,17 @@ PanelWindow {
                 readonly property int batt: panel.devBattery(modelData)
                 width: col.width
                 height: 40
-                color: rowMouse.containsMouse ? "#1a1a1a" : "transparent"
+                radius: Theme.radius
+                color: rowMouse.pressed ? Theme.press
+                    : rowMouse.containsMouse ? Theme.hover : "transparent"
+                Behavior on color { ColorAnimation { duration: 100 } }
 
                 Rectangle {
                     visible: row.modelData.connected
                     anchors.left: parent.left
                     width: 3
                     height: 22
+                    radius: 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     color: Theme.accent
                 }
@@ -224,6 +226,7 @@ PanelWindow {
                     id: rowMouse
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         if (row.modelData.connected)
                             row.modelData.disconnect();

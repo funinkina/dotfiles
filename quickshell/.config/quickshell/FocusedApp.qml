@@ -11,8 +11,7 @@ Item {
 
     readonly property var info: NiriService.appInfo(NiriService.focusedWindow)
 
-    HoverBg {}
-
+    // Purely informational — no hover state, nothing to click
     RowLayout {
         id: content
         anchors.centerIn: parent

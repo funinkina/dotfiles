@@ -38,7 +38,10 @@ Item {
         onTriggered: nmProc.running = true
     }
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("network", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     RowLayout {
         id: content
@@ -64,11 +67,13 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.leftMargin: -8
         anchors.rightMargin: -8
         anchors.topMargin: -8
         anchors.bottomMargin: -8
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("network", QsWindow.window?.screen?.name ?? "")
     }
 }

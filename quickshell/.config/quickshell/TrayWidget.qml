@@ -21,6 +21,7 @@ RowLayout {
             HoverBg {
                 anchors.leftMargin: -5
                 anchors.rightMargin: -5
+                pressed: trayMouse.pressed
             }
 
             IconImage {
@@ -30,7 +31,9 @@ RowLayout {
             }
 
             MouseArea {
+                id: trayMouse
                 anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
                 onClicked: mouse => {
                     const item = trayItem.modelData;
@@ -39,9 +42,8 @@ RowLayout {
                     } else if (mouse.button === Qt.LeftButton && !item.onlyMenu) {
                         item.activate();
                     } else if (item.hasMenu) {
-                        ShellState.openTrayMenu(item.menu,
-                            trayItem.mapToItem(null, trayItem.width / 2, 0).x,
-                            QsWindow.window?.screen?.name ?? "");
+                        item.display(QsWindow.window,
+                            trayItem.mapToItem(null, 0, 0).x, Theme.barHeight);
                     } else {
                         item.activate();
                     }

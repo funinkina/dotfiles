@@ -10,7 +10,10 @@ Item {
         precision: SystemClock.Minutes
     }
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("clock", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     Text {
         id: t
@@ -23,8 +26,10 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.margins: -6
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("clock", QsWindow.window?.screen?.name ?? "")
     }
 }

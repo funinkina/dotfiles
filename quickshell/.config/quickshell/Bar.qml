@@ -19,6 +19,13 @@ PanelWindow {
         color: Theme.bg
     }
 
+    // Hairline separating the bar from window content
+    Rectangle {
+        anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+        height: 1
+        color: Theme.line
+    }
+
     readonly property string sname: bar.screen?.name ?? ""
     readonly property real volX: contentArea.x + rightRow.x + audioW.x + audioW.width / 2
     readonly property real briX: contentArea.x + rightRow.x + backlightW.x + backlightW.width / 2
@@ -66,7 +73,7 @@ PanelWindow {
                 implicitWidth: 20
                 implicitHeight: Theme.barHeight
 
-                HoverBg {}
+                HoverBg { pressed: archMouse.pressed }
 
                 Image {
                     anchors.centerIn: parent
@@ -74,7 +81,9 @@ PanelWindow {
                     sourceSize.width: 20
                     sourceSize.height: 20
                     opacity: archMouse.containsMouse ? 1.0 : 0.85
+                    scale: archMouse.pressed ? 0.9 : 1.0
                     Behavior on opacity { NumberAnimation { duration: 100 } }
+                    Behavior on scale { NumberAnimation { duration: 100 } }
                 }
 
                 MouseArea {
@@ -82,6 +91,7 @@ PanelWindow {
                     anchors.fill: parent
                     anchors.margins: -6
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: NiriService.dispatch(["toggle-overview"])
                 }
             }

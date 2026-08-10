@@ -22,7 +22,7 @@ Item {
         implicitWidth: cells.implicitWidth + 2
         implicitHeight: 22
         color: "transparent"
-        border.color: Theme.faint
+        border.color: Theme.border
         border.width: 1
 
         Row {
@@ -42,7 +42,8 @@ Item {
                     height: parent.height
                     color: modelData.is_active ? Theme.accent
                         : modelData.is_urgent ? Theme.urgent
-                        : chipMouse.containsMouse ? "#1f1f1f" : "transparent"
+                        : chipMouse.pressed ? Theme.press
+                        : chipMouse.containsMouse ? Theme.hover : "transparent"
 
                     Behavior on color { ColorAnimation { duration: 150 } }
 
@@ -51,23 +52,26 @@ Item {
                         anchors.left: parent.left
                         width: 1
                         height: parent.height
-                        color: Theme.faint
+                        color: Theme.line
                     }
 
                     Text {
                         anchors.centerIn: parent
                         text: modelData.idx
                         color: modelData.is_active || modelData.is_urgent
-                            ? "#000000" : Theme.muted
+                            ? Theme.accentFg : chipMouse.containsMouse ? Theme.fg : Theme.muted
                         font.family: Theme.uiFont
                         font.pixelSize: 12
                         font.weight: Font.DemiBold
+
+                        Behavior on color { ColorAnimation { duration: 150 } }
                     }
 
                     MouseArea {
                         id: chipMouse
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: NiriService.dispatch(["focus-workspace", String(modelData.idx)])
                     }
                 }

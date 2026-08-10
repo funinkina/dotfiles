@@ -62,9 +62,11 @@ PanelWindow {
                     readonly property var n: modelData.n
                     width: stack.width
                     implicitHeight: cardRow.implicitHeight + 24
-                    color: Theme.bg
-                    border.color: Theme.border
+                    color: cardMouse.containsMouse ? Theme.surface : Theme.bg
+                    border.color: cardMouse.containsMouse ? Theme.borderBright : Theme.border
                     border.width: 1
+                    Behavior on color { ColorAnimation { duration: 100 } }
+                    Behavior on border.color { ColorAnimation { duration: 100 } }
 
                     opacity: 0
                     Component.onCompleted: opacity = 1
@@ -73,8 +75,11 @@ PanelWindow {
                     Rectangle {
                         visible: card.n.urgency === NotificationUrgency.Critical
                         anchors.left: parent.left
+                        anchors.leftMargin: 4
+                        anchors.verticalCenter: parent.verticalCenter
                         width: 3
-                        height: parent.height
+                        height: parent.height - 16
+                        radius: 1.5
                         color: Theme.urgent
                     }
 
@@ -139,7 +144,10 @@ PanelWindow {
                     }
 
                     MouseArea {
+                        id: cardMouse
                         anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: card.n.dismiss()
                     }
                 }

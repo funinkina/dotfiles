@@ -20,7 +20,10 @@ Item {
         return d.battery <= 1 ? Math.round(d.battery * 100) : Math.round(d.battery);
     }
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("bluetooth", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     RowLayout {
         id: content
@@ -47,8 +50,10 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.margins: -8
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("bluetooth", QsWindow.window?.screen?.name ?? "")
     }
 }

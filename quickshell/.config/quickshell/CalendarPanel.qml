@@ -89,12 +89,7 @@ PanelWindow {
         return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -102,6 +97,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 4
+        opacity: surf.opacity
 
         Text {
             text: Qt.formatDateTime(clock.date, "HH:mm:ss")
@@ -127,7 +123,7 @@ PanelWindow {
 
         Item { width: 1; height: 10 }
 
-        Rectangle { width: parent.width; height: 1; color: Theme.faint }
+        Rectangle { width: parent.width; height: 1; color: Theme.line }
 
         Item { width: 1; height: 10 }
 
@@ -142,11 +138,14 @@ PanelWindow {
                 name: "go-previous-symbolic"
                 size: 14
                 tint: prevMouse.containsMouse ? Theme.fg : Theme.muted
+                scale: prevMouse.pressed ? 0.85 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
                     id: prevMouse
                     anchors.fill: parent
                     anchors.margins: -8
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: panel.shiftMonth(-1)
                 }
             }
@@ -167,11 +166,14 @@ PanelWindow {
                 name: "go-next-symbolic"
                 size: 14
                 tint: nextMouse.containsMouse ? Theme.fg : Theme.muted
+                scale: nextMouse.pressed ? 0.85 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
                     id: nextMouse
                     anchors.fill: parent
                     anchors.margins: -8
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: panel.shiftMonth(1)
                 }
             }
@@ -222,7 +224,7 @@ PanelWindow {
                         Text {
                             anchors.centerIn: parent
                             text: parent.parent.modelData.day
-                            color: parent.parent.modelData.today ? "#000000"
+                            color: parent.parent.modelData.today ? Theme.accentFg
                                 : parent.parent.modelData.inMonth ? Theme.fg : Theme.faint
                             font.family: Theme.uiFont
                             font.pixelSize: 12

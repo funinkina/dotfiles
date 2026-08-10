@@ -59,12 +59,7 @@ PanelWindow {
         return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -72,6 +67,7 @@ PanelWindow {
         y: 14
         width: parent.width - 28
         spacing: 6
+        opacity: surf.opacity
 
         Row {
             spacing: 16
@@ -81,7 +77,7 @@ PanelWindow {
                 width: 78
                 height: 78
                 radius: 8
-                color: "#161616"
+                color: Theme.surface
 
                 Image {
                     anchors.fill: parent
@@ -151,21 +147,43 @@ PanelWindow {
                 id: track
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
-                height: 4
-                radius: 2
-                color: "#2e2e2e"
+                height: seekMouse.containsMouse ? 6 : 4
+                radius: height / 2
+                color: Theme.press
+                Behavior on height { NumberAnimation { duration: 100 } }
 
                 Rectangle {
                     width: panel.len > 0
                         ? track.width * Math.min(1, panel.pos / panel.len) : 0
                     height: parent.height
-                    radius: 2
+                    radius: parent.radius
                     color: Theme.fg
                 }
             }
 
+            // Seek knob, shown on hover
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                x: panel.len > 0
+                    ? Math.max(0, Math.min(parent.width - width,
+                        parent.width * Math.min(1, panel.pos / panel.len) - width / 2))
+                    : 0
+                width: 12
+                height: 12
+                radius: 6
+                color: Theme.accent
+                border.color: Theme.bg
+                border.width: 2
+                opacity: seekMouse.containsMouse ? 1 : 0
+                Behavior on opacity { NumberAnimation { duration: 100 } }
+            }
+
             MouseArea {
+                id: seekMouse
                 anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: panel.player?.canSeek
+                    ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: mouse => {
                     if (panel.player?.canSeek && panel.len > 0) {
                         panel.player.position = (mouse.x / width) * panel.len;
@@ -186,9 +204,14 @@ PanelWindow {
                 name: "media-playlist-shuffle-symbolic"
                 size: 18
                 tint: panel.player?.shuffle ? Theme.fg : Theme.faint
+                scale: shufMouse.pressed ? 0.85 : shufMouse.containsMouse ? 1.15 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
+                    id: shufMouse
                     anchors.fill: parent
                     anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         if (panel.player?.shuffleSupported)
                             panel.player.shuffle = !panel.player.shuffle;
@@ -201,9 +224,14 @@ PanelWindow {
                 name: "media-skip-backward-symbolic"
                 size: 22
                 tint: panel.player?.canGoPrevious ? Theme.fg : Theme.faint
+                scale: prevMouse.pressed ? 0.85 : prevMouse.containsMouse ? 1.15 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
+                    id: prevMouse
                     anchors.fill: parent
                     anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: panel.player?.previous()
                 }
             }
@@ -214,9 +242,14 @@ PanelWindow {
                     ? "media-playback-pause-symbolic"
                     : "media-playback-start-symbolic"
                 size: 28
+                scale: playMouse.pressed ? 0.85 : playMouse.containsMouse ? 1.15 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
+                    id: playMouse
                     anchors.fill: parent
                     anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: panel.player?.togglePlaying()
                 }
             }
@@ -226,9 +259,14 @@ PanelWindow {
                 name: "media-skip-forward-symbolic"
                 size: 22
                 tint: panel.player?.canGoNext ? Theme.fg : Theme.faint
+                scale: nextMouse.pressed ? 0.85 : nextMouse.containsMouse ? 1.15 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
+                    id: nextMouse
                     anchors.fill: parent
                     anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: panel.player?.next()
                 }
             }
@@ -241,9 +279,14 @@ PanelWindow {
                 size: 18
                 tint: panel.player?.loopState !== MprisLoopState.None
                     ? Theme.fg : Theme.faint
+                scale: loopMouse.pressed ? 0.85 : loopMouse.containsMouse ? 1.15 : 1.0
+                Behavior on scale { NumberAnimation { duration: 100 } }
                 MouseArea {
+                    id: loopMouse
                     anchors.fill: parent
                     anchors.margins: -6
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         const p = panel.player;
                         if (!p?.loopSupported)

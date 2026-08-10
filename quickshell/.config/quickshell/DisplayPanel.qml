@@ -217,18 +217,39 @@ PanelWindow {
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
-                height: 5
-                color: Theme.faint
+                height: sMouse.containsMouse || sMouse.pressed ? 7 : 5
+                radius: height / 2
+                color: Theme.press
+                Behavior on height { NumberAnimation { duration: 100 } }
 
                 Rectangle {
                     width: parent.width * Math.min(1, srow.value)
                     height: parent.height
+                    radius: parent.radius
                     color: Theme.accent
                 }
             }
 
+            // Drag knob, shown while hovering or dragging
+            Rectangle {
+                anchors.verticalCenter: parent.verticalCenter
+                x: Math.max(0, Math.min(parent.width - width,
+                    parent.width * Math.min(1, srow.value) - width / 2))
+                width: 13
+                height: 13
+                radius: 6.5
+                color: Theme.accent
+                border.color: Theme.bg
+                border.width: 2
+                opacity: sMouse.containsMouse || sMouse.pressed ? 1 : 0
+                Behavior on opacity { NumberAnimation { duration: 100 } }
+            }
+
             MouseArea {
+                id: sMouse
                 anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
                 onPressed: mouse => srow.moved(mouse.x / width)
                 onPositionChanged: mouse => {
                     if (pressed)
@@ -248,12 +269,7 @@ PanelWindow {
         font.capitalization: Font.AllUppercase
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -261,6 +277,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 6
+        opacity: surf.opacity
 
         SectionLabel { text: panel.isInternal ? "Brightness" : "Brightness · DDC" }
 
@@ -322,8 +339,9 @@ PanelWindow {
                     width: (col.width - 8) / 3
                     height: 28
                     color: modelData.active ? Theme.accent
-                        : rateMouse.containsMouse ? "#1f1f1f" : "transparent"
-                    border.color: modelData.active ? Theme.accent : Theme.faint
+                        : rateMouse.pressed ? Theme.press
+                        : rateMouse.containsMouse ? Theme.hover : "transparent"
+                    border.color: modelData.active ? Theme.accent : Theme.border
                     border.width: 1
 
                     Behavior on color { ColorAnimation { duration: 120 } }
@@ -331,7 +349,7 @@ PanelWindow {
                     Text {
                         anchors.centerIn: parent
                         text: parent.modelData.label
-                        color: parent.modelData.active ? "#000000" : Theme.fg
+                        color: parent.modelData.active ? Theme.accentFg : Theme.fg
                         font.family: Theme.uiFont
                         font.pixelSize: 12
                         font.weight: Font.Medium
@@ -341,6 +359,7 @@ PanelWindow {
                         id: rateMouse
                         anchors.fill: parent
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: panel.setMode(parent.modelData.mode)
                     }
                 }

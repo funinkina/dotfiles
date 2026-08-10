@@ -46,12 +46,7 @@ PanelWindow {
             sink.audio.volume = Math.max(0, Math.min(1, v));
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -59,6 +54,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 6
+        opacity: surf.opacity
 
         Text {
             text: "Volume"
@@ -90,6 +86,7 @@ PanelWindow {
                 MouseArea {
                     anchors.fill: parent
                     anchors.margins: -4
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         if (panel.sink?.audio)
                             panel.sink.audio.muted = !panel.sink.audio.muted;
@@ -120,18 +117,39 @@ PanelWindow {
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
-                    height: 5
-                    color: Theme.faint
+                    height: trackMouse.containsMouse || trackMouse.pressed ? 7 : 5
+                    radius: height / 2
+                    color: Theme.press
+                    Behavior on height { NumberAnimation { duration: 100 } }
 
                     Rectangle {
                         width: parent.width * Math.min(1, panel.vol)
                         height: parent.height
+                        radius: parent.radius
                         color: panel.muted ? Theme.muted : Theme.accent
                     }
                 }
 
+                // Drag knob, shown while hovering or dragging
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: Math.max(0, Math.min(parent.width - width,
+                        parent.width * Math.min(1, panel.vol) - width / 2))
+                    width: 13
+                    height: 13
+                    radius: 6.5
+                    color: Theme.accent
+                    border.color: Theme.bg
+                    border.width: 2
+                    opacity: trackMouse.containsMouse || trackMouse.pressed ? 1 : 0
+                    Behavior on opacity { NumberAnimation { duration: 100 } }
+                }
+
                 MouseArea {
+                    id: trackMouse
                     anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onPressed: mouse => panel.setVol(mouse.x / width)
                     onPositionChanged: mouse => {
                         if (pressed)
@@ -166,13 +184,17 @@ PanelWindow {
                     modelData.id === Pipewire.defaultAudioSink?.id
                 width: col.width
                 height: 34
-                color: rowMouse.containsMouse ? "#1a1a1a" : "transparent"
+                radius: Theme.radius
+                color: rowMouse.pressed ? Theme.press
+                    : rowMouse.containsMouse ? Theme.hover : "transparent"
+                Behavior on color { ColorAnimation { duration: 100 } }
 
                 Rectangle {
                     visible: row.active
                     anchors.left: parent.left
                     width: 3
                     height: 18
+                    radius: 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     color: Theme.accent
                 }
@@ -206,6 +228,7 @@ PanelWindow {
                     id: rowMouse
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: Pipewire.preferredDefaultAudioSink = row.modelData
                 }
             }

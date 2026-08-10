@@ -9,7 +9,10 @@ Item {
 
     readonly property bool hasNotifs: NotifService.all.length > 0
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("notifs", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     ColorIcon {
         id: bell
@@ -34,8 +37,10 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.margins: -8
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("notifs", QsWindow.window?.screen?.name ?? "")
     }
 }

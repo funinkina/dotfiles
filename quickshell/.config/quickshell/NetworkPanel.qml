@@ -243,12 +243,7 @@ PanelWindow {
         onTriggered: speedProc.running = true
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Flickable {
         id: flick
@@ -258,6 +253,7 @@ PanelWindow {
         clip: true
         boundsBehavior: Flickable.StopAtBounds
         focus: true
+        opacity: surf.opacity
         // Esc: collapse an open password row first, then close the panel
         Keys.onEscapePressed: {
             if (panel.expandedSsid !== "")
@@ -292,7 +288,7 @@ PanelWindow {
                     width: 92
                     height: 22
                     color: "transparent"
-                    border.color: Theme.faint
+                    border.color: Theme.border
                     border.width: 1
 
                     Row {
@@ -312,7 +308,8 @@ PanelWindow {
                                 width: parent.width / 2
                                 height: parent.height
                                 color: active ? Theme.accent
-                                    : wtMouse.containsMouse ? "#1f1f1f" : "transparent"
+                                    : wtMouse.pressed ? Theme.press
+                                    : wtMouse.containsMouse ? Theme.hover : "transparent"
 
                                 Behavior on color { ColorAnimation { duration: 120 } }
 
@@ -321,13 +318,13 @@ PanelWindow {
                                     anchors.left: parent.left
                                     width: 1
                                     height: parent.height
-                                    color: Theme.faint
+                                    color: Theme.line
                                 }
 
                                 Text {
                                     anchors.centerIn: parent
                                     text: parent.modelData.label
-                                    color: parent.active ? "#000000" : Theme.fg
+                                    color: parent.active ? Theme.accentFg : Theme.fg
                                     font.family: Theme.uiFont
                                     font.pixelSize: 11
                                     font.weight: Font.Medium
@@ -337,6 +334,7 @@ PanelWindow {
                                     id: wtMouse
                                     anchors.fill: parent
                                     hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
                                     onClicked: panel.setWifi(parent.modelData.val)
                                 }
                             }
@@ -385,7 +383,7 @@ PanelWindow {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Theme.faint
+                color: Theme.line
             }
 
             Item { width: 1; height: 8 }
@@ -415,8 +413,11 @@ PanelWindow {
                     Rectangle {
                         width: parent.width
                         height: 32
-                        color: rowMouse.containsMouse || netItem.expanded
-                            ? "#1a1a1a" : "transparent"
+                        radius: netItem.expanded ? 0 : Theme.radius
+                        color: rowMouse.pressed ? Theme.press
+                            : rowMouse.containsMouse || netItem.expanded
+                            ? Theme.hover : "transparent"
+                        Behavior on color { ColorAnimation { duration: 100 } }
 
                         Text {
                             anchors.left: parent.left
@@ -459,6 +460,7 @@ PanelWindow {
                             id: rowMouse
                             anchors.fill: parent
                             hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 const n = netItem.modelData;
                                 panel.connError = "";
@@ -477,7 +479,10 @@ PanelWindow {
                         visible: netItem.expanded
                         width: parent.width
                         height: 36
-                        color: "#141414"
+                        color: Theme.surface
+                        border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
+                        border.width: 1
+                        Behavior on border.color { ColorAnimation { duration: 100 } }
 
                         onVisibleChanged: if (visible) pwIn.forceActiveFocus()
 
@@ -511,13 +516,17 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             width: btnLabel.implicitWidth + 16
                             height: 24
-                            color: btnMouse.containsMouse ? Theme.fg : "#2a2a2a"
+                            radius: Theme.radius - 2
+                            color: btnMouse.pressed ? Theme.dim
+                                : btnMouse.containsMouse ? Theme.fg : Theme.press
+                            Behavior on color { ColorAnimation { duration: 100 } }
 
                             Text {
                                 id: btnLabel
                                 anchors.centerIn: parent
                                 text: connProc.running ? "…" : "Connect"
-                                color: btnMouse.containsMouse ? "#000000" : Theme.fg
+                                color: btnMouse.containsMouse || btnMouse.pressed
+                                    ? Theme.accentFg : Theme.fg
                                 font.family: Theme.uiFont
                                 font.pixelSize: 12
                                 font.weight: Font.Medium
@@ -527,6 +536,7 @@ PanelWindow {
                                 id: btnMouse
                                 anchors.fill: parent
                                 hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: panel.connect(netItem.modelData.ssid, pwIn.text)
                             }
                         }

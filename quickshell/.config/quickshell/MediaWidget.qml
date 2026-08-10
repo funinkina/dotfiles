@@ -21,7 +21,10 @@ Item {
     readonly property string title: player?.trackTitle ?? ""
     readonly property string artist: player?.trackArtist ?? ""
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("media", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     RowLayout {
         id: content
@@ -60,8 +63,10 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.margins: -6
+        cursorShape: Qt.PointingHandCursor
         onClicked: ShellState.togglePanel("media", QsWindow.window?.screen?.name ?? "")
     }
 }

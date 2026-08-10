@@ -38,12 +38,7 @@ PanelWindow {
         return Qt.formatDateTime(new Date(ts * 1000), "HH:mm");
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -51,6 +46,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 4
+        opacity: surf.opacity
 
         Item {
             width: parent.width
@@ -90,6 +86,7 @@ PanelWindow {
                     anchors.fill: parent
                     anchors.margins: -6
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         panel.editing = true;
                         cityIn.text = WeatherService.cityPref;
@@ -101,8 +98,8 @@ PanelWindow {
             Rectangle {
                 visible: panel.editing
                 anchors.fill: parent
-                color: "#0d0d0d"
-                border.color: cityIn.activeFocus ? Theme.fg : Theme.border
+                color: Theme.surface
+                border.color: cityIn.activeFocus ? Theme.borderBright : Theme.border
                 border.width: 1
 
                 TextInput {
@@ -169,7 +166,7 @@ PanelWindow {
 
         Item { width: 1; height: 8 }
 
-        Rectangle { width: parent.width; height: 1; color: Theme.faint }
+        Rectangle { width: parent.width; height: 1; color: Theme.line }
 
         Item { width: 1; height: 8 }
 
@@ -230,7 +227,7 @@ PanelWindow {
             visible: WeatherService.forecast.length > 0
             width: parent.width
             height: 1
-            color: Theme.faint
+            color: Theme.line
         }
 
         Item { visible: WeatherService.forecast.length > 0; width: 1; height: 8 }

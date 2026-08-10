@@ -9,7 +9,10 @@ Item {
     implicitHeight: Theme.barHeight
     visible: WeatherService.data !== null
 
-    HoverBg {}
+    HoverBg {
+        active: ShellState.isOpen("weather", QsWindow.window?.screen?.name ?? "")
+        pressed: ma.pressed
+    }
 
     RowLayout {
         id: content
@@ -32,8 +35,10 @@ Item {
     }
 
     MouseArea {
+        id: ma
         anchors.fill: parent
         anchors.margins: -6
+        cursorShape: Qt.PointingHandCursor
         onClicked: {
             WeatherService.refresh();
             ShellState.togglePanel("weather", QsWindow.window?.screen?.name ?? "");

@@ -22,12 +22,7 @@ PanelWindow {
     implicitHeight: Math.min(560, flick.contentHeight + 28)
     color: "transparent"
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Flickable {
         id: flick
@@ -35,6 +30,7 @@ PanelWindow {
         anchors.margins: 14
         contentHeight: col.implicitHeight
         clip: true
+        opacity: surf.opacity
 
         Column {
             id: col
@@ -56,20 +52,31 @@ PanelWindow {
                     font.capitalization: Font.AllUppercase
                 }
 
-                Text {
+                Rectangle {
                     visible: NotifService.all.length > 0
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "Clear all"
-                    color: clearMouse.containsMouse ? Theme.fg : Theme.muted
-                    font.family: Theme.uiFont
-                    font.pixelSize: 12
+                    width: clearLabel.implicitWidth + 16
+                    height: 22
+                    radius: Theme.radius - 2
+                    color: clearMouse.pressed ? Theme.press
+                        : clearMouse.containsMouse ? Theme.hover : "transparent"
+                    Behavior on color { ColorAnimation { duration: 100 } }
+
+                    Text {
+                        id: clearLabel
+                        anchors.centerIn: parent
+                        text: "Clear all"
+                        color: clearMouse.containsMouse ? Theme.fg : Theme.muted
+                        font.family: Theme.uiFont
+                        font.pixelSize: 12
+                    }
 
                     MouseArea {
                         id: clearMouse
                         anchors.fill: parent
-                        anchors.margins: -6
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: NotifService.dismissAll()
                     }
                 }
@@ -91,13 +98,17 @@ PanelWindow {
                     required property var modelData
                     width: col.width
                     implicitHeight: cardRow.implicitHeight + 20
-                    color: "#141414"
+                    radius: Theme.radius
+                    color: Theme.surface
 
                     Rectangle {
                         visible: card.modelData.urgency === NotificationUrgency.Critical
                         anchors.left: parent.left
+                        anchors.leftMargin: 4
+                        anchors.verticalCenter: parent.verticalCenter
                         width: 3
-                        height: parent.height
+                        height: parent.height - 16
+                        radius: 1.5
                         color: Theme.urgent
                     }
 
@@ -170,12 +181,25 @@ PanelWindow {
                         name: "window-close-symbolic"
                         size: 14
                         tint: xMouse.containsMouse ? Theme.fg : Theme.muted
+                        scale: xMouse.pressed ? 0.85 : 1.0
+                        Behavior on scale { NumberAnimation { duration: 100 } }
+
+                        Rectangle {
+                            anchors.centerIn: parent
+                            width: 24
+                            height: 24
+                            radius: 12
+                            z: -1
+                            color: xMouse.containsMouse ? Theme.hover : "transparent"
+                            Behavior on color { ColorAnimation { duration: 100 } }
+                        }
 
                         MouseArea {
                             id: xMouse
                             anchors.fill: parent
                             anchors.margins: -8
                             hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: card.modelData.dismiss()
                         }
                     }

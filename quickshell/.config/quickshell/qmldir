@@ -10,7 +10,6 @@ DisplayPanel 1.0 DisplayPanel.qml
 CalendarPanel 1.0 CalendarPanel.qml
 WeatherPanel 1.0 WeatherPanel.qml
 PowerMenu 1.0 PowerMenu.qml
-TrayMenuPanel 1.0 TrayMenuPanel.qml
 BluetoothPanel 1.0 BluetoothPanel.qml
 BluetoothWidget 1.0 BluetoothWidget.qml
 WeatherWidget 1.0 WeatherWidget.qml
@@ -29,6 +28,7 @@ PrivacyWidget 1.0 PrivacyWidget.qml
 LockScreen 1.0 LockScreen.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
+PanelSurface 1.0 PanelSurface.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
 FocusedApp 1.0 FocusedApp.qml
 MediaWidget 1.0 MediaWidget.qml

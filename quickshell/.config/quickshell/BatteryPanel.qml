@@ -79,12 +79,7 @@ PanelWindow {
         return nice.charAt(0).toUpperCase() + nice.slice(1);
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.bg
-        border.color: Theme.border
-        border.width: 1
-    }
+    PanelSurface { id: surf }
 
     Column {
         id: col
@@ -92,6 +87,7 @@ PanelWindow {
         y: 14
         width: parent.width - 36
         spacing: 4
+        opacity: surf.opacity
 
         Text {
             text: "Battery"
@@ -225,7 +221,7 @@ PanelWindow {
             width: parent.width
             height: 30
             color: "transparent"
-            border.color: Theme.faint
+            border.color: Theme.border
             border.width: 1
 
             Row {
@@ -243,7 +239,8 @@ PanelWindow {
                         width: parent.width / segments.profs.length
                         height: parent.height
                         color: active ? Theme.accent
-                            : segMouse.containsMouse ? "#1f1f1f" : "transparent"
+                            : segMouse.pressed ? Theme.press
+                            : segMouse.containsMouse ? Theme.hover : "transparent"
 
                         Behavior on color { ColorAnimation { duration: 120 } }
 
@@ -252,13 +249,13 @@ PanelWindow {
                             anchors.left: parent.left
                             width: 1
                             height: parent.height
-                            color: Theme.faint
+                            color: Theme.line
                         }
 
                         Text {
                             anchors.centerIn: parent
                             text: parent.modelData.label
-                            color: parent.active ? "#000000" : Theme.fg
+                            color: parent.active ? Theme.accentFg : Theme.fg
                             font.family: Theme.uiFont
                             font.pixelSize: 12
                             font.weight: Font.Medium
@@ -268,6 +265,7 @@ PanelWindow {
                             id: segMouse
                             anchors.fill: parent
                             hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: PowerProfiles.profile = parent.modelData.val
                         }
                     }
@@ -277,7 +275,7 @@ PanelWindow {
 
         Item { width: 1; height: 8 }
 
-        Rectangle { width: parent.width; height: 1; color: Theme.faint }
+        Rectangle { width: parent.width; height: 1; color: Theme.line }
 
         Item { width: 1; height: 8 }
 

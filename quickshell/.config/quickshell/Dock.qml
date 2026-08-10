@@ -52,6 +52,13 @@ PanelWindow {
         color: Theme.bg
     }
 
+    // Hairline separating the dock from window content
+    Rectangle {
+        anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
+        width: 1
+        color: Theme.line
+    }
+
     component DockButton: Item {
         id: btn
         property string iconName
@@ -61,6 +68,18 @@ PanelWindow {
 
         width: Theme.dockWidth
         height: 40
+
+        Rectangle {
+            anchors.fill: parent
+            anchors.leftMargin: 6
+            anchors.rightMargin: 6
+            anchors.topMargin: 2
+            anchors.bottomMargin: 2
+            radius: Theme.radius
+            color: btnMouse.pressed ? Theme.press
+                : btnMouse.containsMouse ? Theme.hover : "transparent"
+            Behavior on color { ColorAnimation { duration: 100 } }
+        }
 
         Rectangle {
             anchors.left: parent.left
@@ -77,7 +96,7 @@ PanelWindow {
             source: Quickshell.iconPath(btn.iconName, "application-x-executable")
             opacity: btn.focused || btnMouse.containsMouse ? 1.0
                 : btn.running ? 0.85 : 0.55
-            scale: btnMouse.containsMouse ? 1.1 : 1.0
+            scale: btnMouse.pressed ? 0.9 : btnMouse.containsMouse ? 1.1 : 1.0
             Behavior on scale { NumberAnimation { duration: 120 } }
             Behavior on opacity { NumberAnimation { duration: 120 } }
         }
@@ -86,6 +105,7 @@ PanelWindow {
             id: btnMouse
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
             onClicked: btn.triggered()
         }
     }
@@ -125,7 +145,7 @@ PanelWindow {
                 anchors.centerIn: parent
                 width: 22
                 height: 1
-                color: Theme.faint
+                color: Theme.line
             }
         }
 
@@ -151,6 +171,16 @@ PanelWindow {
         width: Theme.dockWidth
         height: 36
 
+        Rectangle {
+            anchors.fill: parent
+            anchors.leftMargin: 6
+            anchors.rightMargin: 6
+            radius: Theme.radius
+            color: launcherMouse.pressed ? Theme.press
+                : launcherMouse.containsMouse ? Theme.hover : "transparent"
+            Behavior on color { ColorAnimation { duration: 100 } }
+        }
+
         ColorIcon {
             anchors.centerIn: parent
             name: "view-app-grid-symbolic"
@@ -162,6 +192,7 @@ PanelWindow {
             id: launcherMouse
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
             onClicked: Quickshell.execDetached(["walker"])
         }
     }
