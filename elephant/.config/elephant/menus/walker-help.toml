@@ -1,0 +1,111 @@
+name = "walkerhelp"
+name_pretty = "Walker Cheatsheet"
+icon = "help-about"
+
+[[entries]]
+text = ";  provider list — browse everything"
+keywords = ["providers", "list"]
+icon = "view-list-symbolic"
+actions = { "copy" = "wl-copy ';'" }
+
+[[entries]]
+text = ">  runner — shell commands"
+keywords = ["runner", "shell"]
+icon = "utilities-terminal-symbolic"
+actions = { "copy" = "wl-copy '>'" }
+
+[[entries]]
+text = "/  files — search files"
+keywords = ["files"]
+icon = "folder-symbolic"
+actions = { "copy" = "wl-copy '/'" }
+
+[[entries]]
+text = ".  symbols & emoji"
+keywords = ["symbols", "emoji"]
+icon = "face-smile-symbolic"
+actions = { "copy" = "wl-copy '.'" }
+
+[[entries]]
+text = "!  todo list"
+keywords = ["todo"]
+icon = "checkbox-checked-symbolic"
+actions = { "copy" = "wl-copy '!'" }
+
+[[entries]]
+text = "%  bookmarks"
+keywords = ["bookmarks"]
+icon = "user-bookmarks-symbolic"
+actions = { "copy" = "wl-copy '%'" }
+
+[[entries]]
+text = "=  calculator"
+keywords = ["calc", "calculator"]
+icon = "accessories-calculator-symbolic"
+actions = { "copy" = "wl-copy '='" }
+
+[[entries]]
+text = "@  web search"
+keywords = ["websearch", "web"]
+icon = "web-browser-symbolic"
+actions = { "copy" = "wl-copy '@'" }
+
+[[entries]]
+text = ":  clipboard history"
+keywords = ["clipboard", "history"]
+icon = "edit-paste-symbolic"
+actions = { "copy" = "wl-copy ':'" }
+
+[[entries]]
+text = "$  windows — focus open window"
+keywords = ["windows", "focus"]
+icon = "focus-windows-symbolic"
+actions = { "copy" = "wl-copy '$'" }
+
+[[entries]]
+text = "~  snippets"
+keywords = ["snippets"]
+icon = "insert-text-symbolic"
+actions = { "copy" = "wl-copy '~'" }
+
+[[entries]]
+text = "pkg:  arch packages — search/install/remove"
+keywords = ["packages", "arch", "pacman"]
+icon = "package-x-generic-symbolic"
+actions = { "copy" = "wl-copy 'pkg:'" }
+
+[[entries]]
+text = "bt:  bluetooth — connect/pair"
+keywords = ["bluetooth"]
+icon = "bluetooth-symbolic"
+actions = { "copy" = "wl-copy 'bt:'" }
+
+[[entries]]
+text = "snd:  audio devices"
+keywords = ["audio", "sound", "wireplumber"]
+icon = "audio-speakers-symbolic"
+actions = { "copy" = "wl-copy 'snd:'" }
+
+[[entries]]
+text = "na:  niri actions"
+keywords = ["niri", "actions"]
+icon = "preferences-system-symbolic"
+actions = { "copy" = "wl-copy 'na:'" }
+
+[[entries]]
+text = "ns:  niri sessions — save/restore workspaces"
+keywords = ["niri", "sessions"]
+icon = "document-save-symbolic"
+actions = { "copy" = "wl-copy 'ns:'" }
+
+[[entries]]
+text = "bw:  bitwarden passwords"
+keywords = ["bitwarden", "passwords"]
+icon = "dialog-password-symbolic"
+actions = { "copy" = "wl-copy 'bw:'" }
+
+[[entries]]
+text = "?  this cheatsheet"
+keywords = ["help", "cheatsheet"]
+icon = "help-about-symbolic"
+actions = { "copy" = "wl-copy '?'" }

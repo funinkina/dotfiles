@@ -61,6 +61,31 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 16
 
+            // Arch logo: overview toggle
+            Item {
+                implicitWidth: 20
+                implicitHeight: Theme.barHeight
+
+                HoverBg {}
+
+                Image {
+                    anchors.centerIn: parent
+                    source: "file:///usr/share/pixmaps/archlinux-logo.svg"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    opacity: archMouse.containsMouse ? 1.0 : 0.85
+                    Behavior on opacity { NumberAnimation { duration: 100 } }
+                }
+
+                MouseArea {
+                    id: archMouse
+                    anchors.fill: parent
+                    anchors.margins: -6
+                    hoverEnabled: true
+                    onClicked: NiriService.dispatch(["toggle-overview"])
+                }
+            }
+
             WorkspaceDots { screenName: bar.screen?.name ?? "" }
             PrivacyWidget {}
             MediaWidget { id: mediaW }

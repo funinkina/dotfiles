@@ -7,7 +7,57 @@ quick_activate = ["ctrl 1", "ctrl 2", "ctrl 3", "ctrl 4", "ctrl 5"]
 # which otherwise steals focus to whatever is under the cursor
 force_keyboard_focus = true
 
-# Prefixes for providers that don't ship one by default
+# Include menus so "help"/"cheatsheet" is findable from the default search
+[providers]
+default = ["desktopapplications", "calc", "websearch", "menus"]
+empty = ["desktopapplications"]
+
+# Full prefix table: walker defaults + custom providers.
+# NOTE: "//" for snippets collided with "/" (files); "~" is unclaimed.
+[[providers.prefixes]]
+prefix = ";"
+provider = "providerlist"
+
+[[providers.prefixes]]
+prefix = ">"
+provider = "runner"
+
+[[providers.prefixes]]
+prefix = "/"
+provider = "files"
+
+[[providers.prefixes]]
+prefix = "."
+provider = "symbols"
+
+[[providers.prefixes]]
+prefix = "!"
+provider = "todo"
+
+[[providers.prefixes]]
+prefix = "%"
+provider = "bookmarks"
+
+[[providers.prefixes]]
+prefix = "="
+provider = "calc"
+
+[[providers.prefixes]]
+prefix = "@"
+provider = "websearch"
+
+[[providers.prefixes]]
+prefix = ":"
+provider = "clipboard"
+
+[[providers.prefixes]]
+prefix = "$"
+provider = "windows"
+
+[[providers.prefixes]]
+prefix = "~"
+provider = "snippets"
+
 [[providers.prefixes]]
 prefix = "pkg:"
 provider = "archlinuxpkgs"
@@ -21,14 +71,6 @@ prefix = "snd:"
 provider = "wireplumber"
 
 [[providers.prefixes]]
-prefix = "snip:"
-provider = "snippets"
-
-[[providers.prefixes]]
-prefix = "//"
-provider = "snippets"
-
-[[providers.prefixes]]
 prefix = "na:"
 provider = "niriactions"
 
@@ -39,3 +81,7 @@ provider = "nirisessions"
 [[providers.prefixes]]
 prefix = "bw:"
 provider = "bitwarden"
+
+[[providers.prefixes]]
+prefix = "?"
+provider = "menus"

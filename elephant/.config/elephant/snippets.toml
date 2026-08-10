@@ -1,5 +1,4 @@
-# Elephant snippets — in walker type "//" (or "snip:") to list them all,
-# or "//mail" etc. to search. Restart elephant after editing.
+# Elephant snippets — in walker type "~" to list them all, "~mail" to search. Restart elephant after editing.
 
 [[snippets]]
 keywords = ["mail", "email"]
