@@ -38,6 +38,7 @@ singleton MediaService 1.0 MediaService.qml
 IconButton 1.0 IconButton.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
+BlurPanel 1.0 BlurPanel.qml
 PanelSurface 1.0 PanelSurface.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
 FocusedApp 1.0 FocusedApp.qml

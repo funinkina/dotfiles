@@ -57,9 +57,11 @@ layout {
 prefer-no-csd
 
 environment {
-    // Fluent symbolic icons for the shell only; app icons fall through
-    // to Adwaita/hicolor (shim theme in ~/.local/share/icons/Fluent-symbolic)
-    QS_ICON_THEME "Fluent-symbolic"
+    // WhiteSur for the shell, mime types and everything else; app icons fall
+    // through to hicolor, because the Applications-context directories are
+    // stripped from WhiteSur's and WhiteSur-dark's index.theme (originals
+    // kept alongside as index.theme.orig).
+    QS_ICON_THEME "WhiteSur-dark"
 }
 
 spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"

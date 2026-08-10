@@ -51,6 +51,7 @@ Item {
                 id: body
                 width: 22
                 height: 12
+                radius: 3
                 color: "transparent"
                 border.color: root.tone
                 border.width: 1
@@ -60,6 +61,9 @@ Item {
                     y: 2
                     height: 8
                     width: Math.max(1, 18 * root.percent / 100)
+                    // Kept under the shell's radius so the fill nests inside
+                    // the outline instead of tracing it.
+                    radius: 2
                     color: root.tone
                     Behavior on width { NumberAnimation { duration: 200 } }
                 }
@@ -70,6 +74,7 @@ Item {
                 y: 3.5
                 width: 2
                 height: 5
+                radius: 1
                 color: root.tone
             }
 

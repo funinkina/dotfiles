@@ -9,12 +9,14 @@ WlSessionLock {
     locked: LockService.locked
 
     WlSessionLockSurface {
+        id: surface
         color: Theme.bg
 
         readonly property string user: Quickshell.env("USER")
 
         // Wallpaper, dimmed
         Image {
+            id: wallpaper
             anchors.fill: parent
             source: "file:///home/funinkina/.config/wallpaper"
             fillMode: Image.PreserveAspectCrop
@@ -123,6 +125,7 @@ WlSessionLock {
         }
 
         Column {
+            id: loginCol
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 72
@@ -153,12 +156,15 @@ WlSessionLock {
 
             Item { width: 1; height: 14 }
 
-            Rectangle {
+            BlurPanel {
+                id: field
+                blurSource: wallpaper
+                blurRoot: surface
+
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 300
                 height: 34
                 radius: Theme.radius
-                color: Theme.surface
                 border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
                 border.width: 1
                 Behavior on border.color { ColorAnimation { duration: 100 } }
