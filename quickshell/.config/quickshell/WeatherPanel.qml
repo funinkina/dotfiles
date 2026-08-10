@@ -105,6 +105,12 @@ PanelWindow {
                 const rows = [];
                 const add = (k, v) => rows.push({ k: k, v: v });
                 add("Feels like", Math.round(d.main.feels_like) + "°C");
+                {
+                    const mm = d.rain?.["1h"] ?? d.snow?.["1h"] ?? 0;
+                    add("Precipitation", mm > 0
+                        ? mm.toFixed(1) + " mm/h" + (d.snow ? " (snow)" : "")
+                        : "None");
+                }
                 add("Humidity", d.main.humidity + "%");
                 if (d.wind)
                     add("Wind", Math.round(d.wind.speed * 3.6) + " km/h");

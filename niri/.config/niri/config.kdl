@@ -85,6 +85,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
+    Mod+E hotkey-overlay-title="Files: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+L hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }

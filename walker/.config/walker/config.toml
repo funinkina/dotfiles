@@ -1,5 +1,8 @@
 theme = "noir"
 keybind_symbols = false
+
+[keybinds]
+quick_activate = ["ctrl 1", "ctrl 2", "ctrl 3", "ctrl 4", "ctrl 5"]
 # Exclusive keyboard while open — required with focus-follows-mouse,
 # which otherwise steals focus to whatever is under the cursor
 force_keyboard_focus = true
