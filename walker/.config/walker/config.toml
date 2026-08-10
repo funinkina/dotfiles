@@ -1,5 +1,38 @@
 theme = "noir"
-keybind_symbols = true
+keybind_symbols = false
 # Exclusive keyboard while open — required with focus-follows-mouse,
 # which otherwise steals focus to whatever is under the cursor
 force_keyboard_focus = true
+
+# Prefixes for providers that don't ship one by default
+[[providers.prefixes]]
+prefix = "pkg:"
+provider = "archlinuxpkgs"
+
+[[providers.prefixes]]
+prefix = "bt:"
+provider = "bluetooth"
+
+[[providers.prefixes]]
+prefix = "snd:"
+provider = "wireplumber"
+
+[[providers.prefixes]]
+prefix = "snip:"
+provider = "snippets"
+
+[[providers.prefixes]]
+prefix = "//"
+provider = "snippets"
+
+[[providers.prefixes]]
+prefix = "na:"
+provider = "niriactions"
+
+[[providers.prefixes]]
+prefix = "ns:"
+provider = "nirisessions"
+
+[[providers.prefixes]]
+prefix = "bw:"
+provider = "bitwarden"

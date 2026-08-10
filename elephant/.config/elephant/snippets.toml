@@ -1,0 +1,17 @@
+# Elephant snippets — in walker type "//" (or "snip:") to list them all,
+# or "//mail" etc. to search. Restart elephant after editing.
+
+[[snippets]]
+keywords = ["mail", "email"]
+name = "Email"
+content = "aryankushwaha3101@gmail.com"
+
+[[snippets]]
+keywords = ["shrug"]
+name = "Shrug"
+content = "¯\\_(ツ)_/¯"
+
+[[snippets]]
+keywords = ["arrow"]
+name = "Arrow"
+content = "→"
