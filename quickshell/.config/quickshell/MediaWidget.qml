@@ -10,14 +10,8 @@ Item {
     implicitHeight: Theme.barHeight
     visible: player !== null && title !== ""
 
-    readonly property var player: {
-        const list = Mpris.players.values;
-        return list.find(p => p.playbackState === MprisPlaybackState.Playing)
-            ?? list.find(p => p.playbackState === MprisPlaybackState.Paused)
-            ?? null;
-    }
-    readonly property bool playing:
-        player?.playbackState === MprisPlaybackState.Playing
+    readonly property var player: MediaService.player
+    readonly property bool playing: MediaService.playing
     readonly property string title: player?.trackTitle ?? ""
     readonly property string artist: player?.trackArtist ?? ""
 

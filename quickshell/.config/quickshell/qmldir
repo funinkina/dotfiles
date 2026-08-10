@@ -32,6 +32,10 @@ singleton PrivacyService 1.0 PrivacyService.qml
 singleton HideService 1.0 HideService.qml
 PrivacyWidget 1.0 PrivacyWidget.qml
 LockScreen 1.0 LockScreen.qml
+LockMedia 1.0 LockMedia.qml
+LockNotifications 1.0 LockNotifications.qml
+singleton MediaService 1.0 MediaService.qml
+IconButton 1.0 IconButton.qml
 ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
 PanelSurface 1.0 PanelSurface.qml

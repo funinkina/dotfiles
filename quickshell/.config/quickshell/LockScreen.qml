@@ -98,6 +98,20 @@ WlSessionLock {
             }
         }
 
+        // Anchored under the clock rather than inside it, so the clock keeps
+        // its position whether or not something is playing.
+        LockMedia {
+            anchors.horizontalCenter: clockCol.horizontalCenter
+            anchors.top: clockCol.bottom
+            anchors.topMargin: 28
+        }
+
+        LockNotifications {
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 24
+        }
+
         Image {
             anchors.right: parent.right
             anchors.bottom: parent.bottom

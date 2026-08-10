@@ -120,10 +120,9 @@ PanelWindow {
 
                             IconImage {
                                 id: bigIcon
-                                readonly property string icon: card.n.image || card.n.appIcon
+                                readonly property string icon: NotifService.cardImage(card.n)
                                 visible: icon !== ""
-                                source: icon.startsWith("/") || icon.includes("://")
-                                    ? icon : Quickshell.iconPath(icon, "dialog-information")
+                                source: icon
                                 implicitSize: 34
                                 anchors.verticalCenter: parent.verticalCenter
                             }

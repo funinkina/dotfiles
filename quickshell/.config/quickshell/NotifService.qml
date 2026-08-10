@@ -72,18 +72,48 @@ Singleton {
             n.dismiss();
     }
 
+    // Icons reach us three ways: a bare theme name, an absolute path, or a
+    // pre-formed image://icon/<name> url (that's what notify-send's -i becomes,
+    // and it lands in `image` with `appIcon` left empty). Recover the theme name
+    // from the first and last forms; "" means it isn't a themed icon at all.
+    function themeName(s) {
+        const prefix = "image://icon/";
+        if (s.startsWith(prefix))
+            return decodeURIComponent(s.slice(prefix.length));
+        return s.startsWith("/") || s.includes("://") ? "" : s;
+    }
+
+    // Large icon for the card: the notification's own image if it has one,
+    // else the app icon. Themed names are checked for existence, because an
+    // unresolvable one paints Qt's magenta missing-image checkerboard rather
+    // than nothing. Returns "" so the slot can collapse instead.
+    function cardImage(n) {
+        const raw = n.image || n.appIcon;
+        if (!raw)
+            return "";
+        const name = themeName(raw);
+        if (!name)
+            return raw;   // a real file, or an image the sender embedded
+        return Quickshell.iconPath(name, true)
+            || (n.desktopEntry ? Quickshell.iconPath(n.desktopEntry, true) : "");
+    }
+
     // The sender's icon for the header row. Prefers the icon theme's symbolic
     // variant; reports which one it found so the caller knows whether flat
     // tinting is safe (tinting a full-color logo just yields a silhouette).
     function appGlyph(n) {
-        if (n.appIcon.startsWith("/") || n.appIcon.includes("://"))
+        const raw = n.appIcon || n.image;
+        const name = themeName(raw);
+        // A path here is the app's own icon file; an embedded image is the
+        // notification's content (a contact photo), which is not the app.
+        if (!name && n.appIcon)
             return { path: n.appIcon, symbolic: false };
-        for (const c of [n.desktopEntry, n.appIcon]) {
+        for (const c of [n.desktopEntry, name]) {
             const p = c ? Quickshell.iconPath(c + "-symbolic", true) : "";
             if (p)
                 return { path: p, symbolic: true };
         }
-        for (const c of [n.appIcon, n.desktopEntry]) {
+        for (const c of [name, n.desktopEntry]) {
             const p = c ? Quickshell.iconPath(c, true) : "";
             if (p)
                 return { path: p, symbolic: false };
