@@ -56,7 +56,9 @@ layout {
 prefer-no-csd
 
 environment {
-    QS_ICON_THEME "Adwaita"
+    // Fluent symbolic icons for the shell only; app icons fall through
+    // to Adwaita/hicolor (shim theme in ~/.local/share/icons/Fluent-symbolic)
+    QS_ICON_THEME "Fluent-symbolic"
 }
 
 spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"
