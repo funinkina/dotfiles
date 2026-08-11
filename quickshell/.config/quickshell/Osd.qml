@@ -11,6 +11,8 @@ PanelWindow {
     screen: modelData
 
     WlrLayershell.namespace: "quickshell-osd"
+    // Fullscreen windows sit above the top layer, so the OSD has to be higher
+    WlrLayershell.layer: WlrLayer.Overlay
 
     // Center under the icon whose value is being shown
     readonly property string sname: screen?.name ?? ""
@@ -18,10 +20,16 @@ PanelWindow {
         ? ShellState.anchorMap[sname]?.brightness
         : ShellState.anchorMap[sname]?.volume) ?? -1
 
-    anchors { top: true; right: true }
+    // No bar to hang off of in fullscreen — go top center instead
+    readonly property bool fullscreen:
+        NiriService.isFullscreen(sname, screen?.height ?? 0)
+
+    // Unanchored horizontally, layer-shell centers the surface
+    anchors { top: true; right: !fullscreen }
     margins {
-        top: Theme.barHeight + 8
-        right: anchorX < 0 ? 16
+        top: fullscreen ? 12 : Theme.barHeight + 8
+        right: fullscreen ? 0
+            : anchorX < 0 ? 16
             : Math.max(8, (screen?.width ?? 1920) - anchorX - implicitWidth / 2)
     }
     exclusionMode: ExclusionMode.Ignore

@@ -17,6 +17,13 @@ Singleton {
         Quickshell.execDetached(["niri", "msg", "action"].concat(args));
     }
 
+    function isFullscreen(output, outputHeight) {
+        const ws = workspaces.find(w => w.output === output && w.is_active);
+        const win = ws ? windows[ws.active_window_id] : null;
+        return !!win && !win.is_floating && outputHeight > 0
+            && Math.abs((win.layout?.tile_size?.[1] ?? 0) - outputHeight) < 2;
+    }
+
     // Reactive lookup: reading applications.values makes QML bindings
     // re-evaluate once the (async) desktop entry list loads.
     function entryFor(id) {
@@ -88,6 +95,13 @@ Singleton {
                     root.windows = m;
                     if (root.focusedWindowId === ev.WindowClosed.id)
                         root.focusedWindowId = null;
+                } else if (ev.WindowLayoutsChanged) {
+                    // Resizes (incl. fullscreen) arrive here, not as WindowOpenedOrChanged
+                    const m = Object.assign({}, root.windows);
+                    for (const [id, layout] of ev.WindowLayoutsChanged.changes)
+                        if (m[id])
+                            m[id] = Object.assign({}, m[id], { layout: layout });
+                    root.windows = m;
                 } else if (ev.WindowFocusChanged) {
                     root.focusedWindowId = ev.WindowFocusChanged.id ?? null;
                 } else if (ev.CastsChanged) {

@@ -20,12 +20,13 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `btop`       | `~/.config/btop/btop.conf` (+ themes/)              | btop system monitor                               |
 | `electron`   | `~/.config/electron-flags.conf`                     | Electron app flags (Wayland etc.)                 |
 | `scripts`    | `~/.local/bin/*`                                    | Custom user scripts (e.g. `toggle-power-profile`) |
+| `applications`| `~/.local/share/applications/*.desktop`            | Extra launcher entries (Helium per-profile: Aryan / Libra AI) |
 | `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/` | `00-plasma-pa.conf` (device renames) + `50-ab13x-soft-volume.conf` (AB13X USB-C DAC: software volume, smooth low end / no cutoff) |
 
 All packages installed:
 
 ```bash
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications
 ```
 
 ## Snapshots (not stowed)
@@ -66,7 +67,7 @@ yay -S --needed - < snapshots/aurlist.txt
 
 # 2. Install stow + apply configs
 sudo pacman -S stow
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications
 
 # 3. Restore GNOME settings
 dconf load /org/gnome/ < snapshots/gnome-dconf.ini

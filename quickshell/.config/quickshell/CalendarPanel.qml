@@ -89,6 +89,20 @@ PanelWindow {
         return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
     }
 
+    // Elapsed share of the period, counting time of day — subtracting the two
+    // boundaries keeps leap years and DST shifts honest.
+    function yearPct(d) {
+        const s = new Date(d.getFullYear(), 0, 1);
+        const e = new Date(d.getFullYear() + 1, 0, 1);
+        return Math.round((d - s) / (e - s) * 100);
+    }
+
+    function monthPct(d) {
+        const s = new Date(d.getFullYear(), d.getMonth(), 1);
+        const e = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+        return Math.round((d - s) / (e - s) * 100);
+    }
+
     PanelSurface { id: surf }
 
     Column {
@@ -115,7 +129,8 @@ PanelWindow {
         }
 
         Text {
-            text: `Week ${panel.weekNumber(clock.date)} · Day ${panel.dayOfYear(clock.date)} of the year`
+            text: `Week ${panel.weekNumber(clock.date)} · Day ${panel.dayOfYear(clock.date)}`
+                + ` · Year ${panel.yearPct(clock.date)}% · Month ${panel.monthPct(clock.date)}%`
             color: Theme.muted
             font.family: Theme.uiFont
             font.pixelSize: 12

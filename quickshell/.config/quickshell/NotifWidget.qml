@@ -42,6 +42,12 @@ Item {
         anchors.fill: parent
         anchors.margins: -8
         cursorShape: Qt.PointingHandCursor
-        onClicked: ShellState.togglePanel("notifs", QsWindow.window?.screen?.name ?? "")
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: mouse => {
+            if (mouse.button === Qt.RightButton)
+                NotifService.toggleDnd();
+            else
+                ShellState.togglePanel("notifs", QsWindow.window?.screen?.name ?? "");
+        }
     }
 }

@@ -1,0 +1,22 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Helium — Libra AI
+GenericName=Web Browser
+Comment=Helium browser, Libra AI profile
+Exec=helium-browser --profile-directory="Profile 1" %U
+Icon=helium-browser
+Terminal=false
+StartupNotify=true
+StartupWMClass=helium-browser
+Categories=Network;WebBrowser;
+Keywords=helium;browser;web;profile;libra;work;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=helium-browser --profile-directory="Profile 1"
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=helium-browser --profile-directory="Profile 1" --incognito

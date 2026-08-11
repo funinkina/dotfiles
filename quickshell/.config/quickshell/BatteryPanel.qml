@@ -57,8 +57,7 @@ PanelWindow {
                 const r = [];
                 const add = (k, v) => { if (v) r.push({ k: k, v: v }); };
                 add("Health", d["capacity"]);
-                add("Full capacity", d["energy-full"]
-                    + (d["energy-full-design"] ? ` (design ${d["energy-full-design"]})` : ""));
+                add("Full capacity", d["energy-full"]);
                 add("Power draw", d["energy-rate"]);
                 add("Voltage", d["voltage"]);
                 add("Charge cycles", d["charge-cycles"]);

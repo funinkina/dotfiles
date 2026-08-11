@@ -3,7 +3,6 @@ import Quickshell
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
-// Now playing: [play/pause button] Title ∙ Artist
 Item {
     id: root
     implicitWidth: content.implicitWidth
@@ -11,7 +10,6 @@ Item {
     visible: player !== null && title !== ""
 
     readonly property var player: MediaService.player
-    readonly property bool playing: MediaService.playing
     readonly property string title: player?.trackTitle ?? ""
     readonly property string artist: player?.trackArtist ?? ""
 
@@ -23,12 +21,10 @@ Item {
     RowLayout {
         id: content
         anchors.centerIn: parent
-        spacing: 8
+        spacing: 4
 
         ColorIcon {
-            name: root.playing
-                ? "media-playback-pause-symbolic"
-                : "media-playback-start-symbolic"
+            name: "audio-x-generic-symbolic"
             size: 14
             Layout.alignment: Qt.AlignVCenter
         }
@@ -45,7 +41,17 @@ Item {
         }
 
         Text {
-            text: "∙ " + root.artist
+            text: "∙"
+            visible: root.artist !== ""
+            color: Theme.fg
+            font.family: Theme.uiFont
+            font.pixelSize: Theme.fontSize
+            font.weight: Font.Medium
+            Layout.alignment: Qt.AlignVCenter
+        }
+
+        Text {
+            text: root.artist
             visible: root.artist !== ""
             color: Theme.fg
             font.family: Theme.uiFont

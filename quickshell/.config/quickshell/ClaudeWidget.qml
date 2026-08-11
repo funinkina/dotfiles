@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-// Claude Code usage: logo + weekly-limit bar + time to weekly reset.
 Item {
     id: root
     implicitWidth: content.implicitWidth
@@ -54,16 +53,6 @@ Item {
             Layout.alignment: Qt.AlignVCenter
         }
 
-        Text {
-            readonly property string t:
-                ClaudeService.resetTime(ClaudeService.data?.seven_day?.resets_at)
-            text: "∙ " + t
-            visible: t !== ""
-            color: Theme.dim
-            font.family: Theme.uiFont
-            font.pixelSize: 12
-            Layout.alignment: Qt.AlignVCenter
-        }
     }
 
     MouseArea {

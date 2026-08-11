@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Wayland._BackgroundEffect
 import QtQuick
 
 // Centered power menu: shutdown / restart / suspend / logout / lock.
@@ -19,9 +20,18 @@ PanelWindow {
 
     // No anchors: layer-shell centers the surface on screen
     exclusionMode: ExclusionMode.Ignore
-    implicitWidth: row.implicitWidth + 32
-    implicitHeight: row.implicitHeight + 32
+    implicitWidth: row.implicitWidth + 40
+    implicitHeight: row.implicitHeight + 40
     color: "transparent"
+
+    // Compositor blur, same protocol as the bar. The region carries the
+    // panel's own radius so the blur stops at the rounded edge instead of
+    // squaring off the corners.
+    BackgroundEffect.blurRegion: Region {
+        width: panel.width
+        height: panel.height
+        radius: Theme.panelRadius
+    }
 
     readonly property var entries: [
         { icon: "system-shutdown-symbolic", label: "Shut Down", action: "poweroff" },
@@ -50,7 +60,7 @@ PanelWindow {
         }
     }
 
-    PanelSurface { id: surf }
+    PanelSurface { id: surf; tint: Theme.barBg }
 
     Item {
         anchors.fill: parent
@@ -78,13 +88,13 @@ PanelWindow {
                 required property var modelData
                 required property int index
                 readonly property bool current: panel.selected === index
-                width: 104
-                height: 96
+                width: 100
+                height: 92
                 radius: Theme.radius
-                color: tileMouse.pressed ? Theme.press
-                    : current || tileMouse.containsMouse ? Theme.hover : Theme.surface
-                border.color: current ? Theme.fg : Theme.border
-                border.width: 1
+                // No idle fill or outline: a filled tile would sit on top of
+                // the blur and hide it. Only the selected one gets a pill,
+                // and hovering moves the selection anyway.
+                color: tileMouse.pressed || current ? Theme.press : "transparent"
 
                 Behavior on color { ColorAnimation { duration: 100 } }
 

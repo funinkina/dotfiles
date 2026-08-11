@@ -1,7 +1,25 @@
-/* noir — flat black theme matching the quickshell desktop */
-@define-color window_bg_color #000000;
-@define-color accent_bg_color #4d4d4d;
-@define-color theme_fg_color #e6e6e6;
+/* noir — matches the quickshell desktop.
+ *
+ * Tokens mirror quickshell's Theme.qml: surfaces #121212, border #454545,
+ * text #f2f2f2, panel radius 12, inner radius 6, SF Pro Text at 15px.
+ *
+ * Opaque, matching PanelSurface.qml — the chrome every quickshell popout uses.
+ * The bar is translucent because the compositor blurs behind it, via the
+ * ext-background-effect-v1 protocol that kitty and quickshell speak and GTK4
+ * does not. A Wayland client can't blur its own backdrop (it never receives
+ * those pixels), so translucency here would be glass that never frosts.
+ */
+@define-color window_bg_color #121212;
+@define-color surface_color #1d1d1d;
+@define-color hover_color rgba(147, 146, 146, 0.196);
+@define-color press_color rgba(135, 135, 135, 0.506);
+@define-color theme_fg_color #f2f2f2;
+@define-color muted_fg_color #9b9b9b;
+@define-color faint_fg_color #6b6b6b;
+@define-color line_color #2b2b2b;
+@define-color border_color #454545;
+@define-color border_bright_color #bcbcbc;
+@define-color accent_bg_color #ffffff;
 @define-color error_bg_color #f2555a;
 @define-color error_fg_color #000000;
 
@@ -10,10 +28,19 @@
   font-family: "SF Pro Text";
 }
 
+.box-wrapper {
+  background: @window_bg_color;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid @border_color;
+  font-size: 15px;
+  color: @theme_fg_color;
+}
+
 popover {
-  background: #0d0d0d;
-  border: 1px solid @accent_bg_color;
-  border-radius: 0;
+  background: @window_bg_color;
+  border: 1px solid @border_color;
+  border-radius: 12px;
   padding: 10px;
 }
 
@@ -29,42 +56,38 @@ scrollbar {
   opacity: 0;
 }
 
-.box-wrapper {
-  background: @window_bg_color;
-  padding: 16px;
-  border-radius: 0;
-  border: 1px solid @accent_bg_color;
-}
-
 .preview-box,
 .elephant-hint,
 .placeholder {
-  color: @theme_fg_color;
+  color: @muted_fg_color;
 }
 
 .search-container {
-  border-radius: 0;
+  border-radius: 6px;
 }
 
 .input placeholder {
-  opacity: 0.4;
+  color: @faint_fg_color;
 }
 
 .input selection {
-  background: #4d4d4d;
+  background: @press_color;
+  color: @theme_fg_color;
 }
 
 .input {
   caret-color: @theme_fg_color;
-  background: #0d0d0d;
-  border: 1px solid #333333;
+  background: @surface_color;
+  border: 1px solid @border_color;
+  border-radius: 6px;
   padding: 10px;
   color: @theme_fg_color;
+  transition: border-color 100ms ease;
 }
 
 .input:focus,
 .input:active {
-  border-color: @theme_fg_color;
+  border-color: @border_bright_color;
 }
 
 .list {
@@ -72,43 +95,49 @@ scrollbar {
 }
 
 .item-box {
-  border-radius: 0;
+  border-radius: 6px;
   padding: 9px 10px;
+  transition: background 100ms ease;
+}
+
+.item-box:hover {
+  background: @hover_color;
 }
 
 .item-quick-activation {
-  background: #1f1f1f;
-  border-radius: 0;
+  background: @surface_color;
+  border-radius: 6px;
   padding: 10px;
 }
 
+/* Selection reads as the bar's pressed pill rather than a white inversion,
+ * which would fight the translucent surface. */
 child:selected .item-box,
 row:selected .item-box {
-  background: @theme_fg_color;
-  color: #000000;
+  background: @press_color;
+  color: @theme_fg_color;
 }
 
-/* Quick-activation chips (F1, F2, …) inverted on the selected row */
 child:selected .item-quick-activation,
 row:selected .item-quick-activation {
-  background: #000000;
+  background: @window_bg_color;
   color: @theme_fg_color;
 }
 
 child:selected .item-subtext,
 row:selected .item-subtext {
-  color: #000000;
-  opacity: 0.6;
+  color: @theme_fg_color;
+  opacity: 0.7;
 }
 
 .item-subtext {
   font-size: 12px;
-  opacity: 0.5;
+  color: @muted_fg_color;
 }
 
 .providerlist .item-subtext {
   font-size: unset;
-  opacity: 0.75;
+  color: @muted_fg_color;
 }
 
 .item-image-text {
@@ -116,8 +145,8 @@ row:selected .item-subtext {
 }
 
 .preview {
-  border: 1px solid #333333;
-  border-radius: 0;
+  border: 1px solid @border_color;
+  border-radius: 6px;
   color: @theme_fg_color;
 }
 
@@ -139,13 +168,14 @@ row:selected .item-subtext {
 
 .keybinds {
   padding-top: 10px;
-  border-top: 1px solid #1f1f1f;
+  border-top: 1px solid @line_color;
   font-size: 12px;
   color: @theme_fg_color;
 }
 
 .keybind-button {
   opacity: 0.5;
+  transition: opacity 100ms ease;
 }
 
 .keybind-button:hover {
@@ -154,17 +184,18 @@ row:selected .item-subtext {
 
 .keybind-bind {
   text-transform: lowercase;
-  opacity: 0.35;
+  color: @faint_fg_color;
 }
 
 .keybind-label {
   padding: 2px 4px;
-  border-radius: 0;
-  border: 1px solid #4d4d4d;
+  border-radius: 6px;
+  border: 1px solid @border_color;
 }
 
 .error {
   padding: 10px;
+  border-radius: 6px;
   background: @error_bg_color;
   color: @error_fg_color;
 }

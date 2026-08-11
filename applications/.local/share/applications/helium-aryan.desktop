@@ -1,0 +1,22 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Helium — Aryan
+GenericName=Web Browser
+Comment=Helium browser, Aryan profile
+Exec=helium-browser --profile-directory=Default %U
+Icon=helium-browser
+Terminal=false
+StartupNotify=true
+StartupWMClass=helium-browser
+Categories=Network;WebBrowser;
+Keywords=helium;browser;web;profile;aryan;personal;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=helium-browser --profile-directory=Default
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=helium-browser --profile-directory=Default --incognito
