@@ -40,8 +40,14 @@ PanelWindow {
             LockService.lock();
         else if (action === "logout")
             NiriService.dispatch(["quit", "--skip-confirmation"]);
-        else
-            Quickshell.execDetached(["systemctl", action]);
+        else {
+            // Asking for this explicitly beats caffeine. `-i` skips the block
+            // inhibitor too, so suspend doesn't race the lock being dropped.
+            const wasCaf = CaffeineService.active;
+            CaffeineService.setActive(false);
+            Quickshell.execDetached(wasCaf && action === "suspend"
+                ? ["systemctl", "-i", action] : ["systemctl", action]);
+        }
     }
 
     PanelSurface { id: surf }

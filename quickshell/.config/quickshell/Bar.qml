@@ -169,6 +169,7 @@ PanelWindow {
             BatteryWidget { id: battW }
             WeatherWidget { id: weatherW }
             ClockWidget { id: clockW }
+            CaffeineWidget {}
             NotifWidget {}
         }
     }

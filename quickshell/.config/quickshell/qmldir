@@ -29,8 +29,9 @@ singleton NotifService 1.0 NotifService.qml
 singleton ShellState 1.0 ShellState.qml
 singleton LockService 1.0 LockService.qml
 singleton PrivacyService 1.0 PrivacyService.qml
-singleton HideService 1.0 HideService.qml
+singleton CaffeineService 1.0 CaffeineService.qml
 PrivacyWidget 1.0 PrivacyWidget.qml
+CaffeineWidget 1.0 CaffeineWidget.qml
 LockScreen 1.0 LockScreen.qml
 LockMedia 1.0 LockMedia.qml
 LockNotifications 1.0 LockNotifications.qml

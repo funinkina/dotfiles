@@ -18,9 +18,10 @@ ShellRoot {
     }
 
     IpcHandler {
-        target: "hide"
-        function active(): void { HideService.hideActive(); }
-        function all(): void { HideService.toggleAll(); }
+        target: "caffeine"
+        function toggle(): void { CaffeineService.toggle(); }
+        function on(): void { CaffeineService.setActive(true); }
+        function off(): void { CaffeineService.setActive(false); }
     }
 
     IpcHandler {
