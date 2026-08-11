@@ -1,7 +1,50 @@
 #!/bin/bash
 # Cleanly restart the quickshell bar/dock/panels.
-pkill -x qs
-sleep 0.2
-QS_ICON_THEME=Adwaita setsid -f qs -p "$HOME/.config/quickshell" >/dev/null 2>&1
-sleep 1
-pgrep -x qs >/dev/null && echo "quickshell restarted" || echo "quickshell FAILED to start — run: qs -p ~/.config/quickshell" >&2
+#
+# The icon theme is read from niri's own `environment` block rather than
+# hardcoded here. A shell started from a terminal inherits the session's
+# QS_ICON_THEME, not the one niri injects into its children — restart with the
+# wrong one and every ColorIcon in the bar renders as a blank square.
+set -u
+
+CONFIG="$HOME/.config/quickshell"
+NIRI="$HOME/.config/niri/config.kdl"
+
+THEME=$(grep -oP 'QS_ICON_THEME\s+"\K[^"]+' "$NIRI" 2>/dev/null || true)
+: "${THEME:=WhiteSur-dark}"
+
+qs kill >/dev/null 2>&1
+
+# Wait for the old instance to release its Wayland surfaces instead of
+# guessing with a fixed sleep.
+for _ in $(seq 30); do
+    pgrep -x qs >/dev/null || break
+    sleep 0.1
+done
+
+# A shell that died instead of shutting down cleanly leaves its pipewire
+# monitor behind; a second copy would double-report camera/mic state.
+pkill -f "quickshell/scripts/privacy-monitor.py" 2>/dev/null
+
+QS_ICON_THEME="$THEME" setsid -f qs -p "$CONFIG" >/dev/null 2>&1
+
+pid=""
+for _ in $(seq 50); do
+    sleep 0.1
+    pid=$(pgrep -x qs | head -1)
+    [ -n "$pid" ] && break
+done
+
+if [ -z "$pid" ]; then
+    echo "quickshell FAILED to start — run: qs -p $CONFIG" >&2
+    exit 1
+fi
+
+# Prove the theme actually landed in the new process, so a silent regression
+# here can't blank the bar again.
+if tr '\0' '\n' < "/proc/$pid/environ" | grep -qx "QS_ICON_THEME=$THEME"; then
+    echo "quickshell restarted (QS_ICON_THEME=$THEME)"
+else
+    echo "quickshell restarted, but QS_ICON_THEME != $THEME — icons may be blank" >&2
+    exit 1
+fi
