@@ -1,13 +1,13 @@
 import QtQuick
 import Quickshell
 
-// Bar bell: dim when idle, white with a dot badge when notifications exist.
 Item {
     id: root
     implicitWidth: 18
     implicitHeight: Theme.barHeight
 
     readonly property bool hasNotifs: NotifService.all.length > 0
+    readonly property bool dnd: NotifService.dnd
 
     HoverBg {
         active: ShellState.isOpen("notifs", QsWindow.window?.screen?.name ?? "")
@@ -17,12 +17,10 @@ Item {
     ColorIcon {
         id: bell
         anchors.centerIn: parent
-        // A plain bell, not "-new-" (which carries its own dot, and this
-        // widget draws its own badge) and not the "preferences-" name, which
-        // is a settings gear in most icon themes.
-        name: "notification-symbolic"
+        name: root.dnd ? "notification-disabled-symbolic" : "notification-symbolic"
         size: 16
-        tint: root.hasNotifs ? Theme.fg : Theme.faint
+        // Idle-but-silenced still reads at a glance; idle-and-listening stays quiet.
+        tint: root.hasNotifs ? Theme.fg : root.dnd ? Theme.dim : Theme.faint
     }
 
     Rectangle {

@@ -19,7 +19,6 @@ input {
     focus-follows-mouse max-scroll-amount="0%"
 }
 
-// External LG above, laptop below (centered under it); logical coordinates
 output "HDMI-A-1" {
     scale 1.25
     position x=0 y=0
@@ -57,10 +56,6 @@ layout {
 prefer-no-csd
 
 environment {
-    // WhiteSur for the shell, mime types and everything else; app icons fall
-    // through to hicolor, because the Applications-context directories are
-    // stripped from WhiteSur's and WhiteSur-dark's index.theme (originals
-    // kept alongside as index.theme.orig).
     QS_ICON_THEME "WhiteSur-dark"
 }
 
@@ -76,7 +71,6 @@ hotkey-overlay {
     skip-at-startup
 }
 
-// Rounded corners on every window, matching the shell's panel radius
 window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
@@ -87,19 +81,17 @@ window-rule {
     open-floating true
 }
 
-// Semi-transparent terminals: don't paint the focus ring as a backdrop
-// behind the window — it covers the blur when focused
 window-rule {
     match app-id="kitty"
     match app-id="com.mitchellh.ghostty"
     draw-border-with-background false
 }
 
-// Keep notification popups out of screenshares
 layer-rule {
     match namespace="^quickshell-notifications$"
     block-out-from "screencast"
 }
+
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
@@ -109,6 +101,7 @@ binds {
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+Escape hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }
     Mod+C hotkey-overlay-title="Caffeine: keep awake" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "caffeine" "toggle"; }
+    Mod+D hotkey-overlay-title="Do Not Disturb" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dnd" "toggle"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "5%+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
@@ -124,9 +117,6 @@ binds {
     Mod+O repeat=false { toggle-overview; }
     Mod+Q { close-window; }
 
-    // Mod: focus
-    // h/l walk columns, j/k walk windows inside a column. Arrows alias hjkl
-    // everywhere, in every tier below.
     Mod+H     { focus-column-left; }
     Mod+L     { focus-column-right; }
     Mod+J     { focus-window-down; }
@@ -157,8 +147,6 @@ binds {
     Mod+WheelScrollRight     { focus-column-right; }
     Mod+WheelScrollLeft      { focus-column-left; }
 
-    // Mod+Shift: take the window/column with me
-    // Same keys as focus, one modifier deeper.
     Mod+Shift+H     { move-column-left; }
     Mod+Shift+L     { move-column-right; }
     Mod+Shift+J     { move-window-down; }
@@ -184,9 +172,6 @@ binds {
     Mod+Shift+8 { move-column-to-workspace 8; }
     Mod+Shift+9 { move-column-to-workspace 9; }
 
-    // Mod+Ctrl: the level above the workspace
-    // Bare = focus a monitor; add Shift to send something there.
-    // Page keys act on the whole workspace, hjkl on the focused column.
     Mod+Ctrl+H     { focus-monitor-left; }
     Mod+Ctrl+L     { focus-monitor-right; }
     Mod+Ctrl+J     { focus-monitor-down; }
@@ -238,7 +223,6 @@ binds {
 
     Mod+Shift+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
-    // Hardware power/sleep keys open the power menu (logind ignores them)
     XF86PowerOff { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }
     XF86Sleep   { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }
     XF86Suspend { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "power" "toggle"; }

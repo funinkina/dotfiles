@@ -18,6 +18,13 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "dnd"
+        function toggle(): void { NotifService.toggleDnd(); }
+        function on(): void { NotifService.setDnd(true); }
+        function off(): void { NotifService.setDnd(false); }
+    }
+
+    IpcHandler {
         target: "caffeine"
         function toggle(): void { CaffeineService.toggle(); }
         function on(): void { CaffeineService.setActive(true); }
@@ -29,7 +36,6 @@ ShellRoot {
         function toggle(): void { ShellState.togglePanel("power"); }
     }
 
-    // e.g. `qs ipc call panel toggle window eDP-1` — any popout, any screen
     IpcHandler {
         target: "panel"
         function toggle(name: string, screen: string): void {
@@ -37,7 +43,6 @@ ShellRoot {
         }
     }
 
-    // One instance (owns the org.freedesktop.Notifications DBus name)
     NotificationPopup {}
 
     LockScreen {}
