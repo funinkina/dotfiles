@@ -146,8 +146,8 @@ PanelWindow {
 
             WorkspaceDots { screenName: bar.screen?.name ?? "" }
             PrivacyWidget {}
-            MediaWidget { id: mediaW }
             ClaudeWidget { id: claudeW }
+            MediaWidget { id: mediaW }
         }
 
         FocusedApp {

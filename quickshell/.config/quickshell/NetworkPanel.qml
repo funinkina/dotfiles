@@ -29,7 +29,7 @@ PanelWindow {
     }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 320
-    implicitHeight: Math.min(540, col.implicitHeight + 28)
+    implicitHeight: Math.min(540, header.implicitHeight + listCol.implicitHeight + 28)
     color: "transparent"
 
     property string ip: ""
@@ -246,15 +246,12 @@ PanelWindow {
 
     PanelSurface { id: surf }
 
-    Flickable {
-        id: flick
+    Item {
+        id: body
         anchors.fill: parent
         anchors.margins: 14
-        contentHeight: col.implicitHeight
-        clip: true
-        boundsBehavior: Flickable.StopAtBounds
-        focus: true
         opacity: surf.opacity
+        focus: true
         // Esc: collapse an open password row first, then close the panel
         Keys.onEscapePressed: {
             if (panel.expandedSsid !== "")
@@ -263,9 +260,11 @@ PanelWindow {
                 ShellState.closePanels();
         }
 
+        // Pinned: the current connection and its details stay put while only
+        // the nearby-network list scrolls under them.
         Column {
-            id: col
-            width: flick.width
+            id: header
+            anchors { top: parent.top; left: parent.left; right: parent.right }
             spacing: 4
 
             Item {
@@ -401,169 +400,188 @@ PanelWindow {
             }
 
             Item { width: 1; height: 2 }
+        }
 
-            Repeater {
-                model: panel.others
+        Flickable {
+            id: flick
+            anchors {
+                top: header.bottom
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            contentHeight: listCol.implicitHeight
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-                Column {
-                    id: netItem
-                    required property var modelData
-                    readonly property bool expanded:
-                        panel.expandedSsid === modelData.ssid
-                    width: col.width
+            Column {
+                id: listCol
+                width: flick.width
+                spacing: 4
 
-                    Rectangle {
-                        width: parent.width
-                        height: 32
-                        radius: netItem.expanded ? 0 : Theme.radius
-                        color: rowMouse.pressed ? Theme.press
-                            : rowMouse.containsMouse || netItem.expanded
-                            ? Theme.hover : "transparent"
-                        Behavior on color { ColorAnimation { duration: 100 } }
+                Repeater {
+                    model: panel.others
 
-                        Text {
-                            anchors.left: parent.left
-                            anchors.leftMargin: 6
-                            anchors.right: rightInfo.left
-                            anchors.rightMargin: 8
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: netItem.modelData.ssid
-                            color: Theme.fg
-                            font.family: Theme.uiFont
-                            font.pixelSize: 13
-                            elide: Text.ElideRight
-                        }
-
-                        Row {
-                            id: rightInfo
-                            anchors.right: parent.right
-                            anchors.rightMargin: 6
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: 6
-
-                            ColorIcon {
-                                anchors.verticalCenter: parent.verticalCenter
-                                name: "network-wireless-encrypted-symbolic"
-                                size: 12
-                                tint: Theme.muted
-                                visible: netItem.modelData.sec !== ""
-                            }
-
-                            Text {
-                                anchors.verticalCenter: parent.verticalCenter
-                                text: netItem.modelData.signal + "%"
-                                color: Theme.muted
-                                font.family: Theme.uiFont
-                                font.pixelSize: 12
-                            }
-                        }
-
-                        MouseArea {
-                            id: rowMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                const n = netItem.modelData;
-                                panel.connError = "";
-                                if (panel.saved.includes(n.ssid))
-                                    panel.connect(n.ssid);
-                                else if (n.sec === "")
-                                    panel.connect(n.ssid);
-                                else
-                                    panel.expandedSsid = netItem.expanded ? "" : n.ssid;
-                            }
-                        }
-                    }
-
-                    // Inline password entry for new secured networks
-                    Rectangle {
-                        visible: netItem.expanded
-                        width: parent.width
-                        height: 36
-                        radius: Theme.radius
-                        color: Theme.surface
-                        border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
-                        border.width: 1
-                        Behavior on border.color { ColorAnimation { duration: 100 } }
-
-                        onVisibleChanged: if (visible) pwIn.forceActiveFocus()
-
-                        TextInput {
-                            id: pwIn
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-                            anchors.right: connBtn.left
-                            anchors.rightMargin: 8
-                            anchors.verticalCenter: parent.verticalCenter
-                            echoMode: TextInput.Password
-                            color: Theme.fg
-                            font.family: Theme.uiFont
-                            font.pixelSize: 13
-                            clip: true
-                            onAccepted: panel.connect(netItem.modelData.ssid, text)
-
-                            Text {
-                                visible: pwIn.text === "" && !pwIn.activeFocus
-                                text: "Password"
-                                color: Theme.faint
-                                font.family: Theme.uiFont
-                                font.pixelSize: 13
-                            }
-                        }
+                    Column {
+                        id: netItem
+                        required property var modelData
+                        readonly property bool expanded:
+                            panel.expandedSsid === modelData.ssid
+                        width: listCol.width
 
                         Rectangle {
-                            id: connBtn
-                            anchors.right: parent.right
-                            anchors.rightMargin: 6
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: btnLabel.implicitWidth + 16
-                            height: 24
-                            radius: Theme.radius - 2
-                            color: btnMouse.pressed ? Theme.dim
-                                : btnMouse.containsMouse ? Theme.fg : Theme.press
+                            width: parent.width
+                            height: 32
+                            radius: netItem.expanded ? 0 : Theme.radius
+                            color: rowMouse.pressed ? Theme.press
+                                : rowMouse.containsMouse || netItem.expanded
+                                ? Theme.hover : "transparent"
                             Behavior on color { ColorAnimation { duration: 100 } }
 
                             Text {
-                                id: btnLabel
-                                anchors.centerIn: parent
-                                text: connProc.running ? "…" : "Connect"
-                                color: btnMouse.containsMouse || btnMouse.pressed
-                                    ? Theme.accentFg : Theme.fg
+                                anchors.left: parent.left
+                                anchors.leftMargin: 6
+                                anchors.right: rightInfo.left
+                                anchors.rightMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: netItem.modelData.ssid
+                                color: Theme.fg
                                 font.family: Theme.uiFont
-                                font.pixelSize: 12
-                                font.weight: Font.Medium
+                                font.pixelSize: 13
+                                elide: Text.ElideRight
+                            }
+
+                            Row {
+                                id: rightInfo
+                                anchors.right: parent.right
+                                anchors.rightMargin: 6
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 6
+
+                                ColorIcon {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    name: "network-wireless-encrypted-symbolic"
+                                    size: 12
+                                    tint: Theme.muted
+                                    visible: netItem.modelData.sec !== ""
+                                }
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: netItem.modelData.signal + "%"
+                                    color: Theme.muted
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 12
+                                }
                             }
 
                             MouseArea {
-                                id: btnMouse
+                                id: rowMouse
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: panel.connect(netItem.modelData.ssid, pwIn.text)
+                                onClicked: {
+                                    const n = netItem.modelData;
+                                    panel.connError = "";
+                                    if (panel.saved.includes(n.ssid))
+                                        panel.connect(n.ssid);
+                                    else if (n.sec === "")
+                                        panel.connect(n.ssid);
+                                    else
+                                        panel.expandedSsid = netItem.expanded ? "" : n.ssid;
+                                }
                             }
                         }
-                    }
 
-                    Text {
-                        visible: netItem.expanded && panel.connError !== ""
-                        width: parent.width
-                        text: panel.connError
-                        color: Theme.urgent
-                        font.family: Theme.uiFont
-                        font.pixelSize: 11
-                        wrapMode: Text.Wrap
-                        topPadding: 4
+                        // Inline password entry for new secured networks
+                        Rectangle {
+                            visible: netItem.expanded
+                            width: parent.width
+                            height: 36
+                            radius: Theme.radius
+                            color: Theme.surface
+                            border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
+                            border.width: 1
+                            Behavior on border.color { ColorAnimation { duration: 100 } }
+
+                            onVisibleChanged: if (visible) pwIn.forceActiveFocus()
+
+                            TextInput {
+                                id: pwIn
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                anchors.right: connBtn.left
+                                anchors.rightMargin: 8
+                                anchors.verticalCenter: parent.verticalCenter
+                                echoMode: TextInput.Password
+                                color: Theme.fg
+                                font.family: Theme.uiFont
+                                font.pixelSize: 13
+                                clip: true
+                                onAccepted: panel.connect(netItem.modelData.ssid, text)
+
+                                Text {
+                                    visible: pwIn.text === "" && !pwIn.activeFocus
+                                    text: "Password"
+                                    color: Theme.faint
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 13
+                                }
+                            }
+
+                            Rectangle {
+                                id: connBtn
+                                anchors.right: parent.right
+                                anchors.rightMargin: 6
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: btnLabel.implicitWidth + 16
+                                height: 24
+                                radius: Theme.radius - 2
+                                color: btnMouse.pressed ? Theme.dim
+                                    : btnMouse.containsMouse ? Theme.fg : Theme.press
+                                Behavior on color { ColorAnimation { duration: 100 } }
+
+                                Text {
+                                    id: btnLabel
+                                    anchors.centerIn: parent
+                                    text: connProc.running ? "…" : "Connect"
+                                    color: btnMouse.containsMouse || btnMouse.pressed
+                                        ? Theme.accentFg : Theme.fg
+                                    font.family: Theme.uiFont
+                                    font.pixelSize: 12
+                                    font.weight: Font.Medium
+                                }
+
+                                MouseArea {
+                                    id: btnMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: panel.connect(netItem.modelData.ssid, pwIn.text)
+                                }
+                            }
+                        }
+
+                        Text {
+                            visible: netItem.expanded && panel.connError !== ""
+                            width: parent.width
+                            text: panel.connError
+                            color: Theme.urgent
+                            font.family: Theme.uiFont
+                            font.pixelSize: 11
+                            wrapMode: Text.Wrap
+                            topPadding: 4
+                        }
                     }
                 }
-            }
 
-            Text {
-                visible: panel.wifiOn && panel.others.length === 0
-                text: "No other networks found"
-                color: Theme.faint
-                font.family: Theme.uiFont
-                font.pixelSize: 12
+                Text {
+                    visible: panel.wifiOn && panel.others.length === 0
+                    text: "No other networks found"
+                    color: Theme.faint
+                    font.family: Theme.uiFont
+                    font.pixelSize: 12
+                }
             }
         }
     }

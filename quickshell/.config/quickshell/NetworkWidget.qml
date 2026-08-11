@@ -10,25 +10,57 @@ Item {
 
     property string netType: ""
     property string netName: "offline"
+    property int netSignal: -1   // 0-100 for wifi, -1 when unknown
 
+    // NetworkManager's own strength for the in-use AP, so the bars match what
+    // other shells show. --rescan no keeps this a cached lookup rather than
+    // kicking off a scan every poll. Signal is emitted before the connection
+    // name because a name may itself contain colons.
     Process {
         id: nmProc
         command: ["sh", "-c",
-            "nmcli -t -f TYPE,STATE,CONNECTION device status 2>/dev/null | awk -F: '$2==\"connected\"{print $1\":\"$3; exit}'"]
+            "line=$(nmcli -t -f TYPE,STATE,CONNECTION device status 2>/dev/null | awk -F: '$2==\"connected\"{print $1\":\"$3; exit}');"
+            + " [ -n \"$line\" ] || exit 0;"
+            + " type=${line%%:*}; name=${line#*:}; sig=;"
+            + " [ \"$type\" = wifi ] && sig=$(nmcli -t -f IN-USE,SIGNAL device wifi list --rescan no 2>/dev/null | awk -F: '$1==\"*\"{print $2; exit}');"
+            + " printf '%s:%s:%s\\n' \"$type\" \"$sig\" \"$name\""]
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
                 const line = text.trim();
                 if (!line) {
                     root.netType = "";
+                    root.netSignal = -1;
                     root.netName = "offline";
                     return;
                 }
-                const i = line.indexOf(":");
-                root.netType = line.slice(0, i);
-                root.netName = line.slice(i + 1) || root.netType;
+                const a = line.indexOf(":");
+                const b = line.indexOf(":", a + 1);
+                const sig = line.slice(a + 1, b);
+                root.netType = line.slice(0, a);
+                root.netSignal = sig === "" ? -1 : parseInt(sig);
+                root.netName = line.slice(b + 1) || root.netType;
             }
         }
+    }
+
+    // Same thresholds NetworkManager uses to pick its own icon.
+    readonly property string netIcon: {
+        if (netType === "ethernet")
+            return "network-wired-symbolic";
+        if (netType !== "wifi")
+            return "network-offline-symbolic";
+        if (netSignal < 0)
+            return "network-wireless-signal-none-symbolic";
+        if (netSignal >= 80)
+            return "network-wireless-signal-excellent-symbolic";
+        if (netSignal >= 55)
+            return "network-wireless-signal-good-symbolic";
+        if (netSignal >= 30)
+            return "network-wireless-signal-ok-symbolic";
+        if (netSignal >= 5)
+            return "network-wireless-signal-weak-symbolic";
+        return "network-wireless-signal-none-symbolic";
     }
 
     Timer {
@@ -49,9 +81,7 @@ Item {
         spacing: 6
 
         ColorIcon {
-            name: root.netType === "wifi" ? "network-wireless-symbolic"
-                : root.netType === "ethernet" ? "network-wired-symbolic"
-                : "network-offline-symbolic"
+            name: root.netIcon
             tint: root.netType ? Theme.fg : Theme.faint
             size: 16
             Layout.alignment: Qt.AlignVCenter
