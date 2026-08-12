@@ -17,6 +17,27 @@ Singleton {
         Quickshell.execDetached(["niri", "msg", "action"].concat(args));
     }
 
+    // Focus the best window for a loose app key. Tray ids carry suffixes
+    // ("Slack_status_icon_1"), so fall back to the leading token; among several
+    // windows of one app the most recently focused wins. Returns false when
+    // nothing matches — an app that minimised to its tray icon has no window.
+    function focusApp(key) {
+        const k = (key ?? "").toLowerCase();
+        if (!k)
+            return false;
+        const base = k.split(/[_\-. ]/)[0];
+        const appId = w => (w.app_id ?? "").toLowerCase();
+        const wins = Object.values(windows).sort(
+            (a, b) => (b.focus_timestamp ?? 0) - (a.focus_timestamp ?? 0));
+        const w = wins.find(x => appId(x) === k)
+            ?? wins.find(x => appId(x) === base)
+            ?? (base.length >= 3 ? wins.find(x => appId(x).startsWith(base)) : undefined);
+        if (!w)
+            return false;
+        dispatch(["focus-window", "--id", String(w.id)]);
+        return true;
+    }
+
     function isFullscreen(output, outputHeight) {
         const ws = workspaces.find(w => w.output === output && w.is_active);
         const win = ws ? windows[ws.active_window_id] : null;

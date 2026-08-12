@@ -30,6 +30,17 @@ RowLayout {
                 source: trayItem.modelData.icon
             }
 
+            // activate() only asks the app to raise itself, and niri drops that
+            // request without an activation token — so follow up by focusing the
+            // window directly. Delayed so an app that un-hides on activate has
+            // mapped its window by the time we look.
+            Timer {
+                id: focusTimer
+                interval: 200
+                onTriggered: NiriService.focusApp(trayItem.modelData.id
+                    || trayItem.modelData.title)
+            }
+
             MouseArea {
                 id: trayMouse
                 anchors.fill: parent
@@ -41,6 +52,7 @@ RowLayout {
                         item.secondaryActivate();
                     } else if (mouse.button === Qt.LeftButton && !item.onlyMenu) {
                         item.activate();
+                        focusTimer.restart();
                     } else if (item.hasMenu) {
                         item.display(QsWindow.window,
                             trayItem.mapToItem(null, 0, 0).x, Theme.barHeight);

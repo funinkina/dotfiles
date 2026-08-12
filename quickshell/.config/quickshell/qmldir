@@ -49,3 +49,5 @@ BacklightWidget 1.0 BacklightWidget.qml
 NetworkWidget 1.0 NetworkWidget.qml
 BatteryWidget 1.0 BatteryWidget.qml
 TrayWidget 1.0 TrayWidget.qml
+AudioSlider 1.0 AudioSlider.qml
+AudioDeviceRow 1.0 AudioDeviceRow.qml
