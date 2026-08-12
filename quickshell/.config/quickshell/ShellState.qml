@@ -2,12 +2,9 @@ pragma Singleton
 import Quickshell
 import QtQuick
 
-// Shared state between the bar, OSD and popout panels.
 Singleton {
     id: root
 
-    // Per-screen anchor positions: screenName -> { key: centerX }
-    // Keys: volume, brightness, network, battery, media, clock, window, claude
     property var anchorMap: ({})
     function setAnchor(screen, key, x) {
         const m = Object.assign({}, anchorMap);
@@ -19,11 +16,14 @@ Singleton {
     signal osdRequested(string mode)
     function showOsd(mode) { osdRequested(mode); }
 
-    // Dock visibility, toggled via `qs ipc call dock toggle` (Mod+Shift+D)
+    // A volume/brightness key was pressed. Relayed rather than acted on here:
+    // each Osd instance holds its own live values and decides whether the
+    // press actually moved anything.
+    signal osdStepped(string mode, string dir)
+    function stepOsd(mode, dir) { osdStepped(mode, dir); }
+
     property bool dockVisible: false
 
-    // Exclusive popout panels; panelScreen is the screen they open on
-    // ("" = every screen, used by the centered power menu via IPC)
     property string openPanel: ""
     property string panelScreen: ""
     function togglePanel(name, screen) {
@@ -36,7 +36,6 @@ Singleton {
         }
     }
     function closePanels() { openPanel = ""; }
-    // For bar widgets to show an active state while their panel is open
     function isOpen(name, screen) {
         return openPanel === name && panelScreen === screen;
     }

@@ -4,27 +4,22 @@ import Quickshell.Io
 import Quickshell.Services.Pipewire
 import QtQuick
 
-// Volume/brightness OSD that slides out from under the top bar.
 PanelWindow {
     id: osd
     property var modelData
     screen: modelData
 
     WlrLayershell.namespace: "quickshell-osd"
-    // Fullscreen windows sit above the top layer, so the OSD has to be higher
     WlrLayershell.layer: WlrLayer.Overlay
 
-    // Center under the icon whose value is being shown
     readonly property string sname: screen?.name ?? ""
     readonly property real anchorX: (mode === "brightness"
         ? ShellState.anchorMap[sname]?.brightness
         : ShellState.anchorMap[sname]?.volume) ?? -1
 
-    // No bar to hang off of in fullscreen — go top center instead
     readonly property bool fullscreen:
         NiriService.isFullscreen(sname, screen?.height ?? 0)
 
-    // Unanchored horizontally, layer-shell centers the surface
     anchors { top: true; right: !fullscreen }
     margins {
         top: fullscreen ? 12 : Theme.barHeight + 8
@@ -33,11 +28,10 @@ PanelWindow {
             : Math.max(8, (screen?.width ?? 1920) - anchorX - implicitWidth / 2)
     }
     exclusionMode: ExclusionMode.Ignore
-    implicitWidth: 270
+    implicitWidth: 286
     implicitHeight: 68
     color: "transparent"
 
-    // Click-through
     mask: Region {}
 
     visible: false
@@ -72,15 +66,21 @@ PanelWindow {
     readonly property real brightVal:
         (parseInt(bright.text()) || 0) / (parseInt(brightMax.text()) || 1)
 
-    // `ready` suppresses the OSD for initial value loads at startup
-    onVolChanged: if (ready) show("volume", vol)
+    onVolChanged: { volAt = Date.now(); if (ready) show("volume", vol); }
     onMutedChanged: if (ready) show("volume", vol)
-    onBrightValChanged: if (ready) show("brightness", brightVal)
+    onBrightValChanged: { brightAt = Date.now(); if (ready) show("brightness", brightVal); }
 
     Connections {
         target: ShellState
         function onOsdRequested(mode) {
             osd.show(mode, mode === "brightness" ? osd.brightVal : osd.vol);
+        }
+        function onOsdStepped(mode, dir) {
+            const movedAt = mode === "brightness" ? osd.brightAt : osd.volAt;
+            if (Date.now() - movedAt < 150)
+                return; 
+            osd.show(mode, mode === "brightness" ? osd.brightVal : osd.vol);
+            osd.nudge(dir === "up" ? 1 : -1);
         }
         function onOpenPanelChanged() {
             if (osd.shown && (ShellState.openPanel === "audio"
@@ -92,8 +92,32 @@ PanelWindow {
         }
     }
 
+    property real volAt: 0
+    property real brightAt: 0
+
+    function nudge(dir) {
+        nudgeAnim.dir = dir;
+        nudgeAnim.restart();
+    }
+
+    SequentialAnimation {
+        id: nudgeAnim
+        property int dir: 1
+        NumberAnimation {
+            target: content; property: "nudgeX"
+            to: nudgeAnim.dir * 8; duration: 90; easing.type: Easing.OutCubic
+        }
+        NumberAnimation {
+            target: content; property: "nudgeX"
+            to: nudgeAnim.dir * -3; duration: 90
+        }
+        NumberAnimation {
+            target: content; property: "nudgeX"
+            to: 0; duration: 120; easing.type: Easing.OutCubic
+        }
+    }
+
     function show(m, v) {
-        // The audio/display panels already show live values — no OSD on top
         if (ShellState.openPanel === "audio" || ShellState.openPanel === "display")
             return;
         mode = m;
@@ -116,8 +140,10 @@ PanelWindow {
 
     Rectangle {
         id: content
-        width: parent.width
+        property real nudgeX: 0
+        width: 270
         height: parent.height
+        x: (osd.width - width) / 2 + nudgeX
         y: osd.shown ? 0 : -height
         opacity: osd.shown ? 1 : 0
         color: Theme.bg

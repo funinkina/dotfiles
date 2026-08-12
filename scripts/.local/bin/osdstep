@@ -1,0 +1,24 @@
+#!/bin/bash
+# Volume / brightness step, then tell the shell a key was pressed.
+#
+# The OSD normally appears because quickshell sees the value change. At either
+# end of the range nothing changes, so nothing fires and the user gets no
+# feedback at all — this reports every press so the shell can show the OSD and
+# nudge it when the value is already pinned.
+#
+# wpctl/brightnessctl stay authoritative, so the keys keep working even while
+# quickshell is restarting; only the OSD is lost in that window.
+set -u
+
+mode=${1:-}
+dir=${2:-}
+
+case "$mode:$dir" in
+  volume:up)       wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+ ;;
+  volume:down)     wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+  brightness:up)   brightnessctl set 5%+ >/dev/null ;;
+  brightness:down) brightnessctl set 5%- >/dev/null ;;
+  *) echo "usage: osdstep {volume|brightness} {up|down}" >&2; exit 2 ;;
+esac
+
+qs -p "$HOME/.config/quickshell" ipc call osd step "$mode" "$dir" 2>/dev/null || true

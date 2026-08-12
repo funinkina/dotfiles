@@ -18,6 +18,13 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "osd"
+        function step(mode: string, dir: string): void {
+            ShellState.stepOsd(mode, dir);
+        }
+    }
+
+    IpcHandler {
         target: "dnd"
         function toggle(): void { NotifService.toggleDnd(); }
         function on(): void { NotifService.setDnd(true); }
