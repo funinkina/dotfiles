@@ -1,0 +1,51 @@
+/* Satty chrome, matched to quickshell's Theme.qml.
+ *
+ * Selectors are satty's own (.outer_box, .inner_box, .toolbar, .toolbar-top,
+ * .toolbar-bottom, .toast, button.editing); the @define-colors retarget the
+ * libadwaita names its builtin stylesheet points at.
+ */
+
+@define-color headerbar_bg_color #121212;
+@define-color headerbar_fg_color #f2f2f2;
+@define-color accent_color #ffffff;
+@define-color accent_bg_color #ffffff;
+@define-color accent_fg_color #000000;
+
+.outer_box {
+    background-color: #121212;
+}
+
+/* The mat around the screenshot. Builtin is pure black; this is Theme.bg, so
+ * it reads as the same surface as the shell's panels. */
+.inner_box {
+    background-color: #121212;
+}
+
+/* Theme.surface, deliberately one step lighter than the mat behind the image:
+ * it separates chrome from canvas, and keeps the near-black swatch in the
+ * colour palette visible instead of vanishing into its own background. */
+.toolbar {
+    color: #f2f2f2;
+    background-color: #1d1d1d;
+}
+
+/* Theme.panelRadius, so the floating toolbars round like the shell's popouts */
+.overlay .toolbar-top {
+    border-radius: 0 0 12px 12px;
+}
+
+.overlay .toolbar-bottom {
+    border-radius: 12px 12px 0 0;
+}
+
+.toast {
+    color: #f2f2f2;
+    background-color: #1d1d1d;
+    border: 1px solid #454545;
+    border-radius: 12px;
+}
+
+/* Active tool */
+button.editing {
+    color: #ffffff;
+}

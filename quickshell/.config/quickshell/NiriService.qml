@@ -10,8 +10,21 @@ Singleton {
     property var windows: ({})
     property var focusedWindowId: null
     property var casts: []
-    readonly property var focusedWindow: focusedWindowId !== null
-        ? (windows[focusedWindowId] ?? null) : null
+    // The window the shell should treat as current. niri reports no focused
+    // window while one of our own layer surfaces holds the keyboard — which is
+    // every open panel — so fall back to the focused workspace's active
+    // window. That is still the window the user is on; clicking a bar widget
+    // shouldn't make the bar forget it. A genuinely empty workspace yields null.
+    readonly property var activeWindowId: {
+        if (focusedWindowId !== null && windows[focusedWindowId])
+            return focusedWindowId;
+        const ws = workspaces.find(w => w.is_focused);
+        const id = ws?.active_window_id ?? null;
+        return id !== null && windows[id] ? id : null;
+    }
+
+    readonly property var focusedWindow: activeWindowId !== null
+        ? (windows[activeWindowId] ?? null) : null
 
     function dispatch(args) {
         Quickshell.execDetached(["niri", "msg", "action"].concat(args));

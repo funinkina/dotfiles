@@ -1,0 +1,49 @@
+# Satty — screenshot annotation, matched to the quickshell desktop.
+# Keys valid for satty 0.21.x: https://github.com/Satty-org/Satty
+
+[general]
+# A floating, undecorated window sized to the shot, rather than fullscreen —
+# the same way the shell's own popouts behave.
+fullscreen = false
+floating-hack = true
+no-window-decoration = true
+# These outputs run at 1.25x and 1.5x, so grim hands over native pixels.
+# Smart resize fits the window to the image instead of overflowing the screen.
+resize = { mode = "smart" }
+
+# Arrow first: pointing at something is the common case, brush is not.
+initial-tool = "arrow"
+primary-highlighter = "block"
+default-fill-shapes = false
+# Same radius as Theme.panelRadius, so a box drawn around a window in a
+# screenshot matches the rounding of the window itself.
+corner-roundness = 12
+annotation-size-factor = 1.5
+brush-smooth-history-size = 10
+
+copy-command = "wl-copy"
+# Mirrors niri's own screenshot-path, so annotated and raw shots file together.
+output-filename = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+# Enter = copy, save, done. Escape throws it away.
+actions-on-enter = ["save-to-clipboard", "save-to-file", "exit"]
+actions-on-escape = ["exit"]
+early-exit = ["all"]
+disable-notifications = false
+
+[font]
+family = "SF Pro Text"
+style = "Regular"
+
+[color-palette]
+# Theme.urgent leads — it is already the colour this desktop uses to mean
+# "look here" — then accent white and background near-black for annotating
+# light and dark shots. The rest are the system hues that sit with WhiteSur.
+palette = [
+    "#f2555aff",
+    "#ffffffff",
+    "#121212ff",
+    "#ff9f0aff",
+    "#34c759ff",
+    "#0a84ffff",
+]
+custom = []

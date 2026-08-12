@@ -18,6 +18,17 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "probe"
+        function focus(): void {
+            const ws = NiriService.workspaces.filter(w => w.is_focused);
+            console.log("FOCUSPROBE focusedWindowId=" + NiriService.focusedWindowId,
+                "activeWindowId=" + NiriService.activeWindowId,
+                "resolved=" + JSON.stringify(NiriService.focusedWindow?.app_id),
+                "focusedWs=" + JSON.stringify(ws.map(w => [w.idx, w.active_window_id])));
+        }
+    }
+
+    IpcHandler {
         target: "osd"
         function step(mode: string, dir: string): void {
             ShellState.stepOsd(mode, dir);

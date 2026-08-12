@@ -10,11 +10,13 @@ input {
         numlock
     }
     touchpad {
-        tap
         natural-scroll
         dwt
+
+        accel-profile "adaptive"
     }
     mouse {
+        accel-profile "adaptive"
     }
     focus-follows-mouse max-scroll-amount="0%"
 }
@@ -30,8 +32,8 @@ output "eDP-1" {
 }
 
 layout {
-    gaps 8
-    center-focused-column "never"
+    gaps 4
+    center-focused-column "on-overflow"
 
     preset-column-widths {
         proportion 0.33333
@@ -46,7 +48,7 @@ layout {
         inactive-color "#3a3a3a"
     }
     border {
-        off
+        width 1
     }
     shadow {
         // on
@@ -77,7 +79,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    match app-id=r"firefox$" title="^Picture-in-Picture$"
     open-floating true
 }
 
@@ -105,13 +107,13 @@ binds {
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "osdstep" "volume" "up"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "osdstep" "volume" "down"; }
-    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
     XF86AudioPlay  { spawn "playerctl" "play-pause"; }
     XF86AudioNext  { spawn "playerctl" "next"; }
     XF86AudioPrev  { spawn "playerctl" "previous"; }
 
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "osdstep" "brightness" "up"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "osdstep" "brightness" "up"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "osdstep" "brightness" "down"; }
 
     Mod+O repeat=false { toggle-overview; }
@@ -143,18 +145,18 @@ binds {
     Mod+9 { focus-workspace 9; }
 
     // Mouse: vertical wheel scrolls along the workspace (niri's primary axis).
-    Mod+WheelScrollDown      cooldown-ms=50 { focus-column-right; }
-    Mod+WheelScrollUp        cooldown-ms=50 { focus-column-left; }
+    Mod+WheelScrollDown cooldown-ms=50 { focus-column-right; }
+    Mod+WheelScrollUp cooldown-ms=50 { focus-column-left; }
     Mod+WheelScrollRight     { focus-column-right; }
     Mod+WheelScrollLeft      { focus-column-left; }
 
     // Shift+wheel drags the focused column along with the view.
     Mod+Shift+WheelScrollDown cooldown-ms=50 { move-column-right; }
-    Mod+Shift+WheelScrollUp   cooldown-ms=50 { move-column-left; }
+    Mod+Shift+WheelScrollUp cooldown-ms=50 { move-column-left; }
 
     // Workspaces move to Ctrl; columns stay on the bare Mod wheel.
     Mod+Ctrl+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
-    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
 
     // Thumb buttons: column back/forward. Middle click opens the overview.
     Mod+MouseBack    { focus-column-left; }
@@ -231,9 +233,12 @@ binds {
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
     Mod+W       { toggle-column-tabbed-display; }
 
-    Print      { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print  { screenshot-window; }
+    // Capture straight into satty for annotation; Shift+Print keeps niri's
+    // own picker for when a raw shot is all that's wanted.
+    Print hotkey-overlay-title="Screenshot: region"      { spawn "shot" "region"; }
+    Ctrl+Print hotkey-overlay-title="Screenshot: screen"      { spawn "shot" "screen"; }
+    Alt+Print hotkey-overlay-title="Screenshot: window"      { spawn "shot" "window"; }
+    Shift+Print hotkey-overlay-title="Screenshot: niri picker" { screenshot; }
 
     Mod+Shift+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
@@ -244,4 +249,55 @@ binds {
     Mod+Shift+E { quit; }
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+P { power-off-monitors; }
+}
+
+animations {
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=4000 epsilon=0.0009
+    }
+
+    window-open {
+        duration-ms 150
+        curve "ease-out-expo"
+    }
+
+    window-close {
+        duration-ms 150
+        curve "ease-out-quad"
+    }
+
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-resize {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    config-notification-open-close {
+        spring damping-ratio=0.6 stiffness=1000 epsilon=0.001
+    }
+
+    exit-confirmation-open-close {
+        spring damping-ratio=0.6 stiffness=500 epsilon=0.01
+    }
+
+    screenshot-ui-open {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+
+    overview-open-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    recent-windows-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+    }
+}
+cursor {
 }

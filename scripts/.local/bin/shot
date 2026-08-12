@@ -1,0 +1,43 @@
+#!/bin/bash
+# Capture and hand straight to satty for annotation.
+#
+#   shot region   drag a selection (default)
+#   shot screen   the focused output
+#   shot window   the focused window
+#
+# Region goes through grim+slurp; screen and window go through niri, which
+# already knows the output scale and the window's geometry — niri reports no
+# absolute window position over IPC, so grim can't frame a window on its own.
+set -u
+
+mode=${1:-region}
+tmp=$(mktemp --suffix=.png)
+trap 'rm -f "$tmp"' EXIT
+
+case "$mode" in
+  region)
+    geom=$(slurp) || exit 0            # Esc cancels the selection
+    [ -n "$geom" ] || exit 0
+    grim -g "$geom" "$tmp"
+    ;;
+  screen)
+    niri msg action screenshot-screen --path "$tmp" --show-pointer false >/dev/null
+    ;;
+  window)
+    niri msg action screenshot-window --path "$tmp" >/dev/null
+    ;;
+  *)
+    echo "usage: shot {region|screen|window}" >&2
+    exit 2
+    ;;
+esac
+
+# niri writes the file asynchronously, so the path is not ready the moment the
+# action returns. Wait for content rather than guessing with a fixed sleep.
+for _ in $(seq 40); do
+    [ -s "$tmp" ] && break
+    sleep 0.05
+done
+[ -s "$tmp" ] || exit 0
+
+satty --filename "$tmp"
