@@ -142,10 +142,24 @@ binds {
     Mod+8 { focus-workspace 8; }
     Mod+9 { focus-workspace 9; }
 
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    // Mouse: vertical wheel scrolls along the workspace (niri's primary axis).
+    Mod+WheelScrollDown      cooldown-ms=50 { focus-column-right; }
+    Mod+WheelScrollUp        cooldown-ms=50 { focus-column-left; }
     Mod+WheelScrollRight     { focus-column-right; }
     Mod+WheelScrollLeft      { focus-column-left; }
+
+    // Shift+wheel drags the focused column along with the view.
+    Mod+Shift+WheelScrollDown cooldown-ms=50 { move-column-right; }
+    Mod+Shift+WheelScrollUp   cooldown-ms=50 { move-column-left; }
+
+    // Workspaces move to Ctrl; columns stay on the bare Mod wheel.
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+
+    // Thumb buttons: column back/forward. Middle click opens the overview.
+    Mod+MouseBack    { focus-column-left; }
+    Mod+MouseForward { focus-column-right; }
+    Mod+MouseMiddle repeat=false { toggle-overview; }
 
     Mod+Shift+H     { move-column-left; }
     Mod+Shift+L     { move-column-right; }

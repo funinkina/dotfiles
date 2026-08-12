@@ -8,12 +8,11 @@ BatteryPanel 1.0 BatteryPanel.qml
 AudioPanel 1.0 AudioPanel.qml
 DisplayPanel 1.0 DisplayPanel.qml
 CalendarPanel 1.0 CalendarPanel.qml
-WeatherPanel 1.0 WeatherPanel.qml
 PowerMenu 1.0 PowerMenu.qml
 BluetoothPanel 1.0 BluetoothPanel.qml
 BluetoothWidget 1.0 BluetoothWidget.qml
-WeatherWidget 1.0 WeatherWidget.qml
 singleton WeatherService 1.0 WeatherService.qml
+singleton HolidayService 1.0 HolidayService.qml
 MediaPanel 1.0 MediaPanel.qml
 WindowPanel 1.0 WindowPanel.qml
 singleton ClaudeService 1.0 ClaudeService.qml
@@ -44,7 +43,7 @@ PanelSurface 1.0 PanelSurface.qml
 WorkspaceDots 1.0 WorkspaceDots.qml
 FocusedApp 1.0 FocusedApp.qml
 MediaWidget 1.0 MediaWidget.qml
-ClockWidget 1.0 ClockWidget.qml
+DateWeatherWidget 1.0 DateWeatherWidget.qml
 AudioWidget 1.0 AudioWidget.qml
 BacklightWidget 1.0 BacklightWidget.qml
 NetworkWidget 1.0 NetworkWidget.qml

@@ -73,11 +73,10 @@ PanelWindow {
     readonly property real netX: contentArea.x + rightRow.x + netW.x + netW.width / 2
     readonly property real battX: contentArea.x + rightRow.x + battW.x + battW.width / 2
     readonly property real btX: contentArea.x + rightRow.x + btW.x + btW.width / 2
-    readonly property real clkX: contentArea.x + rightRow.x + clockW.x + clockW.width / 2
-    readonly property real weaX: contentArea.x + rightRow.x + weatherW.x + weatherW.width / 2
+    readonly property real clkX: contentArea.x + centerRow.x + clockW.x + clockW.width / 2
     readonly property real medX: contentArea.x + leftRow.x + mediaW.x + mediaW.width / 2
-    readonly property real winX: contentArea.x + focusedApp.x + focusedApp.width / 2
-    readonly property real claX: contentArea.x + leftRow.x + claudeW.x + claudeW.width / 2
+    readonly property real winX: contentArea.x + leftRow.x + focusedApp.x + focusedApp.width / 2
+    readonly property real claX: contentArea.x + rightRow.x + claudeW.x + claudeW.width / 2
 
     onVolXChanged: ShellState.setAnchor(sname, "volume", volX)
     onWinXChanged: ShellState.setAnchor(sname, "window", winX)
@@ -87,7 +86,6 @@ PanelWindow {
     onBattXChanged: ShellState.setAnchor(sname, "battery", battX)
     onBtXChanged: ShellState.setAnchor(sname, "bluetooth", btX)
     onClkXChanged: ShellState.setAnchor(sname, "clock", clkX)
-    onWeaXChanged: ShellState.setAnchor(sname, "weather", weaX)
     onMedXChanged: ShellState.setAnchor(sname, "media", medX)
 
     Component.onCompleted: {
@@ -97,7 +95,6 @@ PanelWindow {
         ShellState.setAnchor(sname, "battery", battX);
         ShellState.setAnchor(sname, "bluetooth", btX);
         ShellState.setAnchor(sname, "clock", clkX);
-        ShellState.setAnchor(sname, "weather", weaX);
         ShellState.setAnchor(sname, "media", medX);
         ShellState.setAnchor(sname, "window", winX);
         ShellState.setAnchor(sname, "claude", claX);
@@ -145,14 +142,18 @@ PanelWindow {
             }
 
             WorkspaceDots { screenName: bar.screen?.name ?? "" }
+            FocusedApp { id: focusedApp }
             PrivacyWidget {}
-            ClaudeWidget { id: claudeW }
             MediaWidget { id: mediaW }
         }
 
-        FocusedApp {
-            id: focusedApp
-            anchors.centerIn: parent
+        RowLayout {
+            id: centerRow
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 16
+
+            DateWeatherWidget { id: clockW }
         }
 
         RowLayout {
@@ -161,14 +162,13 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 16
 
+            ClaudeWidget { id: claudeW }
             TrayWidget {}
             AudioWidget { id: audioW }
             BacklightWidget { id: backlightW }
             NetworkWidget { id: netW }
             BluetoothWidget { id: btW }
             BatteryWidget { id: battW }
-            WeatherWidget { id: weatherW }
-            ClockWidget { id: clockW }
             CaffeineWidget {}
             NotifWidget {}
         }

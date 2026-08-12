@@ -63,7 +63,6 @@ ShellRoot {
             AudioPanel { modelData: s.modelData }
             DisplayPanel { modelData: s.modelData }
             CalendarPanel { modelData: s.modelData }
-            WeatherPanel { modelData: s.modelData }
             PowerMenu { modelData: s.modelData }
             BluetoothPanel { modelData: s.modelData }
             MediaPanel { modelData: s.modelData }

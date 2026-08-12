@@ -15,12 +15,13 @@ PanelWindow {
     WlrLayershell.namespace: "quickshell-dismiss"
 
     // Take the keyboard while a panel is open so Escape can close it.
-    // Network (password entry) and power (arrow nav) manage their own.
+    // Network (password entry), power (arrow nav) and clock (weather city
+    // entry) manage their own.
     // The window panel must NOT grab: grabbing unfocuses the window in niri,
     // which would null focusedWindow and close the panel instantly.
     WlrLayershell.keyboardFocus:
         ShellState.openPanel !== "" && ShellState.openPanel !== "network"
-            && ShellState.openPanel !== "power" && ShellState.openPanel !== "weather"
+            && ShellState.openPanel !== "power" && ShellState.openPanel !== "clock"
             && ShellState.openPanel !== "window"
             ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 

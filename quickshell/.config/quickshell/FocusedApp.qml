@@ -34,6 +34,8 @@ Item {
             font.family: Theme.uiFont
             font.pixelSize: Theme.fontSize
             font.weight: Font.Medium
+            elide: Text.ElideRight
+            Layout.maximumWidth: 200
             Layout.alignment: Qt.AlignVCenter
         }
     }
