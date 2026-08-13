@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Wayland._BackgroundEffect
 import Quickshell.Widgets
 import QtQuick
 
@@ -10,13 +11,17 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-dock"
 
+    BackgroundEffect.blurRegion: Region {
+        width: dock.width
+        height: dock.height
+    }
+
     visible: ShellState.dockVisible
 
     anchors { left: true; top: true; bottom: true }
     implicitWidth: Theme.dockWidth
     color: "transparent"
 
-    // Mirrors gsettings org.gnome.shell favorite-apps
     readonly property var pinnedIds: [
         "helium",
         "org.gnome.Nautilus",
@@ -49,14 +54,7 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.bg
-    }
-
-    // Hairline separating the dock from window content
-    Rectangle {
-        anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
-        width: 1
-        color: Theme.line
+        color: Theme.barBg
     }
 
     component DockButton: Item {
@@ -67,7 +65,7 @@ PanelWindow {
         signal triggered()
 
         width: Theme.dockWidth
-        height: 40
+        height: 44
 
         Rectangle {
             anchors.fill: parent
@@ -92,13 +90,10 @@ PanelWindow {
 
         IconImage {
             anchors.centerIn: parent
-            implicitSize: 28
+            implicitSize: 34
             source: Quickshell.iconPath(btn.iconName, "application-x-executable")
-            opacity: btn.focused || btnMouse.containsMouse ? 1.0
-                : btn.running ? 0.85 : 0.55
             scale: btnMouse.pressed ? 0.9 : btnMouse.containsMouse ? 1.1 : 1.0
             Behavior on scale { NumberAnimation { duration: 120 } }
-            Behavior on opacity { NumberAnimation { duration: 120 } }
         }
 
         MouseArea {
@@ -136,7 +131,6 @@ PanelWindow {
             }
         }
 
-        // Separator before running apps that aren't pinned
         Item {
             width: Theme.dockWidth
             height: 9
@@ -163,7 +157,6 @@ PanelWindow {
         }
     }
 
-    // Launcher at the bottom
     Item {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 12
@@ -184,7 +177,7 @@ PanelWindow {
         ColorIcon {
             anchors.centerIn: parent
             name: "view-app-grid-symbolic"
-            size: 22
+            size: 26
             tint: launcherMouse.containsMouse ? Theme.accent : Theme.muted
         }
 

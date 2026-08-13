@@ -11,19 +11,16 @@ PanelWindow {
 
     WlrLayershell.namespace: "quickshell-bar"
 
-    // Compositor blur behind the translucent bar (same protocol kitty uses)
     BackgroundEffect.blurRegion: Region {
         width: bar.width
         height: Theme.barHeight
     }
 
     anchors { top: true; left: true; right: true }
-    // Extra height for the inverted corner fillets below the bar
     implicitHeight: Theme.barHeight + Theme.panelRadius
     exclusiveZone: Theme.barHeight
     color: "transparent"
 
-    // Only the bar strip takes clicks; the fillet strip passes through
     mask: Region {
         width: bar.width
         height: Theme.barHeight
@@ -35,8 +32,6 @@ PanelWindow {
         color: Theme.barBg
     }
 
-    // Inverted corners: concave fillets so the content area's top corners
-    // are rounded with the same radius as the windows
     component CornerFillet: Canvas {
         property bool mirrored: false
         y: Theme.barHeight
@@ -64,7 +59,15 @@ PanelWindow {
         }
     }
 
-    CornerFillet { anchors.left: parent.left }
+
+    CornerFillet {
+        anchors.left: parent.left
+        visible: !ShellState.dockVisible
+    }
+    CornerFillet {
+        x: Theme.dockWidth
+        visible: ShellState.dockVisible
+    }
     CornerFillet { anchors.right: parent.right; mirrored: true }
 
     readonly property string sname: bar.screen?.name ?? ""
@@ -113,7 +116,6 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 16
 
-            // Arch logo: overview toggle
             Item {
                 implicitWidth: 20
                 implicitHeight: Theme.barHeight

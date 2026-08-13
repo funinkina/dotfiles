@@ -16,13 +16,10 @@ Singleton {
     signal osdRequested(string mode)
     function showOsd(mode) { osdRequested(mode); }
 
-    // A volume/brightness key was pressed. Relayed rather than acted on here:
-    // each Osd instance holds its own live values and decides whether the
-    // press actually moved anything.
     signal osdStepped(string mode, string dir)
     function stepOsd(mode, dir) { osdStepped(mode, dir); }
 
-    property bool dockVisible: false
+    property bool dockVisible: true
 
     property string openPanel: ""
     property string panelScreen: ""
