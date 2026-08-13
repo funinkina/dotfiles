@@ -4,16 +4,9 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 
-// WlSessionLock's default property is `surface`, a single Component — helper
-// objects cannot be nested inside it or they get swallowed by that slot, so
-// the timing logic lives out here in a Scope alongside it.
 Scope {
     id: root
 
-    // `locked` is driven imperatively rather than bound to LockService.
-    // Locking has to take effect on the spot, but unlocking must outlast the
-    // fade: the compositor destroys the lock surface the instant this goes
-    // false, so a plain binding would leave nothing on screen to animate.
     property bool unlocking: false
     readonly property int fadeIn: 320
     readonly property int fadeOut: 200
@@ -26,9 +19,9 @@ Scope {
             if (LockService.locked) {
                 closeTimer.stop();
                 root.unlocking = false;
-                lock.locked = true;     // never delayed
+                lock.locked = true;   
             } else if (lock.locked) {
-                root.unlocking = true;  // fade out, then drop the surface
+                root.unlocking = true;
                 closeTimer.restart();
             }
         }
@@ -36,10 +29,7 @@ Scope {
 
     Timer {
         id: closeTimer
-        interval: root.fadeOut + 40   // outlast the fade so it never cuts early
-        // `unlocking` is deliberately left set: clearing it here would make the
-        // content opaque again for however many frames the surface takes to go
-        // away. The next lock resets it before the surface is recreated.
+        interval: root.fadeOut + 40
         onTriggered: lock.locked = false
     }
 
@@ -52,23 +42,12 @@ Scope {
 
             readonly property string user: Quickshell.env("USER")
             property string fullName: user
-
-            // Starts false so the fade has somewhere to animate from, and is
-            // set from a rendered frame rather than Component.onCompleted: the
-            // surface takes 600ms+ to come up, and a Behavior begun while the
-            // render loop is still stalled jumps straight to its end value once
-            // frames resume. Waiting a few frames makes the fade-in land more
-            // often, though not on every lock; the fade-out is unaffected,
-            // since by then the surface is warm.
             property bool revealed: false
 
             FrameAnimation {
                 property int frames: 0
                 running: true
                 onTriggered: {
-                    // A few frames, not one: the surface keeps stalling just
-                    // after its first, and a fade begun inside that stall
-                    // jumps straight to its end value.
                     if (++frames < 5)
                         return;
                     surface.revealed = true;
@@ -78,8 +57,6 @@ Scope {
 
             readonly property bool shown: revealed && !root.unlocking
 
-            // Content fades over the surface's own opaque colour, so the desktop
-            // is never briefly visible through it while locking.
             property real lift: shown ? 0 : 14
             Behavior on lift {
                 NumberAnimation {
@@ -115,19 +92,13 @@ Scope {
                     }
                 }
 
-                // Wallpaper, dimmed
                 Image {
                     id: wallpaper
                     anchors.fill: parent
                     source: "file:///home/funinkina/.config/wallpaper"
                     fillMode: Image.PreserveAspectCrop
-                    cache: false
-                    // Decoded off the GUI thread; a synchronous decode of the
-                    // 2880x1800 file stalled the first frames of the fade by
-                    // nearly a second.
+                    cache: true
                     asynchronous: true
-                    // Decode straight to screen size; the file is 2982x2108
-                    // and the extra pixels only cost upload time.
                     sourceSize.width: surface.width * Screen.devicePixelRatio
                     opacity: status === Image.Ready ? 1 : 0
                     Behavior on opacity { NumberAnimation { duration: 220 } }
@@ -139,12 +110,20 @@ Scope {
                     opacity: 0.65
                 }
 
+                MouseArea {
+                    anchors.fill: parent
+                    z: 10
+                    hoverEnabled: true
+                    acceptedButtons: LockService.awake ? Qt.NoButton : Qt.AllButtons
+                    onPositionChanged: if (LockService.awake) LockService.wake()
+                    onPressed: LockService.wake()
+                }
+
                 Column {
                     id: clockCol
                     anchors.horizontalCenter: parent.horizontalCenter
                     y: parent.height * 0.33 - height / 2
                     spacing: 6
-                    // Settles down from above as the login block rises to meet it.
                     transform: Translate { y: -surface.lift * 0.6 }
 
                     Text {
@@ -195,8 +174,6 @@ Scope {
                     }
                 }
 
-                // Anchored under the clock rather than inside it, so the clock keeps
-                // its position whether or not something is playing.
                 LockMedia {
                     anchors.horizontalCenter: clockCol.horizontalCenter
                     anchors.top: clockCol.bottom
@@ -227,6 +204,11 @@ Scope {
                     spacing: 10
                     transform: Translate { y: surface.lift }
 
+                    opacity: LockService.awake ? 1 : 0
+                    Behavior on opacity {
+                        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                    }
+
                     ClippingRectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: 76
@@ -255,22 +237,31 @@ Scope {
                     BlurPanel {
                         id: field
                         blurSource: wallpaper
-                        blurRoot: surface
+                        blurRoot: content
 
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: 300
                         height: 34
-                        radius: Theme.radius
-                        border.color: pwIn.activeFocus ? Theme.borderBright : Theme.border
-                        border.width: 1
-                        Behavior on border.color { ColorAnimation { duration: 100 } }
+                        radius: height / 2
+                        border.width: 0
+                        
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: 0.5
+                            radius: height / 2
+                            color: "transparent"
+                            antialiasing: true
+                            border.width: 1 / Screen.devicePixelRatio
+                            border.color: "#30ffffff"
+                        }
 
                         TextInput {
                             id: pwIn
                             anchors.fill: parent
-                            anchors.leftMargin: 14
-                            anchors.rightMargin: 14
+                            anchors.leftMargin: 18
+                            anchors.rightMargin: 18
                             verticalAlignment: TextInput.AlignVCenter
+                            horizontalAlignment: TextInput.AlignHCenter
                             echoMode: TextInput.Password
                             color: Theme.fg
                             font.family: Theme.uiFont
@@ -278,6 +269,11 @@ Scope {
                             focus: true
                             clip: true
                             enabled: !LockService.authenticating
+                            Keys.onPressed: event => {
+                                if (!LockService.awake)
+                                    event.accepted = true;
+                                LockService.wake();
+                            }
                             onAccepted: {
                                 if (text !== "")
                                     LockService.submitPassword(text);
@@ -285,7 +281,7 @@ Scope {
 
                             Text {
                                 visible: pwIn.text === ""
-                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.centerIn: parent
                                 text: "Password"
                                 color: Theme.faint
                                 font.family: Theme.uiFont
@@ -313,10 +309,40 @@ Scope {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
+                        visible: !LockService.fpBroken
                         text: "or touch the fingerprint sensor"
                         color: Theme.faint
                         font.family: Theme.uiFont
                         font.pixelSize: 12
+                    }
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 96
+                    spacing: 8
+                    transform: Translate { y: surface.lift }
+
+                    opacity: LockService.awake ? 0 : 1
+                    visible: opacity > 0
+                    Behavior on opacity {
+                        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+                    }
+
+                    ColorIcon {
+                        anchors.verticalCenter: parent.verticalCenter
+                        name: "changes-prevent-symbolic"
+                        tint: Theme.dim
+                        size: 16
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Click or press a key to unlock"
+                        color: Theme.dim
+                        font.family: Theme.uiFont
+                        font.pixelSize: 14
                     }
                 }
             }

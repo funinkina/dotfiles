@@ -10,6 +10,8 @@ input {
         numlock
     }
     touchpad {
+        tap
+
         natural-scroll
         dwt
 
@@ -33,7 +35,7 @@ output "eDP-1" {
 
 layout {
     gaps 4
-    center-focused-column "on-overflow"
+    center-focused-column "never"
 
     preset-column-widths {
         proportion 0.33333

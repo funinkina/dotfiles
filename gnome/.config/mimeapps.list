@@ -73,6 +73,7 @@ video/vnd.avi=io.github.diegopvlk.Cine.desktop;
 application/xhtml+xml=google-chrome.desktop;helium.desktop;
 image/png=org.gnome.Loupe.desktop;
 application/pdf=org.gnome.Papers.desktop;
+text/csv=wps-office-et.desktop;
 
 [Default Applications]
 application/rss+xml=userapp-Thunderbird-DMXKP3.desktop
@@ -157,3 +158,4 @@ x-scheme-handler/about=helium.desktop
 x-scheme-handler/unknown=helium.desktop
 image/png=org.gnome.Loupe.desktop
 application/pdf=org.gnome.Papers.desktop
+text/csv=wps-office-et.desktop
