@@ -26,6 +26,11 @@ Singleton {
     readonly property var focusedWindow: activeWindowId !== null
         ? (windows[activeWindowId] ?? null) : null
 
+    // Connector name of the monitor the user is on — what a keybind-triggered
+    // panel should open on when the bind carries no screen of its own.
+    readonly property string focusedOutput:
+        workspaces.find(w => w.is_focused)?.output ?? ""
+
     function dispatch(args) {
         Quickshell.execDetached(["niri", "msg", "action"].concat(args));
     }

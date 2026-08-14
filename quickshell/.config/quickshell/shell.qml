@@ -55,6 +55,13 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "launcher"
+        function toggle(): void {
+            ShellState.togglePanel("launcher", NiriService.focusedOutput);
+        }
+    }
+
+    IpcHandler {
         target: "panel"
         function toggle(name: string, screen: string): void {
             ShellState.togglePanel(name, screen);
@@ -74,6 +81,7 @@ ShellRoot {
 
             Bar { modelData: s.modelData }
             Dock { modelData: s.modelData }
+            AppLauncher { modelData: s.modelData }
             Osd { modelData: s.modelData }
             DismissLayer { modelData: s.modelData }
             NetworkPanel { modelData: s.modelData }

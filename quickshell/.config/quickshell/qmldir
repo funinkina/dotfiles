@@ -1,7 +1,11 @@
 singleton Theme 1.0 Theme.qml
 singleton NiriService 1.0 NiriService.qml
+singleton AppService 1.0 AppService.qml
 Bar 1.0 Bar.qml
 Dock 1.0 Dock.qml
+AppLauncher 1.0 AppLauncher.qml
+AppMenu 1.0 AppMenu.qml
+CornerFillet 1.0 CornerFillet.qml
 Osd 1.0 Osd.qml
 NetworkPanel 1.0 NetworkPanel.qml
 BatteryPanel 1.0 BatteryPanel.qml
@@ -40,7 +44,7 @@ ColorIcon 1.0 ColorIcon.qml
 HoverBg 1.0 HoverBg.qml
 BlurPanel 1.0 BlurPanel.qml
 PanelSurface 1.0 PanelSurface.qml
-WorkspaceDots 1.0 WorkspaceDots.qml
+WorkspaceMap 1.0 WorkspaceMap.qml
 FocusedApp 1.0 FocusedApp.qml
 MediaWidget 1.0 MediaWidget.qml
 DateWeatherWidget 1.0 DateWeatherWidget.qml

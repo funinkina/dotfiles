@@ -102,6 +102,7 @@ binds {
     Mod+T hotkey-overlay-title="Terminal: kitty" { spawn "kitty" "--single-instance"; }
     Mod+E hotkey-overlay-title="Files: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
+    Mod+A hotkey-overlay-title="App launcher" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "launcher" "toggle"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+Escape hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }
     Mod+C hotkey-overlay-title="Caffeine: keep awake" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "caffeine" "toggle"; }

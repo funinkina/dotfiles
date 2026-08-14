@@ -1,6 +1,5 @@
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Wayland._BackgroundEffect
 import QtQuick
 import QtQuick.Layouts
 
@@ -10,11 +9,6 @@ PanelWindow {
     screen: modelData
 
     WlrLayershell.namespace: "quickshell-bar"
-
-    BackgroundEffect.blurRegion: Region {
-        width: bar.width
-        height: Theme.barHeight
-    }
 
     anchors { top: true; left: true; right: true }
     implicitHeight: Theme.barHeight + Theme.panelRadius
@@ -29,46 +23,24 @@ PanelWindow {
     Rectangle {
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: Theme.barHeight
-        color: Theme.barBg
+        color: Theme.bg
     }
-
-    component CornerFillet: Canvas {
-        property bool mirrored: false
-        y: Theme.barHeight
-        width: Theme.panelRadius
-        height: Theme.panelRadius
-        onPaint: {
-            const ctx = getContext("2d");
-            const r = width;
-            ctx.reset();
-            ctx.fillStyle = Theme.barBg;
-            ctx.beginPath();
-            if (mirrored) {
-                ctx.moveTo(0, 0);
-                ctx.lineTo(r, 0);
-                ctx.lineTo(r, r);
-                ctx.arc(0, r, r, 0, -Math.PI / 2, true);
-            } else {
-                ctx.moveTo(r, 0);
-                ctx.lineTo(0, 0);
-                ctx.lineTo(0, r);
-                ctx.arc(r, r, r, Math.PI, 3 * Math.PI / 2, false);
-            }
-            ctx.closePath();
-            ctx.fill();
-        }
-    }
-
 
     CornerFillet {
         anchors.left: parent.left
+        y: Theme.barHeight
         visible: !ShellState.dockVisible
     }
     CornerFillet {
         x: Theme.dockWidth
+        y: Theme.barHeight
         visible: ShellState.dockVisible
     }
-    CornerFillet { anchors.right: parent.right; mirrored: true }
+    CornerFillet {
+        anchors.right: parent.right
+        y: Theme.barHeight
+        mirrored: true
+    }
 
     readonly property string sname: bar.screen?.name ?? ""
     readonly property real volX: contentArea.x + rightRow.x + audioW.x + audioW.width / 2
@@ -143,7 +115,6 @@ PanelWindow {
                 }
             }
 
-            WorkspaceDots { screenName: bar.screen?.name ?? "" }
             FocusedApp { id: focusedApp }
             PrivacyWidget {}
             MediaWidget { id: mediaW }
