@@ -99,7 +99,7 @@ layer-rule {
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+T hotkey-overlay-title="Terminal: kitty" { spawn "kitty" "--single-instance"; }
+    Mod+return hotkey-overlay-title="Terminal: kitty" { spawn "kitty" "--single-instance"; }
     Mod+E hotkey-overlay-title="Files: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
     Mod+A hotkey-overlay-title="App launcher" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "launcher" "toggle"; }
