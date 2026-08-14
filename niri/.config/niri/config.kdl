@@ -67,6 +67,10 @@ spawn-at-startup "qs" "-p" "/home/funinkina/.config/quickshell"
 spawn-at-startup "/home/funinkina/.local/bin/setwall"
 spawn-at-startup "elephant"
 spawn-at-startup "walker" "--gapplication-service"
+// Clipboard history for the quickshell clipboard panel (Mod+V). Two watchers:
+// wl-paste --watch only follows one mime type per invocation.
+spawn-at-startup "sh" "-c" "wl-paste --type text --watch cliphist store"
+spawn-at-startup "sh" "-c" "wl-paste --type image --watch cliphist store"
 spawn-at-startup "swayidle" "-w" "timeout" "600" "qs -p /home/funinkina/.config/quickshell ipc call lock lock" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "qs -p /home/funinkina/.config/quickshell ipc call lock lock"
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
@@ -103,6 +107,7 @@ binds {
     Mod+E hotkey-overlay-title="Files: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+Space hotkey-overlay-title="Launcher: walker" { spawn "walker"; }
     Mod+A hotkey-overlay-title="App launcher" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "launcher" "toggle"; }
+    Mod+V hotkey-overlay-title="Clipboard history" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "clipboard" "toggle"; }
     Mod+Shift+D hotkey-overlay-title="Toggle dock" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "dock" "toggle"; }
     Mod+Escape hotkey-overlay-title="Lock screen" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "lock" "lock"; }
     Mod+C hotkey-overlay-title="Caffeine: keep awake" { spawn "qs" "-p" "/home/funinkina/.config/quickshell" "ipc" "call" "caffeine" "toggle"; }
@@ -232,7 +237,8 @@ binds {
     Mod+Shift+Minus { set-window-height "-10%"; }
     Mod+Shift+Equal { set-window-height "+10%"; }
 
-    Mod+V       { toggle-window-floating; }
+    // Mod+V is the clipboard panel now; floating toggle moved one modifier over.
+    Mod+Ctrl+V  { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
     Mod+W       { toggle-column-tabbed-display; }
 

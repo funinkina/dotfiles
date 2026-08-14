@@ -6,6 +6,8 @@ Dock 1.0 Dock.qml
 AppLauncher 1.0 AppLauncher.qml
 AppMenu 1.0 AppMenu.qml
 CornerFillet 1.0 CornerFillet.qml
+singleton ClipboardService 1.0 ClipboardService.qml
+ClipboardPanel 1.0 ClipboardPanel.qml
 Osd 1.0 Osd.qml
 NetworkPanel 1.0 NetworkPanel.qml
 BatteryPanel 1.0 BatteryPanel.qml

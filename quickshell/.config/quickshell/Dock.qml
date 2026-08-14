@@ -3,13 +3,6 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick
 
-// Left-edge dock: pinned apps on top, running-but-unpinned windows below the
-// hairline, the workspace map and the launcher button at the bottom.
-//
-// Pinned icons drag to reorder and right-click for a menu. The menu needs far
-// more room than the 52px strip, so while it is open the surface widens to the
-// whole screen — the exclusive zone stays at the strip width, so nothing else
-// moves, and a click anywhere off the menu dismisses it.
 PanelWindow {
     id: dock
     property var modelData
@@ -23,11 +16,10 @@ PanelWindow {
 
     anchors { left: true; top: true; bottom: true }
     implicitWidth: menu.open ? (screen?.width ?? 1920) : Theme.dockWidth
+    exclusionMode: ExclusionMode.Normal
     exclusiveZone: Theme.dockWidth
     color: "transparent"
 
-    // Input is confined to the strip unless the menu is up, so the widened
-    // surface never swallows clicks meant for the desktop.
     mask: menu.open ? null : stripRegion
     Region {
         id: stripRegion
@@ -41,8 +33,6 @@ PanelWindow {
     readonly property var extraWins:
         wins.filter(w => !AppService.pinOwning(w))
 
-    // Pinned slot pitch: the 44px button plus the 2px gap that used to come
-    // from the column spacing. Drag maths needs one number for both.
     readonly property int itemH: 46
 
     property int dragIndex: -1
@@ -57,8 +47,6 @@ PanelWindow {
         dragY = i * itemH;
     }
 
-    // `pointerY` is in pinArea coordinates, so it stays put while the tile
-    // under the cursor moves with it.
     function updateDrag(pointerY) {
         dragY = pointerY - dragOffset;
         dropIndex = Math.max(0, Math.min(AppService.pinned.length - 1,
@@ -67,8 +55,6 @@ PanelWindow {
 
     function endDrag() {
         const from = dragIndex, to = dropIndex;
-        // Cleared before the model changes: the slot bindings below read
-        // dragIndex, and the Repeater rebuilds the moment pinned is reassigned.
         dragIndex = -1;
         dropIndex = -1;
         if (from >= 0 && to >= 0 && from !== to)
@@ -132,9 +118,6 @@ PanelWindow {
             cursorShape: Qt.PointingHandCursor
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            // Pointer position in the parent's coordinates. Reading it through
-            // btn.y cancels out the tile moving under the cursor mid-drag,
-            // which a raw mouse.y would feed back into itself.
             function pointer(mouse) { return btn.y + mouse.y; }
 
             property real pressAt: 0
@@ -178,8 +161,6 @@ PanelWindow {
         }
     }
 
-    // Fixed-width strip: everything visible lives in here so the contents
-    // don't recentre when the window widens for the menu.
     Item {
         id: strip
         anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
@@ -195,9 +176,6 @@ PanelWindow {
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
 
-            // Absolute positioning, not a Column: reordering is a matter of
-            // which slot each tile animates to, and the dragged one has to sit
-            // outside the layout entirely.
             Item {
                 id: pinArea
                 width: Theme.dockWidth
@@ -214,9 +192,6 @@ PanelWindow {
                         readonly property var appWins: AppService.windowsFor(modelData)
                         readonly property var entry: NiriService.entryFor(modelData)
 
-                        // Where this tile belongs once the in-flight drag is
-                        // applied: drop the dragged item out of the list, then
-                        // reinsert it at the hovered slot.
                         readonly property int slot: {
                             if (dock.dragIndex < 0)
                                 return index;
@@ -274,9 +249,6 @@ PanelWindow {
 
                     DockButton {
                         required property var modelData
-                        // Pin and menu act on the desktop entry when the
-                        // window's app_id resolves to one, so an app pinned
-                        // from here matches the ids already in the list.
                         readonly property string appId: {
                             const raw = modelData.app_id ?? "";
                             return NiriService.entryFor(raw)?.id ?? raw;

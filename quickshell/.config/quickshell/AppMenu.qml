@@ -1,19 +1,10 @@
 import QtQuick
 
-// Right-click menu for an app, shared by the dock and the launcher.
-//
-// It lives inside its host window rather than taking a surface of its own —
-// both hosts are (or grow) large enough to hold it, and an extra layer surface
-// would fight the launcher for the keyboard. The backdrop below it catches the
-// click-away, so it needs no keyboard grab to be dismissible.
 Item {
     id: root
 
-    // Empty id means closed.
     property string appId: ""
-    // Connector name of the output whose workspaces the submenu lists.
     property string output: ""
-    // Requested top-left in this item's coordinates; clamped to stay inside.
     property real px: 0
     property real py: 0
     property bool wsOpen: false
@@ -42,15 +33,20 @@ Item {
         wsOpen = false;
     }
 
+    signal activated()
+
     function focusWindow() {
         const w = AppService.topWindow(appId);
+        activated();
         if (w)
             NiriService.dispatch(["focus-window", "--id", String(w.id)]);
         close();
     }
 
     function launch(workspace) {
-        AppService.launchEntry(root.entry, workspace);
+        const e = root.entry;
+        activated();
+        AppService.launchEntry(e, workspace);
         close();
     }
 
@@ -62,7 +58,6 @@ Item {
         close();
     }
 
-    // Below the box, so it only sees clicks that miss it.
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton

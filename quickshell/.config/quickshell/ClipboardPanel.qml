@@ -1,30 +1,28 @@
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Widgets
 import QtQuick
-
 
 PanelWindow {
     id: panel
     property var modelData
     screen: modelData
 
-    WlrLayershell.namespace: "quickshell-launcher"
+    WlrLayershell.namespace: "quickshell-clipboard"
     WlrLayershell.keyboardFocus: visible
         ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     readonly property string sname: screen?.name ?? ""
-    visible: ShellState.openPanel === "launcher"
+    visible: ShellState.openPanel === "clipboard"
         && (ShellState.panelScreen === "" || ShellState.panelScreen === sname)
 
-    readonly property int cols: 6
-    readonly property int rows: 4
-    readonly property int cellW: 116
-    readonly property int cellH: 104
     readonly property int pad: 12
     readonly property int searchH: 44
-    readonly property int panelW: cols * cellW + pad * 2
-    readonly property int panelH: pad + rows * cellH + 10 + searchH + pad
+    readonly property int panelW: 620
+    readonly property int maxListH: 396
+
+    readonly property int listH: Math.round(
+        Math.max(96, Math.min(maxListH, list.contentHeight)))
+    readonly property int panelH: pad + listH + 10 + searchH + pad
 
     anchors { top: true }
     margins { top: Theme.barHeight }
@@ -35,24 +33,35 @@ PanelWindow {
 
     property string query: ""
     property int selected: 0
-    readonly property var results: AppService.search(query)
+
+    readonly property var results: {
+        const q = query.trim().toLowerCase();
+        const all = ClipboardService.entries;
+        if (q === "")
+            return all;
+        return all.filter(e => e.image
+            ? ("image " + e.meta).toLowerCase().includes(q)
+            : e.text.toLowerCase().includes(q));
+    }
 
     onQueryChanged: {
         selected = 0;
-        grid.positionViewAtBeginning();
+        list.positionViewAtBeginning();
     }
 
     onVisibleChanged: {
-        if (visible) {
-            query = "";
-            selected = 0;
-            input.text = "";
-            input.forceActiveFocus();
-            grid.positionViewAtBeginning();
-        } else {
-            menu.close();
-        }
+        if (!visible)
+            return;
+        query = "";
+        input.text = "";
+        selected = 0;
+        ClipboardService.refresh();
+        input.forceActiveFocus();
+        list.positionViewAtBeginning();
     }
+
+    onResultsChanged: if (selected >= results.length)
+        selected = Math.max(0, results.length - 1)
 
     function moveSel(d) {
         if (results.length === 0)
@@ -65,7 +74,14 @@ PanelWindow {
         if (!e)
             return;
         ShellState.closePanels();
-        AppService.launchEntry(e);
+        ClipboardService.paste(e);
+    }
+
+    function removeAt(i) {
+        const e = results[i];
+        if (!e)
+            return;
+        ClipboardService.remove(e);
     }
 
     Item {
@@ -91,97 +107,106 @@ PanelWindow {
             topLeftRadius: 0
             topRightRadius: 0
 
-            GridView {
-                id: grid
+            ListView {
+                id: list
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.topMargin: panel.pad
                 anchors.leftMargin: panel.pad
                 anchors.rightMargin: panel.pad
-                height: panel.rows * panel.cellH
-                cellWidth: panel.cellW
-                cellHeight: panel.cellH
+                height: panel.listH
                 clip: true
                 model: panel.results
+                spacing: 2
                 boundsBehavior: Flickable.StopAtBounds
-                snapMode: GridView.SnapToRow
 
                 Connections {
                     target: panel
                     function onSelectedChanged() {
-                        grid.positionViewAtIndex(panel.selected, GridView.Contain);
+                        list.positionViewAtIndex(panel.selected, ListView.Contain);
                     }
                 }
 
                 delegate: Item {
-                    id: tile
+                    id: row
                     required property var modelData
                     required property int index
                     readonly property bool current: panel.selected === index
 
-                    width: panel.cellW
-                    height: panel.cellH
+                    width: list.width
+                    height: modelData.image ? 72 : 52
 
                     Rectangle {
                         anchors.fill: parent
-                        anchors.margins: 4
                         radius: Theme.radius + 2
-                        color: tileMouse.pressed ? Theme.press
-                            : tile.current ? Theme.hover : "transparent"
+                        color: rowMouse.pressed ? Theme.press
+                            : row.current ? Theme.hover : "transparent"
                         Behavior on color { ColorAnimation { duration: 100 } }
                     }
 
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 8
+                    Text {
+                        id: ordinal
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 18
+                        text: String(row.index + 1)
+                        color: row.current ? Theme.muted : Theme.faint
+                        font.family: Theme.uiFont
+                        font.pixelSize: 11
+                    }
 
-                        IconImage {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            implicitSize: 44
-                            source: Quickshell.iconPath(tile.modelData.icon,
-                                "application-x-executable")
-                            scale: tileMouse.pressed ? 0.92 : 1.0
-                            Behavior on scale { NumberAnimation { duration: 100 } }
-                        }
+                    Image {
+                        id: thumb
+                        anchors.left: ordinal.right
+                        anchors.leftMargin: 6
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: row.modelData.image
+                        width: 56
+                        height: 56
+                        source: row.modelData.thumb
+                        fillMode: Image.PreserveAspectFit
+                        sourceSize.width: 112
+                        sourceSize.height: 112
+                        asynchronous: true
+                    }
 
-                        Text {
-                            width: panel.cellW - 14
-                            horizontalAlignment: Text.AlignHCenter
-                            text: tile.modelData.name ?? ""
-                            color: tile.current ? Theme.fg : Theme.dim
-                            font.family: Theme.uiFont
-                            font.pixelSize: 12
-                            elide: Text.ElideRight
-                            maximumLineCount: 2
-                            wrapMode: Text.Wrap
-                        }
+                    Text {
+                        anchors.left: row.modelData.image ? thumb.right : ordinal.right
+                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: row.modelData.image
+                            ? row.modelData.meta : row.modelData.text
+                        color: row.modelData.image
+                            ? Theme.muted
+                            : row.current ? Theme.fg : Theme.dim
+                        font.family: Theme.uiFont
+                        font.pixelSize: 13
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        wrapMode: Text.Wrap
                     }
 
                     MouseArea {
-                        id: tileMouse
+                        id: rowMouse
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-                        onPositionChanged: if (!menu.open) panel.selected = tile.index
-                        onClicked: mouse => {
-                            if (mouse.button === Qt.RightButton) {
-                                const p = tile.mapToItem(null, mouse.x, mouse.y);
-                                menu.show(tile.modelData.id, p.x, p.y);
-                            } else {
-                                panel.activate(tile.index);
-                            }
-                        }
+                        onPositionChanged: panel.selected = row.index
+                        onClicked: panel.activate(row.index)
                     }
                 }
             }
 
             Text {
-                anchors.horizontalCenter: grid.horizontalCenter
-                anchors.verticalCenter: grid.verticalCenter
+                anchors.horizontalCenter: list.horizontalCenter
+                anchors.verticalCenter: list.verticalCenter
                 visible: panel.results.length === 0
-                text: "No matches"
+                text: ClipboardService.entries.length === 0
+                    ? "Clipboard history is empty" : "No matches"
                 color: Theme.faint
                 font.family: Theme.uiFont
                 font.pixelSize: 14
@@ -211,13 +236,12 @@ PanelWindow {
                 }
 
                 Text {
-                    id: countLabel
+                    id: hint
                     anchors.right: parent.right
                     anchors.rightMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
-                    visible: panel.query !== ""
-                    text: panel.results.length + (panel.results.length === 1
-                        ? " result" : " results")
+                    visible: panel.results.length > 0
+                    text: "↵ paste · ⌦ delete"
                     color: Theme.faint
                     font.family: Theme.uiFont
                     font.pixelSize: 12
@@ -227,7 +251,7 @@ PanelWindow {
                     id: input
                     anchors.left: searchIcon.right
                     anchors.leftMargin: 10
-                    anchors.right: countLabel.left
+                    anchors.right: hint.left
                     anchors.rightMargin: 8
                     anchors.verticalCenter: parent.verticalCenter
                     color: Theme.fg
@@ -239,20 +263,13 @@ PanelWindow {
 
                     Text {
                         visible: input.text === ""
-                        text: "Search applications"
+                        text: "Filter clipboard history"
                         color: Theme.faint
                         font.family: Theme.uiFont
                         font.pixelSize: 15
                     }
 
                     Keys.onPressed: e => {
-                        if (menu.open) {
-                            if (e.key === Qt.Key_Escape) {
-                                menu.close();
-                                e.accepted = true;
-                            }
-                            return;
-                        }
                         switch (e.key) {
                         case Qt.Key_Escape:
                             ShellState.closePanels();
@@ -261,23 +278,20 @@ PanelWindow {
                         case Qt.Key_Enter:
                             panel.activate(panel.selected);
                             break;
-                        case Qt.Key_Right:
+                        case Qt.Key_Down:
                             panel.moveSel(1);
                             break;
-                        case Qt.Key_Left:
+                        case Qt.Key_Up:
                             panel.moveSel(-1);
                             break;
-                        case Qt.Key_Down:
-                            panel.moveSel(panel.cols);
+                        case Qt.Key_PageDown:
+                            panel.moveSel(5);
                             break;
-                        case Qt.Key_Up:
-                            panel.moveSel(-panel.cols);
+                        case Qt.Key_PageUp:
+                            panel.moveSel(-5);
                             break;
-                        case Qt.Key_Home:
-                            panel.selected = 0;
-                            break;
-                        case Qt.Key_End:
-                            panel.selected = Math.max(0, panel.results.length - 1);
+                        case Qt.Key_Delete:
+                            panel.removeAt(panel.selected);
                             break;
                         default:
                             return;
@@ -286,13 +300,6 @@ PanelWindow {
                     }
                 }
             }
-        }
-
-        AppMenu {
-            id: menu
-            anchors.fill: parent
-            output: panel.sname
-            onActivated: ShellState.closePanels()
         }
     }
 }

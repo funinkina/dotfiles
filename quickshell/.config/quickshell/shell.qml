@@ -62,6 +62,14 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "clipboard"
+        function toggle(): void {
+            ShellState.togglePanel("clipboard", NiriService.focusedOutput);
+        }
+        function wipe(): void { ClipboardService.wipe(); }
+    }
+
+    IpcHandler {
         target: "panel"
         function toggle(name: string, screen: string): void {
             ShellState.togglePanel(name, screen);
@@ -82,6 +90,7 @@ ShellRoot {
             Bar { modelData: s.modelData }
             Dock { modelData: s.modelData }
             AppLauncher { modelData: s.modelData }
+            ClipboardPanel { modelData: s.modelData }
             Osd { modelData: s.modelData }
             DismissLayer { modelData: s.modelData }
             NetworkPanel { modelData: s.modelData }
