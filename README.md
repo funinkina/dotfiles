@@ -23,11 +23,12 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `applications`| `~/.local/share/applications/*.desktop`            | Extra launcher entries (Helium per-profile: Aryan / Libra AI) |
 | `satty`      | `~/.config/satty/{config.toml,overrides.css}`       | Satty screenshot annotation (theme + palette from Theme.qml) |
 | `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/` | `00-plasma-pa.conf` (device renames) + `50-ab13x-soft-volume.conf` (AB13X USB-C DAC: software volume, smooth low end / no cutoff) |
+| `claude`     | `~/.claude/{CLAUDE.md,settings.json,statusline.sh,skills/}` | Claude Code — global instructions, settings, status line, custom skills |
 
 All packages installed:
 
 ```bash
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty claude
 ```
 
 ## Snapshots (not stowed)
@@ -55,6 +56,16 @@ Regenerate snapshots: `./snapshot.sh`. Run before committing dotfiles changes.
 - `~/.icons/`, `~/.local/share/icons/` — icon themes (~40 MB). Reinstall via package manager.
 - `~/.local/share/gnome-shell/extensions/` — tracked as list in `snapshots/gnome-extensions.txt`; reinstall, don't symlink.
 - Browser profiles (`~/.mozilla`, `~/.config/google-chrome`) — use `backup.sh` rsync target instead.
+- Most of `~/.claude/` — the `claude` package deliberately stows config only (~9 files). Everything else there is secrets, account state, or regenerable bulk (~660 MB):
+  - `.credentials.json` — OAuth tokens. Re-run `claude` and log in.
+  - `.claude.json` — machine ID, account UUIDs, per-project history. Machine-specific, regenerates.
+  - `projects/`, `file-history/`, `history.jsonl`, `sessions/` — transcripts and edit history. This is the bulk of the 660 MB.
+  - `plugins/` — reinstalled from marketplaces per `settings.json` `enabledPlugins`.
+  - `skills/humanizer/` — upstream clone, not our work. Restore with
+    `git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer`.
+  - caches (`cache/`, `paste-cache/`, `image-cache/`, `session-env/`, `shell-snapshots/`, `jobs/`) — all regenerable.
+
+  `.gitignore` enforces this as an allowlist (`claude/.claude/*` plus `!` exceptions), so dropping a stray file into the package won't silently commit it.
 
 ## Setup on fresh machine
 
@@ -68,7 +79,7 @@ yay -S --needed - < snapshots/aurlist.txt
 
 # 2. Install stow + apply configs
 sudo pacman -S stow
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty
+stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty claude
 
 # 3. Restore GNOME settings
 dconf load /org/gnome/ < snapshots/gnome-dconf.ini

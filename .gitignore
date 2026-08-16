@@ -3,3 +3,12 @@ helium-backup_*.tar.gz
 helium-backup_*.tar.gz.sha256
 helium-backup_*.tar.partial
 __pycache__
+
+# Claude Code: the package holds config only. Belt-and-braces so credentials,
+# account state, or the 600M+ of transcripts/caches can never be added by accident.
+claude/.claude/*
+!claude/.claude/CLAUDE.md
+!claude/.claude/settings.json
+!claude/.claude/statusline.sh
+!claude/.claude/skills/
+claude/.claude/skills/humanizer/
