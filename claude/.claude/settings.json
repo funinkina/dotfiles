@@ -4,15 +4,15 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
   "hooks": {
     "SessionStart": [],
     "UserPromptSubmit": []
   },
   "workflowKeywordTriggerEnabled": false,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "figma@claude-plugins-official": true,

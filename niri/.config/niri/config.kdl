@@ -25,12 +25,12 @@ input {
 
 output "HDMI-A-1" {
     scale 1.25
-    position x=771 y=864
+    position x=854 y=-1922
 }
 
 output "eDP-1" {
     scale 1.5
-    position x=576 y=1728
+    position x=1459 y=-194
 }
 
 layout {
