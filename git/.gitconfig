@@ -33,6 +33,8 @@
 
 [credential "https://github.com"]
 	useHttpPath = true
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
 
 [init]
 	defaultBranch = main
@@ -59,3 +61,6 @@
     smtpUser = aryankushwaha3101@gmail.com
     from = Aryan Kushwaha <aryankushwaha3101@gmail.com>
     confirm = always
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

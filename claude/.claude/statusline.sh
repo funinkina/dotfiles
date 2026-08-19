@@ -8,26 +8,74 @@ export LC_ALL=C
 
 input=$(cat)
 
-mapfile -t F < <(printf '%s' "$input" | jq -r '
-  [ .model.display_name                              // "?"
-  , .effort.level                                    // ""
-  , (.fast_mode                                      // false | tostring)
-  , (.workspace.current_dir // .cwd                  // "")
-  , (.context_window.used_percentage      // 0 | floor | tostring)
-  , (.context_window.total_input_tokens   // 0 | tostring)
-  , (.context_window.total_output_tokens  // 0 | tostring)
-  , (.context_window.context_window_size  // 200000 | tostring)
-  , (.cost.total_cost_usd                 // 0 | tostring)
-  , (.cost.total_duration_ms              // 0 | tostring)
-  , (.cost.total_lines_added              // 0 | tostring)
-  , (.cost.total_lines_removed            // 0 | tostring)
-  , (.rate_limits.five_hour.used_percentage  // "" | tostring)
-  , (.rate_limits.seven_day.used_percentage  // "" | tostring)
-  , .agent.name                                      // ""
-  , (.pr.number                              // "" | tostring)
-  ] | .[]' 2>/dev/null)
+# Field extraction: jq when available, python3 otherwise (python3 is the only
+# hard dependency this script assumes -- a missing jq used to silently fall
+# through to the hardcoded defaults below and freeze the whole status line).
+read_fields() {
+  if command -v jq >/dev/null 2>&1; then
+    jq -r '
+      [ .model.display_name                              // "?"
+      , .effort.level                                    // ""
+      , (.fast_mode                                      // false | tostring)
+      , (.workspace.current_dir // .cwd                  // "")
+      , (.context_window.used_percentage      // 0 | floor | tostring)
+      , (.context_window.total_input_tokens   // 0 | floor | tostring)
+      , (.context_window.total_output_tokens  // 0 | floor | tostring)
+      , (.context_window.context_window_size  // 200000 | floor | tostring)
+      , (.cost.total_cost_usd                 // 0 | tostring)
+      , (.cost.total_duration_ms              // 0 | floor | tostring)
+      , (.cost.total_lines_added              // 0 | floor | tostring)
+      , (.cost.total_lines_removed            // 0 | floor | tostring)
+      , (.rate_limits.five_hour.used_percentage  // "" | tostring)
+      , (.rate_limits.seven_day.used_percentage  // "" | tostring)
+      , .agent.name                                      // ""
+      , (.pr.number                              // "" | tostring)
+      ] | .[]' 2>/dev/null
+  else
+    python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin)
+except Exception:
+    sys.exit(1)
+def g(*path, default=None):
+    c = d
+    for k in path:
+        if not isinstance(c, dict):
+            return default
+        c = c.get(k)
+        if c is None:
+            return default
+    return c
+def i(*path, default=0):
+    try:
+        return int(float(g(*path, default=default)))
+    except (TypeError, ValueError):
+        return default
+print("\n".join([
+    str(g("model", "display_name", default="?")),
+    str(g("effort", "level", default="")),
+    "true" if g("fast_mode", default=False) else "false",
+    str(g("workspace", "current_dir") or g("cwd", default="")),
+    str(i("context_window", "used_percentage")),
+    str(i("context_window", "total_input_tokens")),
+    str(i("context_window", "total_output_tokens")),
+    str(i("context_window", "context_window_size", default=200000)),
+    str(g("cost", "total_cost_usd", default=0)),
+    str(i("cost", "total_duration_ms")),
+    str(i("cost", "total_lines_added")),
+    str(i("cost", "total_lines_removed")),
+    str(g("rate_limits", "five_hour", "used_percentage", default="")),
+    str(g("rate_limits", "seven_day", "used_percentage", default="")),
+    str(g("agent", "name", default="")),
+    str(g("pr", "number", default="")),
+]))
+' 2>/dev/null
+  fi
+}
 
-# jq failed or gave short output -> degrade instead of printing nothing
+mapfile -t F < <(printf '%s' "$input" | read_fields)
+
 ((${#F[@]} >= 16)) || F=("?" "" "false" "$PWD" 0 0 0 200000 0 0 0 0 "" "" "" "")
 
 model=${F[0]} effort=${F[1]} fast=${F[2]} dir=${F[3]}
