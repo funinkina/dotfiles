@@ -18,9 +18,5 @@ case "$next" in
     performance) icon=power-profile-performance-symbolic;  label="Performance" ;;
 esac
 
-notify-send \
-    -t 1500 \
-    -i "$icon" \
-    -h string:x-canonical-private-synchronous:power-profile \
-    "Power Profile" \
-    "$label"
+# -e/--transient: banner only, never filed in the notification list.
+notify-send -e -t 1500 -i "$icon" "Power Profile" "$label"

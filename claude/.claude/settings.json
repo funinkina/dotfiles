@@ -5,8 +5,18 @@
   },
   "model": "opus[1m]",
   "hooks": {
-    "SessionStart": [],
-    "UserPromptSubmit": []
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/funinkina/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   },
   "workflowKeywordTriggerEnabled": false,
   "statusLine": {
@@ -17,13 +27,56 @@
     "clangd-lsp@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "posthog@claude-plugins-official": true
+    "posthog@claude-plugins-official": true,
+    "ponytail@ponytail": true
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
   },
   "effortLevel": "high",
   "awaySummaryEnabled": false,
+  "askUserQuestionTimeout": "never",
   "theme": "dark",
   "editorMode": "normal",
   "verbose": false,
   "switchModelsOnFlag": false,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(kubectl:* -n k8s-production)",
+      "Bash(sops:*) targeting scripts/sops-edit-prod.sh or scripts/sops-set-prod.sh"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Libra-AI-Inc (from origin remote github.com/Libra-AI-Inc/Libra-AI)",
+      "**Cloud provider(s)**: Google Cloud (gcloud secrets manager marker; GCP-oriented infra files) — treated as informational context only, not a trust grant",
+      "**Repository visibility**: private (Libra-AI-Inc/Libra-AI, confirmed via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: GCP Secret Manager (gcloud secrets) and SOPS-based encrypted secrets (scripts/sops-edit-prod.sh, scripts/sops-set-prod.sh, k8s-production/secrets.enc.yaml, per ADR 0071 — external-secrets-operator, not raw SOPS in cluster)",
+      "**Default / protected branches**: main (default); rulesets on `main` present but disabled, no classic branch protection listed — treat main as unprotected in practice per gh data",
+      "**CI/CD deploy targets**: GitHub Actions workflows deploy-prod-maintenance.yml and deploy-prod-release.yml (production release/maintenance pipelines); Docker Hub and GHCR image push (DOCKERHUB_TOKEN, TARGET_GHCR_PUSH_TOKEN) as part of that pipeline",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo (Libra-AI-Inc/Libra-AI, private) and its origin remote only — as scoped above",
+      "**Trusted internal domains**: trylibra.ai, staging.letslibra.com, dev.letslibra.com, accounts.stage.letslibra.com (repeatedly contacted this project's hosts per usage data)",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: developer.deel.com / app.demo.deel.com (Deel integration, contacted repeatedly in this project's usage)",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: .env and environment files across services (services/server/.env, services/web/.env, services/worker/.env, platform/console/.env, infrastructure/db/.env, docker/.env.byovm.example, docker/staging-local/.env.example), iam_policy.json, k8s-production/secrets.enc.yaml, k8s-testing/03-secrets.yml, infra/app-secrets.{js,ts}, infra/control-plane-secrets.ts — share only with audiences cleared at the named+specifics bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace/host/container with `prod` or `production` as a whole word/segment — includes deploy-prod-maintenance.yml, deploy-prod-release.yml, k8s-production/ namespace and manifests, scripts/sops-edit-prod.sh, scripts/sops-set-prod.sh, PRODUCTION_GLITCHTIP_DSN, PROD_VITE_* secrets",
+      "**Protected deployment namespaces / environments**: k8s-production/* manifests and the `services` k8s namespace observed in this project's usage (18× -n services)",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, node-pool resources, and anything tagged prod/production — includes iam_policy.json, infra/k8s.{js,ts}, infrastructure/orchestration/src/k8s-client.ts, test-infra/harnesses/rbac-fuzzer/rbac.test.ts, k8s-production/*",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development on Libra-AI-Inc/Libra-AI (backend/knowledge-management platform)",
+      "**Trusted repo**: /home/funinkina/LIbra/Libra-AI (Libra-AI-Inc/Libra-AI, private) and its origin remote — confidential material may be committed here, but secrets and sensitive data are never cleared into it by visibility alone",
+      "**Org-specific CLIs**: None configured",
+      "routine under funinkina/ prefix: none identified in recon"
+    ]
+  }
 }

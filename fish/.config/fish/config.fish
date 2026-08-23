@@ -1,10 +1,9 @@
 set fish_greeting 
 
 export STARSHIP_CONFIG=/home/funinkina/.config/starship.toml
-set -gx PATH ~/.npm-global/bin $PATH
 # Quickshell system icons (also set in niri config for autostart);
 # without this, restarting qs from a shell reverts icons to Adwaita
-set -gx QS_ICON_THEME Fluent-symbolic
+set -gx QS_ICON_THEME WhiteSur-dark
 set FZF_DEFAULT_OPTS "--layout=reverse --exact --border=bold --border=rounded --margin=3% --color=dark"
 
 function fish_user_key_bindings
@@ -119,12 +118,11 @@ alias ls='eza -al --color=always --group-directories-first' # preferred listing
 alias la='eza -a --color=always --group-directories-first'  # all files and dirs
 alias ll='eza -l --color=always --group-directories-first'  # long format
 alias lt='eza -aT --color=always --group-directories-first' # tree listing
-alias l.='eza -a | egrep "^\."'
+alias ldot='eza -a | egrep "^\."'                              # hidden dotfiles only
 alias l.='eza -al --color=always --group-directories-first ../' # ls on the PARENT directory
 alias l..='eza -al --color=always --group-directories-first ../../' # ls on directory 2 levels up
 alias l...='eza -al --color=always --group-directories-first ../../../' # ls on directory 3 levels up
 
-alias python="python3"
 
 #git
 alias addup='git add -u'
@@ -146,10 +144,12 @@ fzf_key_bindings
 
 starship init fish | source
 
-set -gx PATH /home/funinkina/.npm-global/bin:/home/funinkina/.npm-global/bin:/home/funinkina/.local/bin:/home/funinkina/.npm-global/bin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/funinkina/.lmstudio/bin:/home/funinkina/.lmstudio/bin /home/funinkina/.jiotv_go/bin
+# fish_add_path prepends only if absent, so re-sourcing config.fish cannot
+# grow PATH. Order here is the search order.
+fish_add_path -g ~/.npm-global/bin ~/.local/bin ~/.lmstudio/bin ~/.jiotv_go/bin
 
 # nvm.fish: activate the Node version pinned by the nearest .nvmrc/.node-version.
-# Must stay after the PATH line above, which would otherwise clobber the activation.
+# Runs after the PATH setup above so the activated version wins the lookup.
 if status is-interactive
     function _nvm_auto_use --on-variable PWD -d "Activate the Node version pinned by the nearest .nvmrc"
         status is-command-substitution; and return

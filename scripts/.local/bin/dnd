@@ -1,0 +1,26 @@
+#!/bin/bash
+# Toggle GNOME notification banners (Do Not Disturb).
+#
+# This exists because GNOME custom keybindings are spawned via
+# g_spawn_command_line_async — there is no shell, so `$(...)` in the command
+# string is passed through as literal argv. The previous inline one-liner
+# handed gsettings 13 junk arguments and silently did nothing.
+set -eu
+
+key="org.gnome.desktop.notifications show-banners"
+
+# -e/--transient: show the banner, then let it go. Without it GNOME files every
+# press in the notification list and a day of toggling leaves a wall of them.
+# (x-canonical-private-synchronous is a Unity hint; GNOME Shell ignores it.)
+note() {
+    notify-send -e -t 1500 -i "$2" "Do Not Disturb" "$1"
+}
+
+if [ "$(gsettings get $key)" = "true" ]; then
+    # Announce before muting, or the confirmation is the first thing suppressed.
+    note on notifications-disabled-symbolic
+    gsettings set $key false
+else
+    gsettings set $key true
+    note off preferences-system-notifications-symbolic
+fi

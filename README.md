@@ -2,12 +2,15 @@
 
 Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
+The `niri`, `quickshell`, `walker` and `elephant` packages are a **second, currently
+inactive desktop** — none of those four are installed right now, and the live session is
+GNOME Shell. They are stowed and kept warm, not in use. See "Inactive desktop" below.
+
 ## Stow packages
 
 | Package      | Target                                              | App                                               |
 | ------------ | --------------------------------------------------- | ------------------------------------------------- |
 | `fish`       | `~/.config/fish/config.fish`                        | Fish shell                                        |
-| `zsh`        | `~/.zshrc`                                          | Zsh                                               |
 | `tmux`       | `~/.tmux.conf`                                      | Tmux                                              |
 | `git`        | `~/.gitconfig`                                      | Git                                               |
 | `ghostty`    | `~/.config/ghostty/config`                          | Ghostty terminal                                  |
@@ -24,11 +27,13 @@ Arch Linux + GNOME dotfiles, managed with [GNU Stow](https://www.gnu.org/softwar
 | `satty`      | `~/.config/satty/{config.toml,overrides.css}`       | Satty screenshot annotation (theme + palette from Theme.qml) |
 | `wireplumber`| `~/.config/wireplumber/wireplumber.conf.d/` | `00-plasma-pa.conf` (device renames) + `50-ab13x-soft-volume.conf` (AB13X USB-C DAC: software volume, smooth low end / no cutoff) |
 | `claude`     | `~/.claude/{CLAUDE.md,settings.json,statusline.sh,skills/}` | Claude Code — global instructions, settings, status line, custom skills |
+| `kitty`      | `~/.config/kitty/kitty.conf`                         | Kitty terminal — **not installed**; `ghostty` is the live terminal |
+| `vscode`     | `~/.vscode/argv.json`                                | VS Code launch args                                 |
 
 All packages installed:
 
 ```bash
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty claude
+stow --no-folding fish tmux git kitty ghostty starship fastfetch zed vscode fontconfig color gnome btop electron scripts wireplumber applications satty claude niri quickshell walker elephant
 ```
 
 ## Snapshots (not stowed)
@@ -44,10 +49,46 @@ stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig co
 
 Regenerate snapshots: `./snapshot.sh`. Run before committing dotfiles changes.
 
+## Keybindings (`gnome-keybinds.sh`)
+
+`dconf` is where GNOME keeps shortcuts, and `snapshot.sh` dumps it — but a dump records
+values, not intent. `gnome-keybinds.sh` is the intent: one table saying which key runs
+what. It is idempotent, and it rebuilds the custom-keybinding list from scratch each run
+so orphaned `custom<N>/` entries can't pile up in dconf.
+
+```bash
+stow --no-folding scripts   # several bindings point at ~/.local/bin
+./gnome-keybinds.sh
+```
+
+GNOME spawns custom-keybinding commands through `g_spawn_command_line_async` — **there is
+no shell**. Pipes, `&&`, and `$(...)` are passed through as literal argv and silently do
+nothing. Anything with logic belongs in a script under `scripts/.local/bin/` (see `dnd`).
+
+| Key | Action |
+| --- | --- |
+| `Super+Return` / `Super+T` | Ghostty |
+| `Super+K` | Do Not Disturb (`dnd`) |
+| `Super+Shift+P` | Cycle power profile (`toggle-power-profile`) |
+| `Super+Print` | OCR screenshot |
+| `Ctrl+Shift+Escape` | Resources (system monitor) |
+| `Super+1`…`9` | Raise Nth dash-to-dock app |
+
 ## Not managed by stow
 
 - `pacman.conf` — system file, copy manually to `/etc/pacman.conf` if needed.
+- `sddm-theme/noir/` — SDDM login theme. Install with `sudo cp -r sddm-theme/noir /usr/share/sddm/themes/` and set `Current=noir` in `/etc/sddm.conf`.
 - `backup.sh` — rsync-based external disk backup script. Edit `DEST_BASE_DIR` before use.
+
+## Inactive desktop (niri + quickshell)
+
+`niri/`, `quickshell/`, `walker/` and `elephant/` describe a scrolling-WM desktop that is
+**not currently installed or running**. The configs are stowed, so editing them is live
+the moment the stack is installed, but nothing reads them today.
+
+`snapshots/pkglist.txt` does not contain any of it — the snapshot predates the experiment.
+Reviving the stack means installing `niri quickshell walker elephant swaybg satty swayidle
+brightnessctl` by hand first; the pkglist will not do it for you.
 
 ## Deliberately excluded
 
@@ -79,7 +120,7 @@ yay -S --needed - < snapshots/aurlist.txt
 
 # 2. Install stow + apply configs
 sudo pacman -S stow
-stow --no-folding fish zsh tmux git ghostty starship fastfetch zed fontconfig color gnome btop electron scripts wireplumber applications satty claude
+stow --no-folding fish tmux git kitty ghostty starship fastfetch zed vscode fontconfig color gnome btop electron scripts wireplumber applications satty claude niri quickshell walker elephant
 
 # 3. Restore GNOME settings
 dconf load /org/gnome/ < snapshots/gnome-dconf.ini
@@ -94,7 +135,7 @@ sudo alsactl store
 
 ## Backing up changes
 
-Stowed configs are symlinks — editing the live file (e.g. `~/.zshrc`) edits the repo file directly. To capture changes:
+Stowed configs are symlinks — editing the live file (e.g. `~/.tmux.conf`) edits the repo file directly. To capture changes:
 
 ```bash
 cd ~/dotfiles

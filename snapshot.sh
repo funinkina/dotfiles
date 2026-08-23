@@ -34,8 +34,14 @@ if grep -E -q "${TOKEN_VALUE_PATTERNS}" "$DCONF_OUT"; then
     exit 1
 fi
 
-echo "Listing GNOME extensions -> snapshots/gnome-extensions.txt"
-gnome-extensions list > snapshots/gnome-extensions.txt
+# Only meaningful in a GNOME session. Under niri the binary may be absent, and
+# `set -e` would abort the snapshot before pkglist/aurlist ever ran.
+if command -v gnome-extensions >/dev/null; then
+    echo "Listing GNOME extensions -> snapshots/gnome-extensions.txt"
+    gnome-extensions list > snapshots/gnome-extensions.txt
+else
+    echo "Skipping GNOME extensions (gnome-extensions not installed)"
+fi
 
 echo "Listing explicit pacman packages -> snapshots/pkglist.txt"
 pacman -Qqe > snapshots/pkglist.txt
@@ -43,4 +49,7 @@ pacman -Qqe > snapshots/pkglist.txt
 echo "Listing AUR/foreign packages -> snapshots/aurlist.txt"
 pacman -Qqm > snapshots/aurlist.txt
 
+# pkglist only records pacman-managed packages. Anything installed by hand into
+# /usr/local/bin or ~/.local/bin (starship, at time of writing) will not restore
+# from it — check before trusting a fresh-machine rebuild.
 echo "Done."
