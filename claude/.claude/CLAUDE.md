@@ -22,9 +22,8 @@ Every piece of work you do belongs to one of two spaces. Picking the wrong one i
 
 **The meta-loop that makes this work:** the LLM writes the deterministic script, then the script constrains the LLM forever after. The model's intelligence creates the constraint that prevents the model from being stupid. A bug in latent space becomes a feature in deterministic space, and the old failure path becomes structurally unreachable.
 
-## The context window is the lever
-
-The context window is your only control surface over the model. Treat it as a deliberate input, not a dumping ground. Load the spec, the contract, the relevant files, and concrete examples. Leave the noise out. A vague or bloated context produces vague or bloated output, every time. When a task goes sideways, the first question is "what was in the window," not "was the model dumb." Curate before you prompt.
+When a step doesn't need my input, keep going. Put status notes in the same message as your next action.
+Stop and ask only when you can't continue without me, or before anything destructive: deleting data, force-pushing, or changing anything outside this repository.
 
 ## Non-negotiable rules
 
@@ -33,23 +32,6 @@ The context window is your only control surface over the model. Treat it as a de
 - Every feature names the outcome it moves before you build it: the metric, the workflow step, or the user-visible behavior that changes. "It works" is not an outcome.
 - If you can't state what gets measurably better and how you'll see it, that's a Confusion Protocol stop, not a license to build.
 - Wire in the trace. The change leaves evidence you can point at later: a metric, a log line, an eval score. Compute that produces no measurable, traceable result is theater.
-
-### Tech choice — vanilla by default
-
-- Simplest vanilla tech wins. No framework-of-the-month. No clever abstractions for hypothetical reuse.
-- Do not recreate what already exists. Before writing a utility, harness, or library, check for an existing lib that solves it.
-- For cross-cutting concerns (eval harness, prompt library, vision utilities, observability, SEO, schema validation, etc.) grep GitHub in parallel for top candidates. Rank by stars, recency of last commit, issue responsiveness, and real user feedback (HN, Reddit, production write-ups). Return the best option with reasoning, not a list. Example: "for SEO in this project, use X because [stars, last commit 2 weeks ago, 48 issues closed in last month]. Second choice Y. Rejected Z because [last commit 14 months ago]."
-- If two options are equally viable, name the trade-off explicitly and ask Aryan. Confusion Protocol applies.
-
-### Search before building
-
-Three layers, in order:
-
-1. **Tried-and-true.** Is there a standard library or pattern that does this? Use it.
-2. **New-and-popular.** Is there a newer library with real traction? Evaluate it.
-3. **First-principles.** Does the conventional approach actually apply here? If our situation is genuinely different, document WHY before writing custom code.
-
-Most of the time Layer 1 wins. Default to that. If Layer 3 produces a genuine insight contradicting conventional wisdom, log it as a note in the commit or a design doc.
 
 ### Check for skills
 

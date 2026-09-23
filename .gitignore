@@ -12,3 +12,4 @@ claude/.claude/*
 !claude/.claude/statusline.sh
 !claude/.claude/skills/
 claude/.claude/skills/humanizer/
+.DS_Store
