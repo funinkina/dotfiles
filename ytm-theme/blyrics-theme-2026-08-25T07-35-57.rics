@@ -19,6 +19,7 @@
   --blyrics-scroll-timing-offset: 0s;
   --blyrics-background-rotate-speed: 30s;
   --blyrics-fullscreen-panel-size: 55%;
+  --blyrics-album-size: clamp(220px, min(36vw, 60vh), 560px);
   /* softer word wobble (default peak: translateX(0.05em) scaleX(1.025)) */
   --blyrics-word-wobble-transform-peak: translateX(0.02em) scaleX(1.01);
   --blyrics-wobble-duration: 1.6s;
@@ -291,8 +292,8 @@ ytmusic-player[is-mweb-player-page-modernization-enabled]:not([video-mode]) {
 
 /* defaults */
 #blyrics-song-info {
-  max-width: 400px;
-  width: 400px;
+  max-width: var(--blyrics-album-size);
+  width: var(--blyrics-album-size);
   /* text-align: left !important; */
 }
 
@@ -306,53 +307,34 @@ ytmusic-player[is-mweb-player-page-modernization-enabled]:not([video-mode]) {
   --ytmusic-player-overlay-gradient: linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 0) 100%) !important;
 }
 
-/* defaults */
+/* normal player page: art is a square sized by #main-panel height, so trim the padding that eats it */
+ytmusic-player-page:not([player-fullscreened]) {
+  --ytmusic-player-page-vertical-padding: 16px;
+  --ytmusic-player-page-horizontal-padding: 32px;
+  --ytmusic-player-page-content-gap: 32px;
+}
+
+/* YTM sizes the art via inline padding on #main-panel, computed once in JS and often stale (tiny art).
+   Ignore it and size the square from the panel itself: as big as fits, minus the song/video toggle row. */
+ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([player-ui-state=MINIPLAYER]):not([is-mweb-modernization-enabled]) #main-panel.ytmusic-player-page {
+  padding: 0 !important;
+  container-type: size;
+}
+
+ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([player-ui-state=MINIPLAYER]):not([is-mweb-modernization-enabled]) #player.ytmusic-player-page {
+  --blyrics-player-art-size: min(70cqw, calc(70cqh - 64px), 680px);
+  width: var(--blyrics-player-art-size) !important;
+  max-width: none;
+  align-self: center;
+}
+
+/* fullscreen album art: scales with the window, capped by height so it never overflows */
 ytmusic-player-page[player-fullscreened]:not([blyrics-dfs]):not([video-mode]) #player.ytmusic-player-page {
-  max-height: 400px;
-  max-width: 400px;
-  height: 400px;
-  width: 400px;
+  max-height: var(--blyrics-album-size);
+  max-width: var(--blyrics-album-size);
+  height: var(--blyrics-album-size);
+  width: var(--blyrics-album-size);
   border-radius: 12px;
-}
-
-@media (max-width: 1024px) {
-  ytmusic-player-page[player-fullscreened]:not([blyrics-dfs]):not([video-mode]) #player.ytmusic-player-page {
-    max-height: 200px;
-    max-width: 200px;
-    height: 200px;
-    width: 200px;
-  }
-
-  #blyrics-song-info {
-    max-width: 200px;
-    width: 200px;
-  }
-}
-
-@media (max-width: 1170px) {
-  ytmusic-player-page[player-fullscreened]:not([blyrics-dfs]):not([video-mode]) #player.ytmusic-player-page {
-    max-height: 250px;
-    max-width: 250px;
-    height: 250px;
-    width: 250px;
-  }
-  #blyrics-song-info {
-    max-width: 250px;
-    width: 250px;
-  }
-}
-
-@media (max-width: 1279px) {
-  ytmusic-player-page[player-fullscreened]:not([blyrics-dfs]):not([video-mode]) #player.ytmusic-player-page {
-    max-height: 300px;
-    max-width: 300px;
-    height: 300px;
-    width: 300px;
-  }
-  #blyrics-song-info {
-    max-width: 300px;
-    width: 300px;
-  }
 }
 
 /* TERRIBLE css hack */
@@ -2564,6 +2546,29 @@ tp-yt-paper-tab.iron-selected.ytmusic-player-page::before {
 tp-yt-paper-tab.ytmusic-player-page tp-yt-paper-ripple {
   inset: 0.5rem;
   border-radius: 6px;
+}
+
+/* lyrics tab: tab bar floats over the top of the panel, hidden until hovered */
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) #side-panel {
+  position: relative;
+}
+
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) tp-yt-paper-tabs.ytmusic-player-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) tp-yt-paper-tabs.ytmusic-player-page:is(:hover, :focus-within) {
+  opacity: 1;
+}
+
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) .tabs-content.tp-yt-paper-tabs {
+  backdrop-filter: blur(16px);
 }
 
 /* song/video toggle, styled like the tabs above */
