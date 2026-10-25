@@ -74,9 +74,12 @@ print("\n".join([
   fi
 }
 
-mapfile -t F < <(printf '%s' "$input" | read_fields)
+DEFAULTS=("?" "" "false" "$PWD" 0 0 0 200000 0 0 0 0 "" "" "" "")
+F=("${DEFAULTS[@]}")
+n=0
+while IFS= read -r line; do F[$n]=$line; n=$((n + 1)); done < <(printf '%s' "$input" | read_fields)
 
-((${#F[@]} >= 16)) || F=("?" "" "false" "$PWD" 0 0 0 200000 0 0 0 0 "" "" "" "")
+((n >= 16)) || F=("${DEFAULTS[@]}")
 
 model=${F[0]} effort=${F[1]} fast=${F[2]} dir=${F[3]}
 pct=${F[4]} tin=${F[5]} tout=${F[6]} ctxmax=${F[7]}
@@ -119,7 +122,8 @@ sep="${D} · ${R}"
 l1="${MAG}${model}${R}"
 [[ -n $effort ]]      && l1+="${D}:${effort}${R}"
 [[ $fast == true ]]   && l1+=" ${YEL}⚡${R}"
-l1+="  ${BLU}${dir/#$HOME/\~}${R}"
+TILDE="~"
+l1+="  ${BLU}${dir/#$HOME/$TILDE}${R}"
 
 if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
   branch=$(git -C "$dir" symbolic-ref --quiet --short HEAD 2>/dev/null \
