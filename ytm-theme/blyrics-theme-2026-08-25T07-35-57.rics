@@ -50,12 +50,9 @@ ytmusic-player-page:before {
   top: 0;
   transform: scale(1.2);
   z-index: -100;
-  animation: none;
   opacity: 0.3;
-  animation: slowRotate var(--blyrics-background-rotate-speed) linear infinite
-      alternate,
-    opacityRotate calc(var(--blyrics-background-rotate-speed) / 2) ease-in-out
-      infinite alternate;
+  /* perf: no infinite rotate/opacity loop; re-filtering a full-page blurred layer every frame is costly and the kawarp shader already supplies motion */
+  animation: none;
 }
 
 ytmusic-player-page[player-ui-state="FULLSCREEN"]>div>div#side-panel {
@@ -81,9 +78,9 @@ ytmusic-player-page[player-ui-state="FULLSCREEN"]
   height: calc(64px - 1.7rem) !important;
 }
 
-/* blurs every single line (when not scrolling) to 5px */
+/* perf: lines beyond the 6 blurred below the active one fade instead of blurring; every blurred line is its own GPU blur pass each frame */
 .blyrics-container:not([data-sync="none"]):not(.blyrics-user-scrolling)>.blyrics--line {
-  filter: blur(9.5px);
+  opacity: 0.4;
   /* sets transition for when it goes active */
   transition: filter 0.5s 0s, opacity 0.5s 0s,
     transform 0.166s var(--blyrics-anim-delay, 0s) !important;
@@ -138,10 +135,15 @@ padding-left: 1.5rem;
   filter: blur(9.5px) !important;
 }
 
+/* the 6 blurred lines below keep full opacity; only lines past them get the 0.4 fade */
+.blyrics-container:not(.blyrics-user-scrolling)>.blyrics--line:is(.blyrics--active+.blyrics--line, .blyrics--active+.blyrics--line+.blyrics--line, .blyrics--active+.blyrics--line+.blyrics--line+.blyrics--line, .blyrics--active+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line, .blyrics--active+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line, .blyrics--active+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line+.blyrics--line) {
+  opacity: 1;
+}
+
 /* past lines (when not scrolling) and when fully finished */
 .blyrics-container:not(.blyrics-user-scrolling)>.blyrics--line:has(~ .blyrics--active):not(.blyrics--animating) {
   opacity: 50%;
-  filter: blur(0px);
+  filter: none;
   transition: filter 0.25s 0s, opacity 0.9s,
     transform 0.166s var(--blyrics-anim-delay, 0s) !important;
 }
@@ -149,8 +151,8 @@ padding-left: 1.5rem;
 /* active line and lines still reading */
 .blyrics-container>.blyrics--line.blyrics--active,
 .blyrics-container>.blyrics--line.blyrics--animating {
-  opacity: 1;
-  filter: blur(0px) !important;
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 /* .blyrics-container > .blyrics--line.blyrics--pre-animating {
@@ -2567,8 +2569,13 @@ ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"])
   opacity: 1;
 }
 
-ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) .tabs-content.tp-yt-paper-tabs {
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) tp-yt-paper-tabs.ytmusic-player-page:is(:hover, :focus-within) .tabs-content.tp-yt-paper-tabs {
+  /* perf: only blur while visible; backdrop-filter re-samples the animated background every frame */
   backdrop-filter: blur(16px);
+}
+
+ytmusic-player-page:has(#tab-renderer[page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS"]) .tabs-content.tp-yt-paper-tabs {
+  transition: backdrop-filter 250ms ease;
 }
 
 /* song/video toggle, styled like the tabs above */
