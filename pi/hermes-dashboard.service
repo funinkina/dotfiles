@@ -1,0 +1,14 @@
+[Unit]
+Description=Hermes Agent web dashboard (LAN, port 9119, login required)
+After=network-online.target hermes-gateway.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open
+WorkingDirectory=%h/.hermes
+Environment="HERMES_HOME=%h/.hermes"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

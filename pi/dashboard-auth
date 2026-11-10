@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Turn on Hermes dashboard login. Password is prompted, stored only as a scrypt hash.
+# Usage: ~/pi/dashboard-auth [public_url]
+#   no url: LAN access (dashboard bound to 0.0.0.0 accepts any Host)
+#   url:    behind a proxy/tunnel on loopback, e.g. https://<pi-name>.<tailnet>.ts.net
+set -euo pipefail
+url=${1:-}
+[[ -z $url || $url == http*://* ]] || { echo "url must start with http:// or https://" >&2; exit 1; }
+launcher=$HOME/.hermes/hermes-agent/.hermes/bin/hermes
+# Hermes's own python; hermes_bootstrap puts its packages on sys.path.
+py=$("$launcher" --print-runtime-command | python3 -c 'import json, sys; print(json.load(sys.stdin)[0])')
+
+hash=$("$py" -I -c '
+import getpass, sys
+sys.path.insert(0, sys.argv[1]); import hermes_bootstrap
+from plugins.dashboard_auth.basic import hash_password
+p = getpass.getpass("Dashboard password: ")
+if len(p) < 12 or p != getpass.getpass("Again: "): sys.exit("passwords differ or shorter than 12 chars")
+print(hash_password(p))' "$HOME/.hermes/hermes-agent")
+
+[[ -n $url ]] && hermes config set dashboard.public_url "${url%/}"
+hermes config set dashboard.basic_auth.username "$USER"
+hermes config set dashboard.basic_auth.password_hash "$hash"
+hermes config set dashboard.basic_auth.secret "$(openssl rand -hex 32)"  # fixed, so logins survive restarts
+systemctl --user restart hermes-dashboard
+echo "dashboard login set for user $USER"

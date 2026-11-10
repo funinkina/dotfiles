@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Hardlinked daily snapshot of ~/.hermes, keeping the last 14.
+set -euo pipefail
+src=${HERMES_HOME:-$HOME/.hermes}
+dst=${BACKUP_DIR:-/mnt/hermes-bak}
+keep=${KEEP:-14}
+
+[[ -d $src ]] || { echo "no $src" >&2; exit 1; }
+[[ -w $dst ]] || { echo "$dst not writable (drive missing?)" >&2; exit 1; }
+
+today=$(date +%F)
+snap=$dst/$today
+# Prune first so a full stick can't block every future run.
+ls -1d "$dst"/[0-9][0-9][0-9][0-9]-* 2>/dev/null | grep -v "/$today\$" | sort |
+  head -n "-$((keep - 1))" | xargs -r rm -rf || true  # empty on first run
+
+excludes=(
+  # reinstallable: code, runtimes, caches (~2.9GB on a fresh install)
+  /hermes-agent/ /tools/ /installs/ /cache/ /image_cache/ /audio_cache/
+  # runtime state that must not be restored
+  '*.lock' '*.pid' '*.sock'
+  # live SQLite side files: copied consistently below; a stale -wal next to a fresh db corrupts it
+  '*-wal' '*-shm' '*-journal'
+)
+link=(); [[ -d $dst/latest ]] && link=(--link-dest="$dst/latest/")
+rc=0
+rsync -a --delete --delete-excluded "${excludes[@]/#/--exclude=}" \
+  "${link[@]}" "$src/" "$snap/" || rc=$?
+(( rc == 0 || rc == 24 )) || exit "$rc"  # 24 = file vanished mid-copy, normal for a live dir
+
+# rsync can catch a db mid-write; replace each with a consistent copy.
+# Scans the snapshot, so excludes apply. rm first: it may be a hardlink shared with an older snapshot.
+find "$snap" -type f -print0 | while IFS= read -r -d '' out; do
+  [[ $(head -c15 "$out") == "SQLite format 3" ]] || continue
+  f=$src/${out#"$snap"/}
+  [[ -f $f ]] || continue
+  rm -f "$out"
+  sqlite3 -cmd '.timeout 30000' "$f" ".backup '$out'"
+done
+
+ln -sfn "$snap" "$dst/latest"
+echo "backup ok: $snap"

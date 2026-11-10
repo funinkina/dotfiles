@@ -49,6 +49,10 @@ stow --no-folding fish tmux git kitty ghostty starship fastfetch zed vscode font
 
 Regenerate snapshots: `./snapshot.sh`. Run before committing dotfiles changes.
 
+## Raspberry Pi (`pi/`, not stowed)
+
+Hardening + nightly backups for the headless Pi 4 running Hermes Agent. See [`pi/README.md`](pi/README.md).
+
 ## Keybindings (`gnome-keybinds.sh`)
 
 `dconf` is where GNOME keeps shortcuts, and `snapshot.sh` dumps it — but a dump records
