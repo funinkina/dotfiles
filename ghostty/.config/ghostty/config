@@ -9,6 +9,7 @@ font-size = 11
 # gtk-toolbar-style = flat
 gtk-titlebar-style = native
 shell-integration = fish
+shell-integration-features = ssh-terminfo
 gtk-single-instance = true
 
 keybind = performable:ctrl+c=copy_to_clipboard
