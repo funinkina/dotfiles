@@ -3,7 +3,7 @@
     "allow": [],
     "defaultMode": "auto"
   },
-  "model": "claude-opus-4-8",
+  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -11,13 +11,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/home/funinkina/.claude/hooks/herdr-agent-state.sh' session",
+            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
             "timeout": 10
           }
         ]
       }
     ]
   },
+  "enableArtifact": false,
   "workflowKeywordTriggerEnabled": false,
   "statusLine": {
     "type": "command",
@@ -25,10 +26,14 @@
   },
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
-    "figma@claude-plugins-official": true,
+    "figma@claude-plugins-official": false,
     "frontend-design@claude-plugins-official": true,
     "posthog@claude-plugins-official": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "mattpocock-skills@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -38,13 +43,23 @@
       }
     }
   },
+  "feedbackDrafts": "off",
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    }
+  },
+  "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
   "askUserQuestionTimeout": "never",
+  "tui": "fullscreen",
   "theme": "dark",
   "editorMode": "normal",
   "verbose": false,
+  "preferredNotifChannel": "ghostty",
   "switchModelsOnFlag": false,
+  "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
   "autoMode": {
     "soft_deny": [
@@ -74,7 +89,7 @@
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, node-pool resources, and anything tagged prod/production — includes iam_policy.json, infra/k8s.{js,ts}, infrastructure/orchestration/src/k8s-client.ts, test-infra/harnesses/rbac-fuzzer/rbac.test.ts, k8s-production/*",
       "### User-specific",
       "**Primary use of Claude Code**: software development on Libra-AI-Inc/Libra-AI (backend/knowledge-management platform)",
-      "**Trusted repo**: /home/funinkina/LIbra/Libra-AI (Libra-AI-Inc/Libra-AI, private) and its origin remote — confidential material may be committed here, but secrets and sensitive data are never cleared into it by visibility alone",
+      "**Trusted repo**: ~/Libra/Libra-AI on macOS, ~/LIbra/Libra-AI on Linux (Libra-AI-Inc/Libra-AI, private) and its origin remote — confidential material may be committed here, but secrets and sensitive data are never cleared into it by visibility alone",
       "**Org-specific CLIs**: None configured",
       "routine under funinkina/ prefix: none identified in recon"
     ]
