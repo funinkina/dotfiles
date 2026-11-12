@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap");
+
 /* better apple music, a custom theme for BetterLyrics */
 
 // @font-face {
@@ -10,9 +12,7 @@
 :root {
   --blyrics-lyric-active-color: color(display-p3 1 1 1 /1);
   --blyrics-lyric-inactive-color: color(display-p3 1 1 1 /0.2);
-  --blyrics-font-family: system-ui, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
+  --blyrics-font-family: "Inter", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --blyrics-lyric-scroll-duration: 300ms;
   --blyrics-lyric-scroll-timing-function: ease-in-out;
   --blyrics-scale-transition-duration: 0.6s;
@@ -31,9 +31,7 @@
 }
 
 * {
-  font-family: system-ui, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol" !important;
+  font-family: var(--blyrics-font-family) !important;
 }
 
 ytmusic-player-page:before {
@@ -301,7 +299,7 @@ ytmusic-player[is-mweb-player-page-modernization-enabled]:not([video-mode]) {
 
 #blyrics-title,
 #blyrics-artist {
-  font-family: var(--blyrics-font-family)
+  font-family: var(--blyrics-font-family);
   font-size: 2rem !important;
 }
 
@@ -312,8 +310,8 @@ ytmusic-player[is-mweb-player-page-modernization-enabled]:not([video-mode]) {
 /* normal player page: art is a square sized by #main-panel height, so trim the padding that eats it */
 ytmusic-player-page:not([player-fullscreened]) {
   --ytmusic-player-page-vertical-padding: 16px;
-  --ytmusic-player-page-horizontal-padding: 32px;
-  --ytmusic-player-page-content-gap: 32px;
+  --ytmusic-player-page-horizontal-padding: 24px;
+  --ytmusic-player-page-content-gap: 24px;
 }
 
 /* YTM sizes the art via inline padding on #main-panel, computed once in JS and often stale (tiny art).
@@ -324,7 +322,7 @@ ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([player-ui-
 }
 
 ytmusic-player-page:not([video-mode]):not([player-fullscreened]):not([player-ui-state=MINIPLAYER]):not([is-mweb-modernization-enabled]) #player.ytmusic-player-page {
-  --blyrics-player-art-size: min(70cqw, calc(70cqh - 64px), 680px);
+  --blyrics-player-art-size: min(80cqw, calc(85cqh - 64px), 740px);
   width: var(--blyrics-player-art-size) !important;
   max-width: none;
   align-self: center;
@@ -2128,6 +2126,7 @@ ytmusic-search-box:not([opened]):not([has-query]) .search-box.ytmusic-search-box
 div.left-controls-buttons > yt-icon-button.previous-button,
 div.left-controls-buttons > yt-icon-button.next-button {
   opacity: 0.75;
+  transform: scale(1.2);
   transition: opacity 0.25s;
 }
 
