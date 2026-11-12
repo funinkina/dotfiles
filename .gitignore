@@ -13,4 +13,5 @@ claude/.claude/*
 !claude/.claude/lamp-signal.py
 !claude/.claude/skills/
 claude/.claude/skills/humanizer/
-.DS_Store.playwright-mcp/
+.DS_Store
+.playwright-mcp/
