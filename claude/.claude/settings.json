@@ -16,6 +16,28 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [{ "type": "command", "command": "~/.claude/lamp-signal.py ask", "async": true }]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "AskUserQuestion|ExitPlanMode",
+        "hooks": [{ "type": "command", "command": "~/.claude/lamp-signal.py ask", "async": true }]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [{ "type": "command", "command": "~/.claude/lamp-signal.py done", "async": true }]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [{ "type": "command", "command": "~/.claude/lamp-signal.py error", "async": true }]
+      }
     ]
   },
   "enableArtifact": false,

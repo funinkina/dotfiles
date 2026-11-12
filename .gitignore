@@ -10,6 +10,7 @@ claude/.claude/*
 !claude/.claude/CLAUDE.md
 !claude/.claude/settings.json
 !claude/.claude/statusline.sh
+!claude/.claude/lamp-signal.py
 !claude/.claude/skills/
 claude/.claude/skills/humanizer/
 .DS_Store
