@@ -6,7 +6,8 @@ usage: lamp-signal.py ask|done|error     (run from Claude Code hooks)
 
 Works whether the lamp is on or off; an off lamp blinks, then goes back off in its old mode.
 Does nothing if the lamp is unreachable, or for headless `claude -p` runs. Overlapping
-signals from several sessions queue up. LAMP_URL overrides the server (tuyable app on the Pi).
+signals from several sessions queue up. LAMP_URL overrides the server (tuyable app on the Pi),
+which must accept "on" alongside a mode.
 """
 import fcntl, json, os, sys, time, urllib.request
 
@@ -40,22 +41,18 @@ def blink(kind):
         return
     if s["error"]:
         return
-    mode = restore_body(s)
-    between = mode if s["on"] else {"on": False}
+    back = restore_body(s) | {"on": s["on"]}  # one write: old mode, old power, so an off lamp never lights in it
     try:
         for _ in range(times):
             api("/api/set", {"mode": "color", "h": hue, "s": 100, "v": 100})
             time.sleep(ON_S)
-            api("/api/set", between)
+            api("/api/set", back)
             time.sleep(OFF_S)
     except Exception:
-        pass
-    finally:  # never leave it stuck on a signal colour
-        for body in [mode] + ([] if s["on"] else [{"on": False}]):
-            try:
-                api("/api/set", body)  # mode first so the next manual switch-on isn't the signal colour
-            except Exception:
-                pass
+        try:
+            api("/api/set", back)  # never leave it stuck on a signal colour
+        except Exception:
+            pass
 
 
 def selftest():
