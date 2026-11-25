@@ -1,0 +1,4 @@
+# /etc/default/earlyoom — read by earlyoom.service via EnvironmentFile.
+# Lives here, not in a drop-in: EnvironmentFile overrides Environment=.
+# Kill at 5% RAM available (swap ignored: -s 100,100), notify, spare the desktop, kill browsers/electron first.
+EARLYOOM_ARGS="-r 60 -n -m 5 -s 100,100 --avoid '(^|/)(gnome-shell|gnome-session-binary|Xorg|Xwayland|systemd|dbus-broker|pipewire)$' --prefer '(^|/)(code|helium|chrome|chromium|electron|firefox|Isolated Web Co|Web Content)$'"

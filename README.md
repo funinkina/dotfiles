@@ -89,6 +89,7 @@ nothing. Anything with logic belongs in a script under `scripts/.local/bin/` (se
   sudo install -m644 powertune/99-powertune.rules /etc/udev/rules.d/
   sudo systemctl daemon-reload && sudo udevadm control --reload && sudo systemctl enable --now powertune
   ```
+- `earlyoom/earlyoom` — earlyoom args (spare GNOME, kill browsers first). Install: `sudo install -m644 earlyoom/earlyoom /etc/default/earlyoom && sudo systemctl restart earlyoom`. Don't use a drop-in `Environment=`; the unit's `EnvironmentFile` overrides it.
 - `backup.sh` — rsync-based external disk backup script. Edit `DEST_BASE_DIR` before use.
 
 ## Inactive desktop (niri + quickshell)
