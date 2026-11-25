@@ -48,4 +48,11 @@ for n in 1 2 3 4 5 6 7 8 9; do
     gsettings set org.gnome.shell.keybindings "switch-to-application-$n" "['<Super>$n']"
 done
 
+# Ctrl+Alt+arrows belong to ghostty split navigation (macOS Cmd+Alt+arrows).
+# Workspace switching keeps Super+PgUp/PgDn and Super+Alt+Left/Right.
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left  "['<Super>Page_Up', '<Super>KP_Prior', '<Super><Alt>Left']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Super>Page_Down', '<Super>KP_Next', '<Super><Alt>Right']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up    "[]"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down  "[]"
+
 echo "Applied $(( ${#CUSTOM[@]} )) custom keybindings + Super+1..9 app switching."

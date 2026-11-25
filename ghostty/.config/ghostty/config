@@ -5,6 +5,9 @@ window-width = 112
 theme = Adwaita Dark
 bold-color = bright
 font-size = 11
+background-opacity=0.9
+background-blur=70
+window-theme=ghostty
 
 # gtk-toolbar-style = flat
 gtk-titlebar-style = native
@@ -16,6 +19,41 @@ keybind = performable:ctrl+c=copy_to_clipboard
 keybind = ctrl+shift+c=copy_to_clipboard
 keybind = ctrl+v=paste_from_clipboard
 keybind = ctrl+t=new_tab
-keybind = ctrl+w=close_tab
+keybind = ctrl+w=close_surface
+keybind = ctrl+d=new_split:right
+keybind = ctrl+shift+d=new_split:down
+
+# macOS layout, cmd -> ctrl. Skipped where ctrl+key is a terminal control code:
+# a (bol), e (eol), j (newline), k (kill), n (history), z (suspend), [ (escape), ] -> Linux defaults kept
+keybind = ctrl+q=quit
+keybind = ctrl+shift+k=clear_screen
+keybind = ctrl+alt+w=close_tab:this
+keybind = ctrl+shift+w=close_window
+keybind = ctrl+alt+shift+w=close_all_windows
+keybind = ctrl+shift+bracket_left=previous_tab
+keybind = ctrl+shift+bracket_right=next_tab
+keybind = ctrl+digit_1=goto_tab:1
+keybind = ctrl+digit_2=goto_tab:2
+keybind = ctrl+digit_3=goto_tab:3
+keybind = ctrl+digit_4=goto_tab:4
+keybind = ctrl+digit_5=goto_tab:5
+keybind = ctrl+digit_6=goto_tab:6
+keybind = ctrl+digit_7=goto_tab:7
+keybind = ctrl+digit_8=goto_tab:8
+keybind = ctrl+digit_9=last_tab
+keybind = super+ctrl+equal=equalize_splits
+keybind = ctrl+arrow_up=jump_to_prompt:-1
+keybind = ctrl+arrow_down=jump_to_prompt:1
+keybind = ctrl+home=scroll_to_top
+keybind = ctrl+end=scroll_to_bottom
+keybind = ctrl+page_up=scroll_page_up
+keybind = ctrl+page_down=scroll_page_down
+keybind = ctrl+arrow_left=text:\x01
+keybind = ctrl+arrow_right=text:\x05
+keybind = ctrl+backspace=text:\x15
+keybind = performable:ctrl+g=navigate_search:next
+keybind = performable:ctrl+shift+g=navigate_search:previous
+keybind = ctrl+shift+v=paste_from_selection
+keybind = ctrl+alt+i=inspector:toggle
 keybind = ctrl+f=start_search
 
