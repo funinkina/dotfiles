@@ -82,6 +82,13 @@ nothing. Anything with logic belongs in a script under `scripts/.local/bin/` (se
 
 - `pacman.conf` — system file, copy manually to `/etc/pacman.conf` if needed.
 - `sddm-theme/noir/` — SDDM login theme. Install with `sudo cp -r sddm-theme/noir /usr/share/sddm/themes/` and set `Current=noir` in `/etc/sddm.conf`.
+- `powertune/` — battery tuning: `powertop --auto-tune` + RAPL PL1 cap (22W battery / 55W AC), re-run on boot and on AC plug/unplug. Install:
+  ```sh
+  sudo install -m755 powertune/powertune.sh /usr/local/bin/
+  sudo install -m644 powertune/powertune.service /etc/systemd/system/
+  sudo install -m644 powertune/99-powertune.rules /etc/udev/rules.d/
+  sudo systemctl daemon-reload && sudo udevadm control --reload && sudo systemctl enable --now powertune
+  ```
 - `backup.sh` — rsync-based external disk backup script. Edit `DEST_BASE_DIR` before use.
 
 ## Inactive desktop (niri + quickshell)

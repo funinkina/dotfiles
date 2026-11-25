@@ -1,0 +1,9 @@
+[Unit]
+Description=Battery power tuning (powertop autotune + RAPL cap)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/powertune.sh
+
+[Install]
+WantedBy=multi-user.target
