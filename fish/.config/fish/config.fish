@@ -106,6 +106,7 @@ alias sstart="sudo systemctl start"
 alias sstop="sudo systemctl stop"
 alias c="clear"
 alias e="exit"
+alias :q="exit"
 alias s="sudo"
 #navigation
 alias ..='cd ..'
